@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omar profiles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(23, 28, 38, 0.8);
+            --accent-color: #00f2ff;
+            --text-color: #e6edf3;
+            /* ألوان السوشيال */
+            --fb: #1877F2; --wa: #25D366; --ig: #E1306C; --ds: #5865F2; --tk: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Cairo', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* خلفية الاورب المتفاعلة */
+        .background-elements { position: absolute; width: 100%; height: 100%; z-index: -1; }
+        .orb {
+            position: absolute; width: 350px; height: 350px; border-radius: 50%;
+            filter: blur(80px); opacity: 0.1; animation: move 15s infinite alternate;
+        }
+
+        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(10%, 10%); } }
+
+        /* الكارد الأساسي */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            width: 90%;
+            max-width: 400px;
+            padding: 80px 25px 30px;
+            text-align: center;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease-out;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+
+        /* الصورة الدائرية (نص داخل ونص خارج) وتتحرك 3D مع الكارد */
+        .profile-img-box {
+            position: absolute;
+            top: -65px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(50px);
+            width: 130px;
+            height: 130px;
+            z-index: 20;
+        }
+
+        .profile-img-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid var(--bg-color);
+            object-fit: cover;
+            background: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-size: 22px; font-weight: 900; margin-top: 10px; }
+        .message { font-size: 15px; margin-bottom: 25px; line-height: 1.5; color: #abb2bf; }
+
+        /* أزرار السوشيال بعرض الكارد */
+        .links-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .link-item i { font-size: 18px; }
+        .fb:hover { background: var(--fb); box-shadow: 0 0 15px var(--fb); }
+        .wa:hover { background: var(--wa); box-shadow: 0 0 15px var(--wa); }
+        .ig:hover { background: var(--ig); box-shadow: 0 0 15px var(--ig); }
+        .tk:hover { background: var(--tk); box-shadow: 0 0 15px #333; }
+        .ds:hover { background: var(--ds); box-shadow: 0 0 15px var(--ds); }
+
+        /* قسم الهوايات والوضع */
+        .info-grid {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 0;
+            margin-top: 10px;
+        }
+        .info-item { font-size: 11px; opacity: 0.6; display: flex; flex-direction: column; }
+        .info-item span { color: var(--accent-color); font-weight: bold; font-size: 12px; }
+
+        /* قسم آخر أعمالي وزر تأمين */
+        .work-box { margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .work-box p { font-size: 13px; margin-bottom: 15px; opacity: 0.8; }
+
+        .tameen-logo-btn {
+            display: inline-flex;
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tameen-logo-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px #fff; }
+        .tameen-logo-btn img { width: 35px; }
+
+        /* الفوتر */
+        .footer-note { font-size: 12px; opacity: 0.5; margin-top: 20px; }
+
+        /* الماوس */
+        #cursor {
+            width: 12px; height: 12px; background: var(--accent-color);
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 9999; box-shadow: 0 0 10px var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-elements">
+        <div class="orb" style="background: var(--accent-color); top: 10%; left: 10%;"></div>
+        <div class="orb" style="background: #818cf8; bottom: 10%; right: 10%;"></div>
+    </div>
+
+    <div id="cursor"></div>
+
+    <div class="card" id="card">
+        <div class="profile-img-box">
+            <img src="profile.jpg" alt="عمر">
+        </div>
+
+        <h1>أنا عمر.. أنت مين؟ 👋</h1>
+        
+        <p class="message">
+            دامك غلبت حالك ودخلت، بعينك الله كمل معروفك وشوفني عالباقي.. نورت الموقع!
+        </p>
+
+        <div class="links-container">
+            <a href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" class="link-item fb"><i class="fab fa-facebook-f"></i> فيسبوك</a>
+            <a href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" class="link-item wa"><i class="fab fa-whatsapp"></i> واتساب</a>
+            <a href="https://www.instagram.com/omar.a.z3?igsh=YTV6YXM2eGd1YWZu" target="_blank" class="link-item ig"><i class="fab fa-instagram"></i> انستجرام</a>
+            <a href="https://www.tiktok.com/@gdmi_33?_r=1&_t=ZS-94xfVAUl1Az" target="_blank" class="link-item tk"><i class="fab fa-tiktok"></i> تيك توك</a>
+            <a href="https://discord.gg/pxgwBCdD" target="_blank" class="link-item ds"><i class="fab fa-discord"></i> ديسكورد</a>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">الحالة<span>Learning..</span></div>
+            <div class="info-item">المجال<span>EV & Hybrid</span></div>
+            <div class="info-item">الهواية<span>Web Dev</span></div>
+        </div>
+
+        <div class="work-box">
+            <p>شوف هاد آخر أعمالي حالياً 👇</p>
+            <a href="https://omar-i9.github.io/taamenn/" target="_blank" class="tameen-logo-btn">
+                <img src="https://omar-i9.github.io/taamenn/favicon.ico" alt="تأمين">
+            </a>
+        </div>
+
+        <div class="footer-note">
+            الفولو ما بكهربك.. صدقني! ⚡
+        </div>
+    </div>
+
+    <script>
+        const card = document.getElementById('card');
+        const cursor = document.getElementById('cursor');
+
+        // تتبع الماوس
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+
+            // حركة إمالة خفيفة جداً
+            const x = (window.innerWidth / 2 - e.clientX) / 40;
+            const y = (window.innerHeight / 2 - e.clientY) / 40;
+            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+        });
+
+        // إعادة الكارد لوضعه الطبيعي عند خروج الماوس من الشاشة
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+    </script>
+</body>
+</html>
