@@ -16,22 +16,27 @@
             --fb: #1877F2; --wa: #25D366; --ig: #E1306C; --ds: #5865F2; --tk: #000000;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        /* شلت الـ cursor: none من هون عشان نتحكم فيها حسب الشاشة */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Cairo', sans-serif;
-            height: 100vh;
+            
+            /* التعديل الأساسي للسكرول */
+            min-height: 100vh; 
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden; /* نمنع السكرول العرضي */
+            overflow-y: auto;   /* نسمح للسكرول الطولي */
+            padding: 100px 20px 50px; /* مسافة من فوق عشان صورتك ما تنقص، ومسافة من تحت */
             perspective: 1000px;
         }
 
-        /* خلفية الاورب المتفاعلة */
-        .background-elements { position: absolute; width: 100%; height: 100%; z-index: -1; }
+        /* خلفية الاورب المتفاعلة - خليتها fixed عشان تضل معك وانت بتنزل */
+        .background-elements { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; pointer-events: none; }
         .orb {
             position: absolute; width: 350px; height: 350px; border-radius: 50%;
             filter: blur(80px); opacity: 0.1; animation: move 15s infinite alternate;
@@ -46,7 +51,7 @@
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 35px;
-            width: 90%;
+            width: 100%; /* تعديل بسيط ليتجاوب أحسن */
             max-width: 400px;
             padding: 80px 25px 30px;
             text-align: center;
@@ -54,6 +59,7 @@
             transform-style: preserve-3d;
             transition: transform 0.2s ease-out;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            margin: auto; /* عشان يتوسط صح بحالة السكرول */
         }
 
         /* الصورة الدائرية (نص داخل ونص خارج) وتتحرك 3D مع الكارد */
@@ -138,12 +144,6 @@
         /* الفوتر */
         .footer-note { font-size: 12px; opacity: 0.5; margin-top: 20px; }
 
-        /* الماوس */
-        #cursor {
-            width: 12px; height: 12px; background: var(--accent-color);
-            border-radius: 50%; position: fixed; pointer-events: none;
-            z-index: 9999; box-shadow: 0 0 10px var(--accent-color);
-        }
     </style>
 </head>
 <body>
@@ -196,21 +196,23 @@
         const card = document.getElementById('card');
         const cursor = document.getElementById('cursor');
 
-        // تتبع الماوس
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+        // تتبع الماوس (يشتغل بس إذا الشاشة كبيرة عشان التاتش ما يعلق)
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
 
-            // حركة إمالة خفيفة جداً
-            const x = (window.innerWidth / 2 - e.clientX) / 70;
-            const y = (window.innerHeight / 2 - e.clientY) / 70;
-            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-        });
+                // حركة إمالة خفيفة جداً
+                const x = (window.innerWidth / 2 - e.clientX) / 70;
+                const y = (window.innerHeight / 2 - e.clientY) / 70;
+                card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+            });
 
-        // إعادة الكارد لوضعه الطبيعي عند خروج الماوس من الشاشة
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        });
+            // إعادة الكارد لوضعه الطبيعي عند خروج الماوس من الشاشة
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            });
+        }
     </script>
 </body>
 </html>
