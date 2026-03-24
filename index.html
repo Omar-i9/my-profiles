@@ -127,7 +127,7 @@
     }
 
     .music-meta{
-      flex:1;
+      flex:1; 
       min-width:0;
       text-align:right;
     }
@@ -544,6 +544,34 @@
         background:rgba(255,255,255,.03);
       }
     }
+    /* شكل الشريط */
+#seekBar{
+  width:100%;
+  margin-top:10px;
+  appearance:none;
+  height:5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  outline:none;
+}
+#seekBar::-webkit-slider-thumb{
+  appearance:none;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(255,255,255,.35);
+}
+#seekBar::-moz-range-thumb{
+  width:14px;
+  height:14px;
+  border:none;
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(255,255,255,.35);
+}
   </style>
 </head>
 <body>
@@ -561,7 +589,7 @@
   <!-- Desktop Music Dock -->
   <section class="music-dock" aria-label="مشغل الأغاني">
     <div class="music-top">
-      <img class="music-cover" src="./wildflower.jpeg" alt="غلاف Wildflower" />
+      <img class="music-cover" src="./wildflower.jpg" alt="غلاف Wildflower" />
       <div class="music-meta">
         <div class="label">Now Playing</div>
         <div class="title">Wildflower</div>
@@ -583,6 +611,9 @@
     </div>
 
     <div class="progress"><span id="progressDesktop"></span></div>
+    
+    <!-- داخل المشغل، تحت الأزرار مباشرة -->
+<input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
 
     <audio id="audio" preload="metadata" src="./wildflower.mp3"></audio>
   </section>
@@ -599,7 +630,7 @@
     </button>
 
     <div class="panel-top">
-      <img class="music-cover" src="./wildflower.jpeg" alt="غلاف Wildflower" />
+      <img class="music-cover" src="./wildflower.jpg" alt="غلاف Wildflower" />
       <div class="music-meta">
         <div class="label">Now Playing</div>
         <div class="title">Wildflower</div>
@@ -622,6 +653,8 @@
     </div>
 
     <div class="panel-progress"><span id="progressMobile"></span></div>
+    <!-- داخل المشغل، تحت الأزرار مباشرة -->
+<input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
   </section>
 
   <main class="card" id="card">
@@ -776,6 +809,21 @@
         card.style.transform = 'rotateY(0deg) rotateX(0deg)';
       });
     }
+    const seekBar = document.getElementById('seekBar');
+
+audio.addEventListener('timeupdate', () => {
+  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+  seekBar.value = pct;
+  progressDesktop.style.width = pct + '%';
+  progressMobile.style.width = pct + '%';
+});
+
+seekBar.addEventListener('input', () => {
+  if (audio.duration) {
+    const newTime = (seekBar.value / 100) * audio.duration;
+    audio.currentTime = newTime;
+  }
+});
   </script>
 </body>
 </html>
