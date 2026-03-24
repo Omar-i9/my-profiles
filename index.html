@@ -202,8 +202,8 @@
             cursor.style.top = e.clientY + 'px';
 
             // حركة إمالة خفيفة جداً
-            const x = (window.innerWidth / 2 - e.clientX) / 20;
-            const y = (window.innerHeight / 2 - e.clientY) / 20;
+            const x = (window.innerWidth / 2 - e.clientX) / 70;
+            const y = (window.innerHeight / 2 - e.clientY) / 70;
             card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
         });
 
