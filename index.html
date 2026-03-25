@@ -572,6 +572,11 @@
   cursor:pointer;
   box-shadow:0 0 10px rgba(255,255,255,.35);
 }
+    .sc:hover{
+  background:#FFFC00;
+  color:#000;
+  box-shadow:0 0 16px rgba(255,252,0,.45);
+}
   </style>
 </head>
 <body>
@@ -589,10 +594,9 @@
   <!-- Desktop Music Dock -->
   <section class="music-dock" aria-label="مشغل الأغاني">
     <div class="music-top">
-    <img class="music-cover" src="./wildflower.jpeg" alt="غلاف Wildflower" />
+    <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
       <div class="music-meta">
-        <div class="label">Now Playing</div>
-        <div class="title">Wildflower</div>
+        <div class="title">درب المهالك</div>
       </div>
     </div>
 
@@ -615,7 +619,7 @@
     <!-- داخل المشغل، تحت الأزرار مباشرة -->
 <input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
 
-    <audio id="audio" preload="metadata" src="./wildflower.mp3"></audio>
+    <audio id="audio" preload="metadata" src="./درب المهالك.mp3"></audio>
   </section>
 
   <!-- Mobile Music Button -->
@@ -630,10 +634,9 @@
     </button>
 
     <div class="panel-top">
-      <img class="music-cover" src="./wildflower.jpg" alt="غلاف Wildflower" />
+      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
       <div class="music-meta">
-        <div class="label">Now Playing</div>
-        <div class="title">Wildflower</div>
+        <div class="title">درب المهالك</div>
         <div class="artist"></div>
       </div>
     </div>
@@ -662,10 +665,10 @@
       <img src="https://omar-i9.github.io/my-profiles/profile.jpeg" alt="عمر">
     </div>
 
-    <div class="pill"><i class="fa-solid fa-bolt"></i> ملفات شخصية مرتبة وسريعة</div>
-    <h1>أنا عمر.. أنت مين؟</h1>
+    <div class="pill"><i class="fa-solid fa-bolt"></i></div>
+    <h1></h1>
     <div class="typing" id="typing"></div>
-    <div class="sub">تنساش انه كل حساباتي  PRIVET</div>
+    <div class="sub">هممممم...</div>
 
     <div class="section-title">روابط التواصل</div>
     <div class="links">
@@ -674,23 +677,25 @@
       <a class="btn ig" href="https://www.instagram.com/omar.a.z3?igsh=YTV6YXM2eGd1YWZu" target="_blank"><i class="fab fa-instagram"></i> انستجرام</a>
       <a class="btn tk" href="https://www.tiktok.com/@gdmi_33?_r=1&_t=ZS-94xfVAUl1Az" target="_blank"><i class="fab fa-tiktok"></i> تيك توك</a>
       <a class="btn ds" href="https://discord.gg/pxgwBCdD" target="_blank"><i class="fab fa-discord"></i> ديسكورد</a>
+      <a class="btn sc" href="https://www.snapchat.com/add/omar-gdmi?share_id=KIu9UxOnRt8&locale=ar-EG" target="_blank">
+  <i class="fab fa-snapchat-ghost"></i> سناب شات
+</a>
     </div>
 
     <div class="section-title">معلومات سريعة</div>
     <div class="info">
-      <div class="info-box">الحالة <span>🟡 مشغول دائماً</span></div>
+      <div class="info-box">الحالة <span>مشغول دائماً</span></div>
       <div class="info-box">المجال <span>EV & Hybrid</span></div>
       <div class="info-box">الهواية <span>Web Dev</span></div>
     </div>
 
     <div class="chips">
-      <div class="chip">بحب الفطبل! بتحبه مثلي؟</div>
       <div class="chip">بتعرف كلاش؟؟</div>
-      <div class="chip">متجاوب</div>
+      <div class="chip">عفويه..</div>
     </div>
 
     <div class="work">
-      <p>شوف هاد آخر أعمالي حالياً 👇</p>
+      <p>آخر أعمالي حالياً</p>
       <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank">
         <div class="work-logo">
           <img src="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" alt="تأمين">
@@ -722,7 +727,7 @@
     const musicPanel = document.getElementById('musicPanel');
     const closePanel = document.getElementById('closePanel');
 
-    const text = "دامك دخلت، كمل معروفك وشوف الباقي. نورت الموقع!";
+    const text = "دامك دخلت، كمل معروفك وشوف الباقي!";
     let i = 0;
 
     function typeText() {
