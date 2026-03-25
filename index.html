@@ -15,7 +15,7 @@
   <style>
     :root{
       --bg:#0d1117;
-      --card:rgba(19,24,34,.82);
+      --card:rgba(19,24,34,.84);
       --line:rgba(255,255,255,.08);
       --text:#e6edf3;
       --muted:#aab6c5;
@@ -26,12 +26,13 @@
       --ig:#E1306C;
       --ds:#5865F2;
       --tk:#111;
-      --player-bg:rgba(18,23,33,.92);
+      --player-bg:rgba(18,23,33,.94);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
+      position:relative;
       min-height:100vh;
       font-family:'Cairo',sans-serif;
       background:
@@ -46,11 +47,30 @@
       justify-content:center;
     }
 
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-10%;
+      pointer-events:none;
+      z-index:-2;
+      background:
+        radial-gradient(circle at var(--mx, 50vw) var(--my, 25vh), rgba(0,242,255,.10), transparent 22%),
+        radial-gradient(circle at calc(100% - var(--mx, 50vw)) calc(100% - var(--my, 25vh)), rgba(129,140,248,.12), transparent 24%);
+      transition:background-position .08s linear;
+    }
+
     .bg {
-      position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden;
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-1;
+      overflow:hidden;
     }
     .orb{
-      position:absolute; border-radius:50%; filter:blur(80px); opacity:.12;
+      position:absolute;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:.12;
       animation: drift 18s ease-in-out infinite alternate;
     }
     .orb.one{width:330px;height:330px;top:8%;left:6%;background:var(--accent)}
@@ -74,7 +94,6 @@
       mix-blend-mode:screen;
     }
 
-    /* ---------- LOADING ---------- */
     .loader{
       position:fixed;
       inset:0;
@@ -86,13 +105,12 @@
       color:#fff;
       font-size:18px;
       letter-spacing:2px;
-      animation: loaderFade .45s ease 0.85s forwards;
+      animation: loaderFade .45s ease .85s forwards;
     }
     @keyframes loaderFade{
       to{opacity:0;visibility:hidden}
     }
 
-    /* ---------- DESKTOP MUSIC DOCK ---------- */
     .music-dock{
       position:fixed;
       top:16px;
@@ -107,12 +125,37 @@
       -webkit-backdrop-filter:blur(14px);
       padding:12px;
       display:none;
+      overflow:hidden;
+    }
+
+    .music-dock::before,
+    .music-panel::before,
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    .music-dock::before,
+    .music-panel::before{
+      background:linear-gradient(120deg, transparent 0%, rgba(0,242,255,.08) 35%, rgba(255,255,255,.06) 50%, rgba(129,140,248,.08) 65%, transparent 100%);
+      mix-blend-mode:screen;
+      opacity:.8;
+      animation:holoSweep 6s linear infinite;
+    }
+
+    @keyframes holoSweep{
+      from{transform:translateX(-20%)}
+      to{transform:translateX(20%)}
     }
 
     .music-top{
       display:flex;
       gap:12px;
       align-items:center;
+      position:relative;
+      z-index:1;
     }
 
     .music-cover{
@@ -127,7 +170,7 @@
     }
 
     .music-meta{
-      flex:1; 
+      flex:1;
       min-width:0;
       text-align:right;
     }
@@ -162,6 +205,8 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
+      position:relative;
+      z-index:1;
     }
 
     .fake-btn{
@@ -195,15 +240,20 @@
     }
     .play-btn:hover{transform:scale(1.04)}
 
-    .progress{
+    .progress,
+    .panel-progress{
       margin-top:10px;
       width:100%;
       height:4px;
       border-radius:999px;
       background:rgba(255,255,255,.08);
       overflow:hidden;
+      position:relative;
+      z-index:1;
     }
-    .progress span{
+
+    .progress span,
+    .panel-progress span{
       display:block;
       width:0%;
       height:100%;
@@ -211,7 +261,36 @@
       background:linear-gradient(90deg, var(--accent), var(--accent2));
     }
 
-    /* ---------- MOBILE MUSIC BUTTON + PANEL ---------- */
+    .seek-bar{
+      width:100%;
+      margin-top:10px;
+      appearance:none;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      outline:none;
+      position:relative;
+      z-index:1;
+    }
+    .seek-bar::-webkit-slider-thumb{
+      appearance:none;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:#fff;
+      cursor:pointer;
+      box-shadow:0 0 10px rgba(255,255,255,.35);
+    }
+    .seek-bar::-moz-range-thumb{
+      width:14px;
+      height:14px;
+      border:none;
+      border-radius:50%;
+      background:#fff;
+      cursor:pointer;
+      box-shadow:0 0 10px rgba(255,255,255,.35);
+    }
+
     .music-fab{
       position:fixed;
       top:12px;
@@ -249,6 +328,7 @@
       visibility:hidden;
       pointer-events:none;
       transition:.22s ease;
+      overflow:hidden;
     }
 
     .music-panel.open{
@@ -269,6 +349,7 @@
       background:rgba(255,255,255,.06);
       color:#fff;
       cursor:pointer;
+      z-index:2;
     }
 
     .panel-top{
@@ -276,6 +357,8 @@
       gap:12px;
       align-items:center;
       padding-top:8px;
+      position:relative;
+      z-index:1;
     }
 
     .panel-controls{
@@ -284,26 +367,10 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
+      position:relative;
+      z-index:1;
     }
 
-    .panel-progress{
-      margin-top:10px;
-      width:100%;
-      height:4px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .panel-progress span{
-      display:block;
-      width:0%;
-      height:100%;
-      border-radius:999px;
-      background:linear-gradient(90deg, var(--accent), var(--accent2));
-    }
-
-    /* ---------- CARD ---------- */
     .card{
       width:100%;
       max-width:430px;
@@ -319,6 +386,43 @@
       transform-style:preserve-3d;
       animation: pop .8s ease both;
       transition:transform .15s ease-out;
+      overflow:visible;
+    }
+
+    .card::before{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,242,255,.12), transparent 18%),
+        radial-gradient(circle at 80% 80%, rgba(129,140,248,.12), transparent 18%),
+        linear-gradient(120deg, transparent 0%, rgba(255,255,255,.05) 50%, transparent 100%);
+      mix-blend-mode:screen;
+      opacity:.85;
+      animation:holoPulse 5s ease-in-out infinite alternate;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.05) 0px,
+        rgba(255,255,255,.05) 1px,
+        transparent 1px,
+        transparent 8px
+      );
+      opacity:.08;
+      animation:holoScan 7s linear infinite;
+    }
+
+    @keyframes holoPulse{
+      from{transform:translateY(-3px)}
+      to{transform:translateY(3px)}
+    }
+
+    @keyframes holoScan{
+      from{transform:translateY(-10px)}
+      to{transform:translateY(10px)}
     }
 
     @keyframes pop{
@@ -328,13 +432,16 @@
 
     .avatar{
       position:absolute;
-      top:-64px; left:50%;
+      top:-64px;
+      left:50%;
       transform:translateX(-50%);
-      width:128px;height:128px;
+      width:128px;
+      height:128px;
       z-index:2;
     }
     .avatar img{
-      width:100%;height:100%;
+      width:100%;
+      height:100%;
       border-radius:50%;
       object-fit:cover;
       border:6px solid var(--bg);
@@ -353,6 +460,8 @@
       color:#bafcff;
       font-size:13px;
       margin-bottom:12px;
+      position:relative;
+      z-index:1;
     }
 
     h1{
@@ -360,6 +469,8 @@
       line-height:1.35;
       margin-bottom:10px;
       font-weight:900;
+      position:relative;
+      z-index:1;
     }
 
     .typing{
@@ -367,6 +478,8 @@
       font-size:15px;
       color:var(--muted);
       margin-bottom:16px;
+      position:relative;
+      z-index:1;
     }
 
     .sub{
@@ -378,6 +491,8 @@
       border-radius:12px;
       padding:8px 12px;
       margin-bottom:18px;
+      position:relative;
+      z-index:1;
     }
 
     .section-title{
@@ -386,11 +501,28 @@
       font-weight:700;
       color:#bfcbda;
       margin:16px 2px 10px;
+      position:relative;
+      z-index:1;
     }
 
     .links{
       display:grid;
       gap:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .links:hover .btn{
+      transform:scale(.92);
+      opacity:.72;
+      filter:blur(.5px);
+    }
+
+    .links .btn:hover{
+      transform:scale(1.12);
+      opacity:1;
+      filter:none;
+      z-index:2;
     }
 
     .btn{
@@ -407,8 +539,8 @@
       border:1px solid rgba(255,255,255,.06);
       transition:.25s ease;
       will-change:transform;
+      position:relative;
     }
-    .btn:hover{transform:translateY(-2px)}
     .btn i{font-size:18px}
 
     .fb:hover{background:var(--fb); box-shadow:0 0 16px rgba(24,119,242,.45)}
@@ -416,6 +548,11 @@
     .ig:hover{background:var(--ig); box-shadow:0 0 16px rgba(225,48,108,.45)}
     .tk:hover{background:#000; box-shadow:0 0 16px rgba(255,255,255,.12)}
     .ds:hover{background:var(--ds); box-shadow:0 0 16px rgba(88,101,242,.45)}
+    .sc:hover{background:#FFFC00; color:#000; box-shadow:0 0 16px rgba(255,252,0,.45)}
+    .st:hover{background:#1b2838; box-shadow:0 0 16px rgba(27,40,56,.55)}
+    .sp:hover{background:#1db954; box-shadow:0 0 16px rgba(29,185,84,.45)}
+    .gh:hover{background:#24292e; box-shadow:0 0 16px rgba(36,41,46,.55)}
+    .tw:hover{background:#9146ff; box-shadow:0 0 16px rgba(145,70,255,.45)}
 
     .info{
       display:grid;
@@ -425,6 +562,8 @@
       padding:14px 0;
       border-top:1px solid var(--line);
       border-bottom:1px solid var(--line);
+      position:relative;
+      z-index:1;
     }
     .info-box{
       display:flex;
@@ -446,6 +585,8 @@
       gap:8px;
       justify-content:center;
       margin-top:12px;
+      position:relative;
+      z-index:1;
     }
     .chip{
       padding:8px 12px;
@@ -456,11 +597,52 @@
       border:1px solid rgba(255,255,255,.07);
     }
 
+    .epic-box{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:15px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .epic-text{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      color:#fff;
+      text-align:right;
+      min-width:0;
+    }
+
+    .copy-btn{
+      border:none;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-family:inherit;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .copy-btn:hover{
+      background:rgba(255,255,255,.14);
+    }
+
     .work{
       margin-top:18px;
       padding-top:16px;
       border-top:1px solid var(--line);
       text-align:right;
+      position:relative;
+      z-index:1;
     }
     .work p{
       font-size:14px;
@@ -475,7 +657,8 @@
       color:#fff;
     }
     .work-logo{
-      width:72px;height:72px;
+      width:72px;
+      height:72px;
       border-radius:50%;
       overflow:hidden;
       flex:0 0 auto;
@@ -488,7 +671,8 @@
       box-shadow:0 0 28px rgba(255,255,255,.28);
     }
     .work-logo img{
-      width:100%;height:100%;
+      width:100%;
+      height:100%;
       object-fit:cover;
     }
     .work-txt strong{
@@ -505,6 +689,8 @@
       margin-top:16px;
       font-size:12px;
       color:rgba(230,237,243,.62);
+      position:relative;
+      z-index:1;
     }
     .footer em{font-style:normal;color:#b8f7ff}
 
@@ -525,9 +711,69 @@
       }
     }
 
+    .confetti{
+      position:fixed;
+      width:6px;
+      height:10px;
+      pointer-events:none;
+      z-index:9999;
+      animation:explode .7s ease-out forwards;
+    }
+
+    @keyframes explode{
+      from{opacity:1; transform:translate(0,0) rotate(0)}
+      to{
+        opacity:0;
+        transform:translate(var(--x),var(--y)) rotate(720deg) scale(.4);
+      }
+    }
+
+    #copiedGlow,
+    #navHint{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%) scale(.7);
+      padding:12px 20px;
+      border:none;
+      border-radius:999px;
+      font-weight:800;
+      opacity:0;
+      pointer-events:none;
+      transition:.32s ease;
+      z-index:99999;
+      white-space:nowrap;
+    }
+
+    #copiedGlow{
+      bottom:20px;
+      background:#00f2ff;
+      color:#000;
+      box-shadow:0 0 25px rgba(0,242,255,.8);
+    }
+
+    #navHint{
+      top:20px;
+      background:rgba(10,14,22,.92);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 0 20px rgba(0,0,0,.35);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+    }
+
+    #copiedGlow.show,
+    #navHint.show{
+      opacity:1;
+      transform:translateX(-50%) scale(1);
+    }
+
     @media (min-width: 769px){
       .music-dock{display:block}
       .music-fab,.music-panel{display:none}
+    }
+
+    @media (max-width:768px){
+      .music-fab{display:flex}
     }
 
     @media (max-width:480px){
@@ -543,40 +789,14 @@
         border-radius:12px;
         background:rgba(255,255,255,.03);
       }
+      .epic-box{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .copy-btn{
+        width:100%;
+      }
     }
-    /* شكل الشريط */
-#seekBar{
-  width:100%;
-  margin-top:10px;
-  appearance:none;
-  height:5px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  outline:none;
-}
-#seekBar::-webkit-slider-thumb{
-  appearance:none;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:#fff;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(255,255,255,.35);
-}
-#seekBar::-moz-range-thumb{
-  width:14px;
-  height:14px;
-  border:none;
-  border-radius:50%;
-  background:#fff;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(255,255,255,.35);
-}
-    .sc:hover{
-  background:#FFFC00;
-  color:#000;
-  box-shadow:0 0 16px rgba(255,252,0,.45);
-}
   </style>
 </head>
 <body>
@@ -591,12 +811,13 @@
 
   <div class="cursor" id="cursor"></div>
 
-  <!-- Desktop Music Dock -->
   <section class="music-dock" aria-label="مشغل الأغاني">
     <div class="music-top">
-    <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
+      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
       <div class="music-meta">
+        <div class="label">Now Playing</div>
         <div class="title">درب المهالك</div>
+        <div class="artist">ملف محلي داخل المشروع</div>
       </div>
     </div>
 
@@ -615,19 +836,15 @@
     </div>
 
     <div class="progress"><span id="progressDesktop"></span></div>
-    
-    <!-- داخل المشغل، تحت الأزرار مباشرة -->
-<input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
+    <input class="seek-bar" id="seekBarDesktop" type="range" min="0" max="100" value="0" step="0.1" />
 
     <audio id="audio" preload="metadata" src="./درب المهالك.mp3"></audio>
   </section>
 
-  <!-- Mobile Music Button -->
   <button class="music-fab" id="musicFab" type="button" aria-label="فتح مشغل الأغاني">
     <i class="fa-solid fa-music"></i>
   </button>
 
-  <!-- Mobile Music Panel -->
   <section class="music-panel" id="musicPanel" aria-label="مشغل الأغاني على الجوال">
     <button class="panel-close" id="closePanel" type="button" aria-label="إغلاق المشغل">
       <i class="fa-solid fa-xmark"></i>
@@ -636,8 +853,9 @@
     <div class="panel-top">
       <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
       <div class="music-meta">
+        <div class="label">Now Playing</div>
         <div class="title">درب المهالك</div>
-        <div class="artist"></div>
+        <div class="artist">ملف محلي داخل المشروع</div>
       </div>
     </div>
 
@@ -656,8 +874,7 @@
     </div>
 
     <div class="panel-progress"><span id="progressMobile"></span></div>
-    <!-- داخل المشغل، تحت الأزرار مباشرة -->
-<input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
+    <input class="seek-bar" id="seekBarMobile" type="range" min="0" max="100" value="0" step="0.1" />
   </section>
 
   <main class="card" id="card">
@@ -672,14 +889,42 @@
 
     <div class="section-title">روابط التواصل</div>
     <div class="links">
-      <a class="btn fb" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank"><i class="fab fa-facebook-f"></i> فيسبوك</a>
-      <a class="btn wa" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank"><i class="fab fa-whatsapp"></i> واتساب</a>
-      <a class="btn ig" href="https://www.instagram.com/omar.a.z3?igsh=YTV6YXM2eGd1YWZu" target="_blank"><i class="fab fa-instagram"></i> انستجرام</a>
-      <a class="btn tk" href="https://www.tiktok.com/@gdmi_33?_r=1&_t=ZS-94xfVAUl1Az" target="_blank"><i class="fab fa-tiktok"></i> تيك توك</a>
-      <a class="btn ds" href="https://discord.gg/pxgwBCdD" target="_blank"><i class="fab fa-discord"></i> ديسكورد</a>
-      <a class="btn sc" href="https://www.snapchat.com/add/omar-gdmi?share_id=KIu9UxOnRt8&locale=ar-EG" target="_blank">
-  <i class="fab fa-snapchat-ghost"></i> سناب شات
-</a>
+      <a class="btn fb" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i> فيسبوك</a>
+      <a class="btn wa" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> واتساب</a>
+      <a class="btn ig" href="https://www.instagram.com/omar.a.z3?igsh=YTV6YXM2eGd1YWZu" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> انستجرام</a>
+      <a class="btn tk" href="https://www.tiktok.com/@gdmi_33?_r=1&_t=ZS-94xfVAUl1Az" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i> تيك توك</a>
+      <a class="btn ds" href="https://discord.gg/pxgwBCdD" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> ديسكورد</a>
+      <a class="btn sc" href="https://www.snapchat.com/add/omar-gdmi?share_id=KIu9UxOnRt8&locale=ar-EG" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-snapchat-ghost"></i> سناب شات
+      </a>
+      <a class="btn st" href="https://steamcommunity.com/profiles/76561199547179169/" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-steam"></i> ستيم
+      </a>
+      <a class="btn sp" href="https://open.spotify.com/user/31zq4egkwu5qt6armgjuvey2tgga?si=20c234fc4ee44a54" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-spotify"></i> سبوتيفاي
+      </a>
+      <a class="btn gh" href="https://github.com/Omar-i9" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-github"></i> جيت هاب
+      </a>
+      <a class="btn tw" href="https://www.twitch.tv/gdmi3" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-twitch"></i> تويتش
+      </a>
+    </div>
+
+    <div class="epic-box">
+      <div class="epic-text">
+        <i class="fa-solid fa-gamepad"></i>
+        <span>Epic Games: Omar-G4</span>
+      </div>
+      <button class="copy-btn" type="button" onclick="copyText('Omar-G4')">نسخ الاسم</button>
+    </div>
+
+    <div class="epic-box">
+      <div class="epic-text">
+        <i class="fa-brands fa-steam"></i>
+        <span>Steam Friend Code: 1586913441</span>
+      </div>
+      <button class="copy-btn" type="button" onclick="copyText('1586913441')">نسخ الكود</button>
     </div>
 
     <div class="section-title">معلومات سريعة</div>
@@ -696,7 +941,7 @@
 
     <div class="work">
       <p>آخر أعمالي حالياً</p>
-      <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank">
+      <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer">
         <div class="work-logo">
           <img src="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" alt="تأمين">
         </div>
@@ -710,6 +955,9 @@
     <div class="footer">الفولو <em>ما بكهربك</em>.. صدقني!</div>
   </main>
 
+  <button id="copiedGlow" type="button" aria-live="polite">✓ تم النسخ</button>
+  <div id="navHint" aria-live="polite">جاري الفتح...</div>
+
   <script>
     const card = document.getElementById('card');
     const cursor = document.getElementById('cursor');
@@ -722,10 +970,15 @@
     const playIconMobile = document.getElementById('playIconMobile');
     const progressDesktop = document.getElementById('progressDesktop');
     const progressMobile = document.getElementById('progressMobile');
+    const seekBarDesktop = document.getElementById('seekBarDesktop');
+    const seekBarMobile = document.getElementById('seekBarMobile');
 
     const musicFab = document.getElementById('musicFab');
     const musicPanel = document.getElementById('musicPanel');
     const closePanel = document.getElementById('closePanel');
+
+    const copiedGlow = document.getElementById('copiedGlow');
+    const navHint = document.getElementById('navHint');
 
     const text = "دامك دخلت، كمل معروفك وشوف الباقي!";
     let i = 0;
@@ -758,16 +1011,29 @@
 
     audio.addEventListener('play', () => setPlayIcons(true));
     audio.addEventListener('pause', () => setPlayIcons(false));
+    audio.addEventListener('ended', () => setPlayIcons(false));
 
-    audio.addEventListener('timeupdate', () => {
+    function updateSeekUI() {
       const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
       progressDesktop.style.width = pct + '%';
       progressMobile.style.width = pct + '%';
-    });
+      if (document.activeElement !== seekBarDesktop) seekBarDesktop.value = pct;
+      if (document.activeElement !== seekBarMobile) seekBarMobile.value = pct;
+    }
+
+    audio.addEventListener('timeupdate', updateSeekUI);
 
     audio.addEventListener('loadedmetadata', () => {
-      progressDesktop.style.width = '0%';
-      progressMobile.style.width = '0%';
+      updateSeekUI();
+    });
+
+    [seekBarDesktop, seekBarMobile].forEach(bar => {
+      bar.addEventListener('input', () => {
+        if (audio.duration) {
+          const newTime = (bar.value / 100) * audio.duration;
+          audio.currentTime = newTime;
+        }
+      });
     });
 
     musicFab.addEventListener('click', () => {
@@ -788,22 +1054,92 @@
       }
     });
 
+    function showCopied(message = '✓ تم النسخ') {
+      copiedGlow.textContent = message;
+      copiedGlow.classList.add('show');
+      setTimeout(() => copiedGlow.classList.remove('show'), 1400);
+    }
+
+    async function copyText(value) {
+      try {
+        await navigator.clipboard.writeText(value);
+        showCopied('✓ تم النسخ');
+      } catch {
+        const temp = document.createElement('textarea');
+        temp.value = value;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        temp.remove();
+        showCopied('✓ تم النسخ');
+      }
+    }
+
+    function showNavHint(message = 'جاري الفتح...') {
+      navHint.textContent = message;
+      navHint.classList.add('show');
+      setTimeout(() => navHint.classList.remove('show'), 220);
+    }
+
+    function confettiBurst(x, y) {
+      for (let i = 0; i < 18; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = x + 'px';
+        c.style.top = y + 'px';
+        c.style.background = `hsl(${Math.random() * 360}, 90%, 60%)`;
+        c.style.setProperty('--x', (Math.random() * 140 - 70) + 'px');
+        c.style.setProperty('--y', (Math.random() * 140 - 70) + 'px');
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 700);
+      }
+    }
+
+    document.querySelectorAll('a.btn, a.work-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        e.preventDefault();
+
+        const x = e.clientX || (window.innerWidth / 2);
+        const y = e.clientY || (window.innerHeight / 2);
+
+        confettiBurst(x, y);
+        showNavHint('جاري الفتح...');
+
+        setTimeout(() => {
+          const target = link.getAttribute('target');
+          if (target === '_blank') {
+            window.open(href, '_blank', 'noopener,noreferrer');
+          } else {
+            window.location.href = href;
+          }
+        }, 300);
+      });
+    });
+
     document.addEventListener('click', (e) => {
-      const r = document.createElement("div");
-      r.className = "ripple";
-      r.style.left = e.clientX + "px";
-      r.style.top = e.clientY + "px";
-      r.style.width = r.style.height = "18px";
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      r.style.width = r.style.height = '18px';
       document.body.appendChild(r);
       setTimeout(() => r.remove(), 600);
     });
 
-    if (window.innerWidth > 768) {
+    const isDesktop = window.innerWidth > 768;
+
+    if (isDesktop) {
       cursor.style.display = 'block';
 
       document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
+
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
 
         const x = (window.innerWidth / 2 - e.clientX) / 75;
         const y = (window.innerHeight / 2 - e.clientY) / 75;
@@ -813,22 +1149,10 @@
       document.addEventListener('mouseleave', () => {
         card.style.transform = 'rotateY(0deg) rotateX(0deg)';
       });
+    } else {
+      document.documentElement.style.setProperty('--mx', '50vw');
+      document.documentElement.style.setProperty('--my', '20vh');
     }
-    const seekBar = document.getElementById('seekBar');
-
-audio.addEventListener('timeupdate', () => {
-  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-  seekBar.value = pct;
-  progressDesktop.style.width = pct + '%';
-  progressMobile.style.width = pct + '%';
-});
-
-seekBar.addEventListener('input', () => {
-  if (audio.duration) {
-    const newTime = (seekBar.value / 100) * audio.duration;
-    audio.currentTime = newTime;
-  }
-});
   </script>
 </body>
 </html>
