@@ -801,6 +801,99 @@ align-self: center;
         width:100%; 
       } 
     } 
+    
+    /* زر الإنستا البرايفت الجديد */
+.private-ig {
+  position: relative;
+  /* ضروري يكون visible عشان الـ badge تطلع برا براحتها */
+  overflow: visible !important; 
+  background: rgba(20, 20, 30, 0.7) !important; 
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  justify-content: flex-start !important; /* عشان نثبت الصورة عاليمين */
+  padding: 12px 18px !important;
+}
+
+.private-ig:hover {
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.4); 
+}
+
+/* كلمة برايفت اللي طالعة برا الإطار */
+.privet-badge {
+  position: absolute;
+  top: -15px; /* رفعناها لبرا */
+  left: -12px; /* شحطناها عالشمال برا */
+  background: rgba(129, 140, 248, 0.95); 
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(129, 140, 248, 0.6);
+  animation: floatBadge 2s infinite alternate ease-in-out;
+  z-index: 10;
+}
+
+@keyframes floatBadge {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5px); }
+}
+
+/* حاوية الفقاقيع عشان نتحكم فيها جوا الزر بس وما تطلع تفضحنا برا */
+.bubble-container {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px; /* نفس لفة الزر الأصلي */
+  overflow: hidden; /* عشان الفقاقيع تختفي بس توصل الحفة */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* فقاقيع 3D متعوب عليها */
+.bubble {
+  position: absolute;
+  bottom: -25px;
+  /* تدرج لوني دائري بعطي إيحاء الـ 3D واللمعة */
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), rgba(0, 242, 255, 0.4) 60%, rgba(12, 15, 20, 0.1));
+  box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  animation: flyUp 4s infinite linear;
+  transition: opacity 0.5s ease;
+}
+
+/* التوقف المتدرج لما تيجي الماوس */
+.private-ig:hover .bubble {
+  animation-play-state: paused;
+  opacity: 0.15; 
+}
+
+/* أحجام وسرعات الفقاقيع */
+.bubble:nth-child(1) { width: 14px; height: 14px; left: 15%; animation-duration: 3.2s; }
+.bubble:nth-child(2) { width: 22px; height: 22px; left: 45%; animation-duration: 5.5s; animation-delay: 1.2s; }
+.bubble:nth-child(3) { width: 12px; height: 12px; left: 75%; animation-duration: 3.8s; animation-delay: 2.1s; }
+.bubble:nth-child(4) { width: 18px; height: 18px; left: 88%; animation-duration: 4.7s; animation-delay: 0.4s; }
+
+@keyframes flyUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
+}
+
+/* صورتك عاليمين */
+.prof-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  z-index: 3;
+  margin-left: 12px; /* عشان تبعد عن النص شوي */
+}
+
+/* النص */
+.private-txt {
+  z-index: 3;
+  font-weight: 800;
+  font-size: 15px;
+}
   </style> 
 </head> 
 <body> 
@@ -905,6 +998,22 @@ align-self: center;
         <i class="fab fa-steam"></i> ستيم 
       </a> 
       </a> 
+      <a class="btn private-ig" href="https://www.instagram.com/omar.a.z3" target="_blank" rel="noopener noreferrer">
+  <!-- التاج المضيء الطاير برا الزر -->
+  <div class="privet-badge">Private</div>
+  
+  <!-- حاوية الفقاقيع المحجوزة جوا -->
+  <div class="bubble-container">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <!-- المحتوى: الصورة عاليمين المزبوط لأنها أول عنصر، وبعدها النص -->
+  <img src="my-face2.jpg" alt="صورة الحساب الخاص" class="prof-img">
+  <span class="private-txt">انستا خاص</span>
+</a>
     </div> 
  
     <div class="epic-box"> 
