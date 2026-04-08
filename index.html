@@ -1,1266 +1,1812 @@
-<!DOCTYPE html> 
-<html lang="ar" dir="rtl"> 
-<head> 
-  <meta charset="UTF-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-  <meta name="theme-color" content="#0d1117" /> 
-  <title>Omar Profiles</title> 
- 
-  <link rel="icon" href="https://omar-i9.github.io/my-profiles/profile.jpeg" type="image/jpeg" /> 
-  <link rel="apple-touch-icon" href="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" /> 
- 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
- 
-  <style> 
-    :root{ 
-      --bg:#0d1117; 
-      --card:rgba(19,24,34,.84); 
-      --line:rgba(255,255,255,.08); 
-      --text:#e6edf3; 
-      --muted:#aab6c5; 
-      --accent:#00f2ff; 
-      --accent2:#818cf8; 
-      --fb:#1877F2; 
-      --wa:#25D366; 
-      --ig:#E1306C; 
-      --ds:#5865F2; 
-      --tk:#111; 
-      --player-bg:rgba(18,23,33,.94); 
-    } 
- 
-    *{box-sizing:border-box;margin:0;padding:0} 
-    html{scroll-behavior:smooth} 
-    body{ 
-      position:relative; 
-      min-height:100vh; 
-      font-family:'Cairo',sans-serif; 
-      background: 
-        radial-gradient(circle at 15% 15%, rgba(0,242,255,.13), transparent 22%), 
-        radial-gradient(circle at 85% 85%, rgba(129,140,248,.14), transparent 25%), 
-        var(--bg); 
-      color:var(--text); 
-      overflow-x:hidden; 
-      overflow-y:auto; 
-  padding: 95px 16px 60px;
-      display:flex; 
-  align-items: flex-start;
-}      justify-content:center; 
-    } 
- 
-    body::before{ 
-      content:""; 
-      position:fixed; 
-      inset:-10%; 
-      pointer-events:none; 
-      z-index:-2; 
-      background: 
-        radial-gradient(circle at var(--mx, 50vw) var(--my, 25vh), rgba(0,242,255,.10), transparent 22%), 
-        radial-gradient(circle at calc(100% - var(--mx, 50vw)) calc(100% - var(--my, 25vh)), rgba(129,140,248,.12), transparent 24%); 
-      transition:background-position .08s linear; 
-    } 
- 
-    .bg { 
-      position:fixed; 
-      inset:0; 
-      pointer-events:none; 
-      z-index:-1; 
-      overflow:hidden; 
-    } 
-    .orb{ 
-      position:absolute; 
-      border-radius:50%; 
-      filter:blur(80px); 
-      opacity:.12; 
-      animation: drift 18s ease-in-out infinite alternate; 
-    } 
-    .orb.one{width:330px;height:330px;top:8%;left:6%;background:var(--accent)} 
-    .orb.two{width:280px;height:280px;right:4%;bottom:8%;background:var(--accent2);animation-duration:22s} 
-    .orb.three{width:180px;height:180px;top:55%;left:55%;background:#22c55e;opacity:.05;animation-duration:26s} 
- 
-    @keyframes drift{ 
-      from{transform:translate(-10px,-10px) scale(1)} 
-      to{transform:translate(10px,10px) scale(1.08)} 
-    } 
- 
-    .cursor{ 
-      position:fixed; 
-      width:16px;height:16px;border-radius:50%; 
-      background:rgba(0,242,255,.85); 
-      transform:translate(-50%,-50%); 
-      box-shadow:0 0 20px rgba(0,242,255,.55); 
-      pointer-events:none; 
-      z-index:9999; 
-      display:none; 
-      mix-blend-mode:screen; 
-    } 
- 
-    .loader{ 
-      position:fixed; 
-      inset:0; 
-      background:#000; 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      z-index:99999; 
-      color:#fff; 
-      font-size:18px; 
-      letter-spacing:2px; 
-      animation: loaderFade .45s ease .85s forwards; 
-    } 
-    @keyframes loaderFade{ 
-      to{opacity:0;visibility:hidden} 
-    } 
- 
-    .music-dock{ 
-      position:fixed; 
-      top:16px; 
-      left:16px; 
-      width:320px; 
-      z-index:2000; 
-      background:var(--player-bg); 
-      border:1px solid rgba(255,255,255,.08); 
-      border-radius:22px; 
-      box-shadow:0 18px 40px rgba(0,0,0,.45); 
-      backdrop-filter:blur(14px); 
-      -webkit-backdrop-filter:blur(14px); 
-      padding:12px; 
-      display:none; 
-      overflow:hidden; 
-    } 
- 
-    .music-dock::before, 
-    .music-panel::before, 
-    .card::before{ 
-      content:""; 
-      position:absolute; 
-      inset:0; 
-      pointer-events:none; 
-    } 
- 
-    .music-dock::before, 
-    .music-panel::before{ 
-      background:linear-gradient(120deg, transparent 0%, rgba(0,242,255,.08) 35%, rgba(255,255,255,.06) 50%, rgba(129,140,248,.08) 65%, transparent 100%); 
-      mix-blend-mode:screen; 
-      opacity:.8; 
-      animation:holoSweep 6s linear infinite; 
-    } 
- 
-    @keyframes holoSweep{ 
-      from{transform:translateX(-20%)} 
-      to{transform:translateX(20%)} 
-    } 
- 
-    .music-top{ 
-      display:flex; 
-      gap:12px; 
-      align-items:center; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .music-cover{ 
-      width:62px; 
-      height:62px; 
-      border-radius:16px; 
-      object-fit:cover; 
-      flex:0 0 auto; 
-      background:#111; 
-      border:1px solid rgba(255,255,255,.08); 
-      box-shadow:0 8px 20px rgba(0,0,0,.35); 
-    } 
- 
-    .music-meta{ 
-      flex:1; 
-      min-width:0; 
-      text-align:right; 
-    } 
- 
-    .music-meta .label{ 
-      font-size:11px; 
-      color:#93a4b5; 
-      margin-bottom:2px; 
-    } 
- 
-    .music-meta .title{ 
-      font-size:15px; 
-      font-weight:800; 
-      line-height:1.25; 
-      margin-bottom:2px; 
-      white-space:nowrap; 
-      overflow:hidden; 
-      text-overflow:ellipsis; 
-    } 
- 
-    .music-meta .artist{ 
-      font-size:12px; 
-      color:var(--muted); 
-      white-space:nowrap; 
-      overflow:hidden; 
-      text-overflow:ellipsis; 
-    } 
- 
-    .music-controls{ 
-      margin-top:10px; 
-      display:flex; 
-      align-items:center; 
-      justify-content:space-between; 
-      gap:8px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .fake-btn{ 
-      width:34px; 
-      height:34px; 
-      border-radius:50%; 
-      border:1px solid rgba(255,255,255,.08); 
-      background:rgba(255,255,255,.05); 
-      color:#fff; 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      opacity:.45; 
-      pointer-events:none; 
-    } 
- 
-    .play-btn{ 
-      width:42px; 
-      height:42px; 
-      border-radius:50%; 
-      border:none; 
-      background:#fff; 
-      color:#000; 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      font-size:16px; 
-      cursor:pointer; 
-      box-shadow:0 10px 20px rgba(0,0,0,.28); 
-      transition:transform .2s ease; 
-    } 
-    .play-btn:hover{transform:scale(1.04)} 
- 
-    .progress, 
-    .panel-progress{ 
-      margin-top:10px; 
-      width:100%; 
-      height:4px; 
-      border-radius:999px; 
-      background:rgba(255,255,255,.08); 
-      overflow:hidden; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .progress span, 
-    .panel-progress span{ 
-      display:block; 
-      width:0%; 
-      height:100%; 
-      border-radius:999px; 
-      background:linear-gradient(90deg, var(--accent), var(--accent2)); 
-    } 
- 
-    .seek-bar{ 
-      width:100%; 
-      margin-top:10px; 
-      appearance:none; 
-      height:5px; 
-      border-radius:999px; 
-      background:rgba(255,255,255,.08); 
-      outline:none; 
-      position:relative; 
-      z-index:1; 
-    } 
-    .seek-bar::-webkit-slider-thumb{ 
-      appearance:none; 
-      width:14px; 
-      height:14px; 
-      border-radius:50%; 
-      background:#fff; 
-      cursor:pointer; 
-      box-shadow:0 0 10px rgba(255,255,255,.35); 
-    } 
-    .seek-bar::-moz-range-thumb{ 
-      width:14px; 
-      height:14px; 
-      border:none; 
-      border-radius:50%; 
-      background:#fff; 
-      cursor:pointer; 
-      box-shadow:0 0 10px rgba(255,255,255,.35); 
-    } 
- 
-    .music-fab{ 
-      position:fixed; 
-      top:12px; 
-      left:12px; 
-      z-index:2200; 
-      width:42px; 
-      height:42px; 
-      border-radius:50%; 
-      border:1px solid rgba(255,255,255,.08); 
-      background:rgba(18,23,33,.92); 
-      color:#fff; 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      box-shadow:0 12px 28px rgba(0,0,0,.45); 
-      backdrop-filter:blur(12px); 
-      -webkit-backdrop-filter:blur(12px); 
-    } 
- 
-    .music-panel{ 
-      position:fixed; 
-      top:62px; 
-      left:12px; 
-      z-index:2200; 
-      width:min(340px, calc(100vw - 24px)); 
-      background:var(--player-bg); 
-      border:1px solid rgba(255,255,255,.08); 
-      border-radius:22px; 
-      box-shadow:0 18px 40px rgba(0,0,0,.45); 
-      backdrop-filter:blur(14px); 
-      -webkit-backdrop-filter:blur(14px); 
-      padding:12px; 
-      transform:translateY(-8px) scale(.98); 
-      opacity:0; 
-      visibility:hidden; 
-      pointer-events:none; 
-      transition:.22s ease; 
-      overflow:hidden; 
-    } 
- 
-    .music-panel.open{ 
-      transform:translateY(0) scale(1); 
-      opacity:1; 
-      visibility:visible; 
-      pointer-events:auto; 
-    } 
- 
-    .panel-close{ 
-      position:absolute; 
-      top:10px; 
-      right:10px; 
-      width:30px; 
-      height:30px; 
-      border-radius:50%; 
-      border:none; 
-      background:rgba(255,255,255,.06); 
-      color:#fff; 
-      cursor:pointer; 
-      z-index:2; 
-    } 
- 
-    .panel-top{ 
-      display:flex; 
-      gap:12px; 
-      align-items:center; 
-      padding-top:8px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .panel-controls{ 
-      margin-top:10px; 
-      display:flex; 
-      align-items:center; 
-      justify-content:space-between; 
-      gap:8px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-.card{
-  width: 100%;
-  max-width: 700px;
-  padding: 110px 55px 50px;
-  border-radius: 34px;
-  background: linear-gradient(180deg, rgba(28,34,47,.9), rgba(17,21,30,.9));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 30px 70px rgba(0,0,0,.6);
-  position: relative;
-  text-align: center;
-  transform-style: preserve-3d;
-  animation: pop .8s ease both;
-  transition: transform .15s ease-out;
-  overflow: visible;
-  margin: 0 auto;
-align-self: center;
-}
-    
-    .card::before{ 
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(0,242,255,.12), transparent 18%), 
-        radial-gradient(circle at 80% 80%, rgba(129,140,248,.12), transparent 18%), 
-        linear-gradient(120deg, transparent 0%, rgba(255,255,255,.05) 50%, transparent 100%); 
-      mix-blend-mode:screen; 
-      opacity:.85; 
-      animation:holoPulse 5s ease-in-out infinite alternate; 
-    } 
- 
-    .card::after{ 
-      content:""; 
-      position:absolute; 
-      inset:0; 
-      pointer-events:none; 
-      background:repeating-linear-gradient( 
-        to bottom, 
-        rgba(255,255,255,.05) 0px, 
-        rgba(255,255,255,.05) 1px, 
-        transparent 1px, 
-        transparent 8px 
-      ); 
-      opacity:.08; 
-      animation:holoScan 7s linear infinite; 
-    } 
- 
-    @keyframes holoPulse{ 
-      from{transform:translateY(-3px)} 
-      to{transform:translateY(3px)} 
-    } 
- 
-    @keyframes holoScan{ 
-      from{transform:translateY(-10px)} 
-      to{transform:translateY(10px)} 
-    } 
- 
-    @keyframes pop{ 
-      from{opacity:0; transform:translateY(20px) scale(.97)} 
-      to{opacity:1; transform:translateY(0) scale(1)} 
-    } 
- 
-    .avatar{ 
-      position:absolute; 
-      top:-75px; 
-      left:50%; 
-      transform:translateX(-50%); 
-      width:150px; 
-      height:150px; 
-      z-index:2; 
-    } 
-    .avatar img{ 
-      width:100%; 
-      height:100%; 
-      border-radius:50%; 
-      object-fit:cover; 
-      border:6px solid var(--bg); 
-      box-shadow:0 12px 28px rgba(0,0,0,.55); 
-      background:#fff; 
-    } 
- 
-    .pill{ 
-      display:inline-flex; 
-      align-items:center; 
-      gap:8px; 
-      padding:7px 14px; 
-      border-radius:999px; 
-      background:rgba(0,242,255,.09); 
-      border:1px solid rgba(0,242,255,.18); 
-      color:#bafcff; 
-      font-size:13px; 
-      margin-bottom:12px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    h1{ 
-      font-size:30px; 
-      line-height:1.35; 
-      margin-bottom:10px; 
-      font-weight:900; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .typing{ 
-      min-height:28px; 
-      font-size:17px; 
-      color:var(--muted); 
-      margin-bottom:16px; 
-      position:relative; 
-      line-height: 1.8;
-      z-index:1; 
-    } 
- 
-    .sub{ 
-      display:inline-block; 
-      font-size:13px; 
-      color:#93a4b5; 
-      background:rgba(255,255,255,.04); 
-      border:1px solid rgba(255,255,255,.06); 
-      border-radius:12px; 
-      padding:10px 14px; 
-      margin-bottom:18px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .section-title{ 
-      text-align:right; 
-      font-size:13px; 
-      font-weight:700; 
-      color:#bfcbda; 
-      margin:16px 2px 10px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .links{ 
-      display:grid; 
-      gap:10px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .links:hover .btn{ 
-      transform:scale(.92); 
-      opacity:.72; 
-      filter:blur(.5px); 
-    } 
- 
-    .links .btn:hover{ 
-      transform:scale(1.12); 
-      opacity:1; 
-      filter:none; 
-      z-index:2; 
-    } 
- 
-    .btn{ 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      gap:10px; 
-  padding: 16px 18px;
-  border-radius: 18px;
-      text-decoration:none; 
-      color:#fff; 
-      font-weight:700; 
-      background:rgba(255,255,255,.05); 
-      border:1px solid rgba(255,255,255,.06); 
-      transition:.25s ease; 
-      will-change:transform; 
-      position:relative; 
-    } 
-.btn i{ font-size: 20px; }
-    
-    .fb:hover{background:var(--fb); box-shadow:0 0 16px rgba(24,119,242,.45)} 
-    .wa:hover{background:var(--wa); box-shadow:0 0 16px rgba(37,211,102,.45)} 
-    .ig:hover{background:var(--ig); box-shadow:0 0 16px rgba(225,48,108,.45)} 
-    .tk:hover{background:#000; box-shadow:0 0 16px rgba(255,255,255,.12)} 
-    .ds:hover{background:var(--ds); box-shadow:0 0 16px rgba(88,101,242,.45)} 
-    .sc:hover{background:#FFFC00; color:#000; box-shadow:0 0 16px rgba(255,252,0,.45)} 
-    .st:hover{background:#1b2838; box-shadow:0 0 16px rgba(27,40,56,.55)} 
-    .sp:hover{background:#1db954; box-shadow:0 0 16px rgba(29,185,84,.45)} 
-    .gh:hover{background:#24292e; box-shadow:0 0 16px rgba(36,41,46,.55)} 
-    .tw:hover{background:#9146ff; box-shadow:0 0 16px rgba(145,70,255,.45)} 
- 
-    .info{ 
-      display:grid; 
-      grid-template-columns:repeat(3,1fr); 
-      gap:8px; 
-      margin-top:8px; 
-      padding:14px 0; 
-      border-top:1px solid var(--line); 
-      border-bottom:1px solid var(--line); 
-      position:relative; 
-      z-index:1; 
-    } 
-    .info-box{ 
-      display:flex; 
-      flex-direction:column; 
-      align-items:center; 
-      gap:3px; 
-      font-size:11px; 
-      color:#9ca9b8; 
-    } 
-    .info-box span{ 
-      color:var(--accent); 
-      font-size:12px; 
-      font-weight:800; 
-    } 
- 
-    .chips{ 
-      display:flex; 
-      flex-wrap:wrap; 
-      gap:8px; 
-      justify-content:center; 
-      margin-top:12px; 
-      position:relative; 
-      z-index:1; 
-    } 
-    .chip{ 
-      padding:8px 12px; 
-      border-radius:999px; 
-      font-size:12px; 
-      color:#d6deea; 
-      background:rgba(255,255,255,.05); 
-      border:1px solid rgba(255,255,255,.07); 
-    } 
- 
-    .epic-box{ 
-      display:flex; 
-      align-items:center; 
-      justify-content:space-between; 
-      gap:10px; 
-      padding:12px 14px; 
-      border-radius:15px; 
-      background:rgba(255,255,255,.05); 
-      border:1px solid rgba(255,255,255,.06); 
-      margin-top:10px; 
-      position:relative; 
-      z-index:1; 
-    } 
- 
-    .epic-text{ 
-      display:flex; 
-      align-items:center; 
-      gap:10px; 
-      font-size:13px; 
-      color:#fff; 
-      text-align:right; 
-      min-width:0; 
-    } 
- 
-    .copy-btn{ 
-      border:none; 
-      background:rgba(255,255,255,.08); 
-      color:#fff; 
-      padding:8px 12px; 
-      border-radius:12px; 
-      cursor:pointer; 
-      font-family:inherit; 
-      font-size:12px; 
-      white-space:nowrap; 
-    } 
-    .copy-btn:hover{ 
-      background:rgba(255,255,255,.14); 
-    } 
- 
-    .work{ 
-      margin-top:18px; 
-      padding-top:16px; 
-      border-top:1px solid var(--line); 
-      text-align:right; 
-      position:relative; 
-      z-index:1; 
-    } 
-    .work p{ 
-      font-size:14px; 
-      color:#cbd5e1; 
-      margin-bottom:14px; 
-    } 
-    .work-link{ 
-      display:flex; 
-      gap:12px; 
-      align-items:center; 
-      text-decoration:none; 
-      color:#fff; 
-    } 
-    .work-logo{ 
-      width:72px; 
-      height:72px; 
-      border-radius:50%; 
-      overflow:hidden; 
-      flex:0 0 auto; 
-      background:#fff; 
-      box-shadow:0 0 20px rgba(255,255,255,.18); 
-      transition:transform .25s ease, box-shadow .25s ease; 
-    } 
-    .work-logo:hover{ 
-      transform:scale(1.08) rotate(-3deg); 
-      box-shadow:0 0 28px rgba(255,255,255,.28); 
-    } 
-    .work-logo img{ 
-      width:100%; 
-      height:100%; 
-      object-fit:cover; 
-    } 
-    .work-txt strong{ 
-      display:block; 
-      font-size:14px; 
-      margin-bottom:3px; 
-    } 
-    .work-txt span{ 
-      font-size:12px; 
-      color:#9eaabc; 
-    } 
- 
-    .footer{ 
-      margin-top:16px; 
-      font-size:12px; 
-      color:rgba(230,237,243,.62); 
-      position:relative; 
-      z-index:1; 
-    } 
-    .footer em{font-style:normal;color:#b8f7ff} 
- 
-    .ripple{ 
-      position:fixed; 
-      border-radius:50%; 
-      background:rgba(0,242,255,.32); 
-      transform:scale(0); 
-      animation:ripple .6s linear; 
-      pointer-events:none; 
-      z-index:9998; 
-    } 
- 
-    @keyframes ripple{ 
-      to{ 
-        transform:scale(4); 
-        opacity:0; 
-      } 
-    } 
- 
-    .confetti{ 
-      position:fixed; 
-      width:6px; 
-      height:10px; 
-      pointer-events:none; 
-      z-index:9999; 
-      animation:explode .7s ease-out forwards; 
-    } 
- 
-    @keyframes explode{ 
-      from{opacity:1; transform:translate(0,0) rotate(0)} 
-      to{ 
-        opacity:0; 
-        transform:translate(var(--x),var(--y)) rotate(720deg) scale(.4); 
-      } 
-    } 
- 
-    #copiedGlow, 
-    #navHint{ 
-      position:fixed; 
-      left:50%; 
-      transform:translateX(-50%) scale(.7); 
-      padding:12px 20px; 
-      border:none; 
-      border-radius:999px; 
-      font-weight:800; 
-      opacity:0; 
-      pointer-events:none; 
-      transition:.32s ease; 
-      z-index:99999; 
-      white-space:nowrap; 
-    } 
- 
-    #copiedGlow{ 
-      bottom:20px; 
-      background:#00f2ff; 
-      color:#000; 
-      box-shadow:0 0 25px rgba(0,242,255,.8); 
-    } 
- 
-    #navHint{ 
-      top:20px; 
-      background:rgba(10,14,22,.92); 
-      color:#fff; 
-      border:1px solid rgba(255,255,255,.08); 
-      box-shadow:0 0 20px rgba(0,0,0,.35); 
-      backdrop-filter:blur(12px); 
-      -webkit-backdrop-filter:blur(12px); 
-    } 
- 
-    #copiedGlow.show, 
-    #navHint.show{ 
-      opacity:1; 
-      transform:translateX(-50%) scale(1); 
-    } 
- 
-    @media (min-width: 769px){ 
-      .music-dock{display:block} 
-      .music-fab,.music-panel{display:none} 
-    } 
- 
-    @media (max-width:768px){ 
-      .music-fab{display:flex} 
-    } 
- 
-    @media (max-width:480px){ 
-      body{padding:90px 14px 36px} 
-      .card{padding:84px 16px 22px;border-radius:28px} 
-      h1{font-size:22px} 
-      .info{grid-template-columns:1fr;gap:10px} 
-      .info-box{ 
-        flex-direction:row; 
-        justify-content:space-between; 
-        width:100%; 
-        padding:10px 12px; 
-        border-radius:12px; 
-        background:rgba(255,255,255,.03); 
-      } 
-      .epic-box{ 
-        flex-direction:column; 
-        align-items:stretch; 
-      } 
-      .copy-btn{ 
-        width:100%; 
-      } 
-    } 
-    
-/* الزر المعدل: توزيع العناصر */
-.private-ig {
-  position: relative;
-  overflow: visible !important; 
-  background: rgba(20, 20, 30, 0.7) !important; 
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  display: flex !important;
-  justify-content: center; /* سنترة المحتوى بالمنتصف */
-  align-items: center;
-  padding: 12px 18px !important;
-  min-height: 55px;
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- SEO & Social Sharing -->
+  <meta property="og:title" content="Omar Profiles | عمر">
+  <meta property="og:description" content="كل حساباتي في مكان واحد.. حياكم الله!">
+  <meta property="og:image" content="https://omar-i9.github.io/my-profiles/profile.jpeg">
+  <meta property="og:url" content="https://omar-i9.github.io/my-profiles/">
+  <meta name="twitter:card" content="summary_large_image">
 
-/* صورة الوجه: مثبتة عاليمين عشان ما تخرب السنترة */
-.prof-img {
-  position: absolute;
-  right: 12px; /* لازقة عاليمين */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  z-index: 3;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f16" />
+  <meta name="color-scheme" content="dark" />
+  <title>Omar Profiles</title>
 
-/* حاوية النص والشعار بالمنتصف */
-.center-content {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* مسافة بين الشعار والكلام */
-  z-index: 3;
-}
+  <link rel="icon" href="https://omar-i9.github.io/my-profiles/profile.jpeg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" />
 
-.center-content i {
-  font-size: 18px;
-  color: #E1306C;
-  filter: drop-shadow(0 0 5px rgba(225, 48, 108, 0.4));
-}
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-.private-txt {
-  font-weight: 800;
-  font-size: 15px;
-  color: #fff;
-}
+  <style>
+    :root{
+      --bg:#0b0f16;
+      --card:rgba(17,22,31,.82);
+      --line:rgba(255,255,255,.08);
+      --text:#eef3f8;
+      --muted:#a9b4c3;
+      --accent:#00f2ff;
+      --accent2:#818cf8;
+      --wa:#25D366;
+      --ig:#E1306C;
+      --fb:#1877F2;
+      --sc:#FFFC00;
+      --tk:#000000;
+      --ds:#5865F2;
+      --st:#1b2838;
+      --sp:#1db954;
+      --gh:#24292e;
+      --tw:#9146ff;
+      --player-bg:rgba(18,23,33,.95);
+      --shadow:0 28px 70px rgba(0,0,0,.56);
+    }
 
-/* باقي التجهيزات (الفقاقيع والتاج) بتضل زي ما هي */
-.privet-badge {
-  position: absolute;
-  top: -15px;
-  left: -10px;
-  background: rgba(129, 140, 248, 0.95);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 900;
-  padding: 3px 10px;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(129, 140, 248, 0.6);
-  animation: floatBadge 2s infinite alternate ease-in-out;
-  z-index: 10;
-}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:'Cairo',sans-serif;
+      color:var(--text);
+      overflow-x:hidden;
+      overflow-y:auto;
+      padding:92px 16px 44px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(0,242,255,.12), transparent 24%),
+        radial-gradient(circle at 85% 80%, rgba(129,140,248,.12), transparent 26%),
+        linear-gradient(180deg, #0b0f16, #090c12);
+      position:relative;
+      isolation:isolate;
+    }
 
-.bubble-container {
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  overflow: hidden;
-  z-index: 1;
-  pointer-events: none;
-}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-10%;
+      pointer-events:none;
+      z-index:-2;
+      background:
+        radial-gradient(circle at var(--mx, 50vw) var(--my, 25vh), rgba(0,242,255,.08), transparent 22%),
+        radial-gradient(circle at calc(100% - var(--mx, 50vw)) calc(100% - var(--my, 25vh)), rgba(129,140,248,.10), transparent 24%);
+      transition:background-position .08s linear;
+    }
 
-.bubble {
-  position: absolute;
-  bottom: -25px;
-  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.8), rgba(0, 242, 255, 0.35) 60%);
-  box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  animation: flyUp 4s infinite linear;
-}
+    .bg{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-1;
+      overflow:hidden;
+    }
+    .orb{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:.12;
+      animation:drift 18s ease-in-out infinite alternate;
+    }
+    .orb.one{width:320px;height:320px;top:8%;left:6%;background:var(--accent)}
+    .orb.two{width:280px;height:280px;right:4%;bottom:8%;background:var(--accent2);animation-duration:22s}
+    .orb.three{width:180px;height:180px;top:55%;left:55%;background:#22c55e;opacity:.05;animation-duration:26s}
+    @keyframes drift{
+      from{transform:translate(-10px,-10px) scale(1)}
+      to{transform:translate(10px,10px) scale(1.08)}
+    }
 
-@keyframes flyUp {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
-}
+    .cursor{
+      position:fixed;
+      width:16px;height:16px;border-radius:50%;
+      background:rgba(0,242,255,.85);
+      transform:translate(-50%,-50%);
+      box-shadow:0 0 20px rgba(0,242,255,.55);
+      pointer-events:none;
+      z-index:9999;
+      display:none;
+      mix-blend-mode:screen;
+    }
 
-@keyframes floatBadge {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-5px); }
-}
-  </style> 
-</head> 
-<body> 
- 
-  <div class="loader">Loading...</div> 
- 
-  <div class="bg"> 
-    <div class="orb one"></div> 
-    <div class="orb two"></div> 
-    <div class="orb three"></div> 
-  </div> 
- 
-  <div class="cursor" id="cursor"></div> 
- 
-  <section class="music-dock" aria-label="مشغل الأغاني"> 
-    <div class="music-top"> 
-      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" /> 
-      <div class="music-meta"> 
-        <div class="label">Now Playing</div> 
-        <div class="title">درب المهالك</div> 
-        <div class="artist">ملف محلي داخل المشروع</div> 
-      </div> 
-    </div> 
- 
-    <div class="music-controls"> 
-      <button class="fake-btn" type="button" aria-label="السابق" title="السابق"> 
-        <i class="fa-solid fa-backward-step"></i> 
-      </button> 
- 
-      <button class="play-btn" id="playBtnDesktop" type="button" aria-label="تشغيل/إيقاف"> 
-        <i class="fa-solid fa-play" id="playIconDesktop"></i> 
-      </button> 
- 
-      <button class="fake-btn" type="button" aria-label="التالي" title="التالي"> 
-        <i class="fa-solid fa-forward-step"></i> 
-      </button> 
-    </div> 
- 
-    <div class="progress"><span id="progressDesktop"></span></div> 
-    <input class="seek-bar" id="seekBarDesktop" type="range" min="0" max="100" value="0" step="0.1" /> 
- 
-    <audio id="audio" preload="metadata" src="./درب المهالك.mp3"></audio> 
-  </section> 
- 
-  <button class="music-fab" id="musicFab" type="button" aria-label="فتح مشغل الأغاني"> 
-    <i class="fa-solid fa-music"></i> 
-  </button> 
- 
-  <section class="music-panel" id="musicPanel" aria-label="مشغل الأغاني على الجوال"> 
-    <button class="panel-close" id="closePanel" type="button" aria-label="إغلاق المشغل"> 
-      <i class="fa-solid fa-xmark"></i> 
-    </button> 
- 
-    <div class="panel-top"> 
-      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" /> 
-      <div class="music-meta"> 
-        <div class="label">Now Playing</div> 
-        <div class="title">درب المهالك</div> 
-      </div> 
-    </div> 
- 
-    <div class="panel-controls"> 
-      <button class="fake-btn" type="button" aria-label="السابق" title="السابق"> 
-        <i class="fa-solid fa-backward-step"></i> 
-      </button> 
- 
-      <button class="play-btn" id="playBtnMobile" type="button" aria-label="تشغيل/إيقاف"> 
-        <i class="fa-solid fa-play" id="playIconMobile"></i> 
-      </button> 
- 
-      <button class="fake-btn" type="button" aria-label="التالي" title="التالي"> 
-        <i class="fa-solid fa-forward-step"></i> 
-      </button> 
-    </div> 
- 
-    <div class="panel-progress"><span id="progressMobile"></span></div> 
-    <input class="seek-bar" id="seekBarMobile" type="range" min="0" max="100" value="0" step="0.1" /> 
-  </section> 
- 
-  <main class="card" id="card"> 
-    <div class="avatar"> 
-      <img src="https://omar-i9.github.io/my-profiles/profile.jpeg" alt="عمر"> 
-    </div> 
- 
-    <div class="pill"><i class="fa-solid fa-bolt"></i></div> 
-    <h1></h1> 
-    <div class="typing" id="typing"></div> 
-    <div class="sub">هممممم...</div> 
- 
-    <div class="section-title">روابط التواصل</div> 
-    <div class="links"> 
-      <a class="btn fb" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i> فيسبوك
-              <div class="privet-badge">Private</div>
-</a>
-      <a class="btn wa" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> واتساب</a> 
-      <a class="btn ig" href="https://www.instagram.com/omar.a.z3" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> انستجرام</a> 
-      <a class="btn tk" href="https://www.tiktok.com/@gdmi_33" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i> تيك توك
-                      <div class="privet-badge">Private</div>
-</a> 
-      <a class="btn ds" href="https://discord.gg/pxgwBCdD" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> ديسكورد</a> 
-      <a class="btn sc" href="https://www.snapchat.com/add/omar-gdmi" target="_blank" rel="noopener noreferrer"> 
-        <i class="fab fa-snapchat-ghost"></i> سناب شات 
-          <div class="privet-badge">Private</div>
+    .loader{
+      position:fixed;
+      inset:0;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      color:#fff;
+      font-size:18px;
+      letter-spacing:2px;
+      animation:loaderFade .45s ease .85s forwards;
+    }
+    @keyframes loaderFade{to{opacity:0;visibility:hidden}}
 
-      </a> 
-      <a class="btn st" href="https://steamcommunity.com/profiles/76561199547179169/" target="_blank" rel="noopener noreferrer"> 
-        <i class="fab fa-steam"></i> ستيم 
-      </a> 
-      </a> 
-<a class="btn private-ig" href="https://www.instagram.com/3mar.close" target="_blank" rel="noopener noreferrer">
-  <!-- 1. التاج المضيء (خارج الإطار) -->
-  <div class="privet-badge">Private</div>
-  
-  <!-- 2. الفقاقيع 3D -->
-  <div class="bubble-container">
-    <div class="bubble" style="width:14px; height:14px; left:20%; animation-duration:3s;"></div>
-    <div class="bubble" style="width:20px; height:20px; left:50%; animation-duration:5s; animation-delay:1s;"></div>
-    <div class="bubble" style="width:12px; height:12px; left:80%; animation-duration:4s; animation-delay:2s;"></div>
+    .music-dock{
+      position:fixed;
+      top:16px;
+      left:16px;
+      width:min(340px, calc(100vw - 32px));
+      z-index:2000;
+      background:var(--player-bg);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      box-shadow:0 18px 40px rgba(0,0,0,.45);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      padding:12px;
+      overflow:hidden;
+      display:none;
+    }
+
+    .music-dock::before,
+    .music-panel::before,
+    .card::before,
+    .social-section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    .music-dock::before,
+    .music-panel::before{
+      background:linear-gradient(120deg, transparent 0%, rgba(0,242,255,.08) 35%, rgba(255,255,255,.06) 50%, rgba(129,140,248,.08) 65%, transparent 100%);
+      mix-blend-mode:screen;
+      opacity:.8;
+      animation:holoSweep 6s linear infinite;
+    }
+    @keyframes holoSweep{
+      from{transform:translateX(-20%)}
+      to{transform:translateX(20%)}
+    }
+
+    .music-top,
+    .panel-top{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .music-cover{
+      width:64px;
+      height:64px;
+      border-radius:16px;
+      object-fit:cover;
+      flex:0 0 auto;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 8px 20px rgba(0,0,0,.35);
+    }
+
+    .music-meta{
+      flex:1;
+      min-width:0;
+      text-align:right;
+    }
+    .music-meta .label{
+      font-size:11px;
+      color:#93a4b5;
+      margin-bottom:2px;
+    }
+    .music-meta .title{
+      font-size:15px;
+      font-weight:800;
+      line-height:1.25;
+      margin-bottom:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .music-meta .artist{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .music-controls,
+    .panel-controls{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      position:relative;
+      z-index:1;
+    }
+
+    .fake-btn{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:.5;
+      pointer-events:none;
+    }
+
+    .play-btn{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:none;
+      background:#fff;
+      color:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .play-btn:hover{transform:scale(1.04)}
+
+    .progress,.panel-progress{
+      margin-top:10px;
+      width:100%;
+      height:4px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      position:relative;
+      z-index:1;
+    }
+    .progress span,.panel-progress span{
+      display:block;
+      width:0%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .seek-bar{
+      width:100%;
+      margin-top:10px;
+      appearance:none;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      outline:none;
+      position:relative;
+      z-index:1;
+    }
+    .seek-bar::-webkit-slider-thumb{
+      appearance:none;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:#fff;
+      cursor:pointer;
+      box-shadow:0 0 10px rgba(255,255,255,.35);
+    }
+    .seek-bar::-moz-range-thumb{
+      width:14px;
+      height:14px;
+      border:none;
+      border-radius:50%;
+      background:#fff;
+      cursor:pointer;
+      box-shadow:0 0 10px rgba(255,255,255,.35);
+    }
+
+    .music-fab{
+      position:fixed;
+      top:12px;
+      left:12px;
+      z-index:2200;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(18,23,33,.92);
+      color:#fff;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 12px 28px rgba(0,0,0,.45);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      cursor:pointer;
+    }
+
+    .music-panel{
+      position:fixed;
+      top:62px;
+      left:12px;
+      z-index:2200;
+      width:min(340px, calc(100vw - 24px));
+      background:var(--player-bg);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      box-shadow:0 18px 40px rgba(0,0,0,.45);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      padding:12px;
+      transform:translateY(-8px) scale(.98);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:.22s ease;
+      overflow:hidden;
+    }
+    .music-panel.open{
+      transform:translateY(0) scale(1);
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+    .panel-close{
+      position:absolute;
+      top:10px;
+      right:10px;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      cursor:pointer;
+      z-index:2;
+    }
+
+    .card{
+      width:100%;
+      max-width:760px;
+      padding:108px 22px 26px;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(28,34,47,.92), rgba(15,19,27,.92));
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      position:relative;
+      z-index:2;
+      text-align:center;
+      transform-style:preserve-3d;
+      animation:pop .8s ease both;
+      transition:transform .15s ease-out;
+      overflow: visible;
+      margin:0 auto;
+      align-self:center;
+    }
+    .card::before{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,242,255,.12), transparent 18%),
+        radial-gradient(circle at 80% 80%, rgba(129,140,248,.12), transparent 18%),
+        linear-gradient(120deg, transparent 0%, rgba(255,255,255,.05) 50%, transparent 100%);
+      mix-blend-mode:screen;
+      opacity:.75;
+      animation:holoPulse 5s ease-in-out infinite alternate;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0px, rgba(255,255,255,.05) 1px, transparent 1px, transparent 8px);
+      opacity:.05;
+      animation:holoScan 7s linear infinite;
+    }
+    @keyframes holoPulse{
+      from{transform:translateY(-3px)}
+      to{transform:translateY(3px)}
+    }
+    @keyframes holoScan{
+      from{transform:translateY(-10px)}
+      to{transform:translateY(10px)}
+    }
+    @keyframes pop{
+      from{opacity:0;transform:translateY(20px) scale(.97)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .avatar{
+      position:absolute;
+      top:-70px;
+      left:50%;
+      transform:translateX(-50%);
+      width:144px;
+      height:144px;
+      z-index:2;
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      object-fit:cover;
+      border:6px solid #0b0f16;
+      box-shadow:0 14px 30px rgba(0,0,0,.55);
+      background:#fff;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(0,242,255,.10);
+      border:1px solid rgba(0,242,255,.16);
+      color:#bafcff;
+      font-size:13px;
+      margin-bottom:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    h1{
+      font-size:clamp(24px, 4vw, 34px);
+      line-height:1.3;
+      margin-bottom:10px;
+      font-weight:900;
+      position:relative;
+      z-index:1;
+    }
+
+    .typing{
+      min-height:34px;
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:16px;
+      line-height:1.9;
+      position:relative;
+      z-index:1;
+    }
+
+    .sub{
+      display:inline-block;
+      font-size:13px;
+      color:#93a4b5;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:12px;
+      padding:10px 14px;
+      margin-bottom:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .section-title{
+      text-align:right;
+      font-size:13px;
+      font-weight:800;
+      color:#c9d4e2;
+      margin:16px 2px 10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .social-section{
+      position:relative;
+      margin-top:4px;
+      border-radius:28px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      overflow:visible;
+      isolation:isolate;
+      z-index:1;
+    }
+
+    .social-section::before{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 26%),
+        radial-gradient(circle at 80% 75%, rgba(255,255,255,.05), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.015));
+      z-index:0;
+    }
+
+    .social-section.hovering::before{
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.12), transparent 26%),
+        radial-gradient(circle at 80% 75%, rgba(255,255,255,.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+
+    .social-backdrop{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+      filter:blur(8px) saturate(1.2);
+      opacity:.78;
+    }
+
+    .float-brand{
+      position:absolute;
+      font-size:34px;
+      opacity:.18;
+      transform:translateY(120%);
+      animation:floatBrand 9s linear infinite;
+      text-shadow:0 0 18px currentColor;
+    }
+    .float-brand.small{font-size:24px;opacity:.15;}
+    .float-brand.big{font-size:40px;opacity:.14;}
+
+    @keyframes floatBrand{
+      0%{transform:translateY(120%) translateX(0) rotate(-10deg);opacity:0}
+      10%{opacity:.18}
+      50%{opacity:.12}
+      100%{transform:translateY(-140%) translateX(18px) rotate(12deg);opacity:0}
+    }
+
+    .links{
+      display:grid;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .social-card{
+      --brand:#fff;
+      --shadow-x:0px;
+      --shadow-y:0px;
+      position:relative;
+      overflow:visible;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      min-height:88px;
+      padding:16px 18px 16px 92px;
+      border-radius:22px;
+      text-decoration:none;
+      color:#fff;
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(14px + var(--shadow-y))
+        30px rgba(0,0,0,.26);
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease, filter .22s ease, background .22s ease;
+      transform:translateZ(0);
+      will-change:transform, box-shadow;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      user-select:none;
+    }
+
+    .social-card:hover,
+    .social-card:focus-visible{
+      transform:translateY(-4px) scale(1.01);
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(22px + var(--shadow-y))
+        46px rgba(0,0,0,.42);
+      border-color:rgba(255,255,255,.14);
+      outline:none;
+    }
+
+    .social-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.16), transparent 28%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,.08), transparent 30%),
+        linear-gradient(130deg, transparent 0%, rgba(255,255,255,.10) 45%, transparent 70%);
+      opacity:.45;
+      pointer-events:none;
+      mix-blend-mode:screen;
+      transition:opacity .25s ease;
+    }
+
+    .social-card:hover::before,
+    .social-card:focus-visible::before{opacity:.85;}
+
+    .social-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+      transform:translateX(-120%);
+      animation:shine 4.8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes shine{
+      0%,55%{transform:translateX(-120%)}
+      100%{transform:translateX(120%)}
+    }
+
+    .brand-cloud{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .brand-cloud i{
+      position:absolute;
+      left:50%;
+      bottom:-24px;
+      color:var(--brand);
+      opacity:0;
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.25));
+      animation:floatIcon 5.8s linear infinite;
+    }
+
+    @keyframes floatIcon{
+      0%{transform:translateX(-50%) translateY(0) scale(.65) rotate(-10deg);opacity:0}
+      12%{opacity:.36}
+      50%{opacity:.58}
+      100%{transform:translateX(-50%) translateY(-118px) scale(1.15) rotate(14deg);opacity:0}
+    }
+
+    .social-icon{
+      position:absolute;
+      left:16px;
+      top:50%;
+      width:54px;
+      height:54px;
+      transform:translateY(-50%);
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      font-size:24px;
+      background:var(--brand);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.24);
+      box-shadow:0 10px 24px rgba(0,0,0,.28), 0 0 16px rgba(255,255,255,.08);
+      z-index:2;
+      transition:all .25s ease;
+    }
+
+    .social-card:hover .social-icon{
+      background:#fff;
+      color:var(--brand);
+      transform:translateY(-50%) scale(1.04);
+    }
+
+    .social-face{
+      position:absolute;
+      right:12px;
+      top:50%;
+      width:42px;
+      height:42px;
+      transform:translateY(-50%);
+      object-fit:cover;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.28);
+      box-shadow:0 8px 18px rgba(0,0,0,.35);
+      z-index:2;
+    }
+
+    .social-text{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+      text-align:right;
+      position:relative;
+      z-index:2;
+      margin-inline-start:62px;
+    }
+
+    .social-title{
+      font-size:16px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .social-sub{
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      letter-spacing:.2px;
+    }
+
+    .private-badge{
+      position:absolute;
+      top:-12px;
+      left:14px;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:900;
+      color:#fff;
+      background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
+      z-index:3;
+      transform-origin:center;
+      transform:scale(.96);
+      transition:transform .25s ease, background .25s ease, box-shadow .25s ease;
+    }
+
+    .social-card:hover .private-badge,
+    .social-card:focus-visible .private-badge{
+      transform:scale(1.06);
+    }
+
+    .fb-card{--brand:#1877F2;}
+    .fb-card .social-icon{box-shadow:0 10px 24px rgba(24,119,242,.20), 0 0 20px rgba(24,119,242,.28);}
+    .fb-card .social-sub{color:#9fc6ff;}
+    .fb-card .private-badge{background:linear-gradient(135deg, rgba(24,119,242,.95), rgba(24,119,242,.72));}
+    .fb-card::before{opacity:.68;}
+
+    .wa-card{--brand:#25D366;}
+    .wa-card .social-icon{box-shadow:0 10px 24px rgba(37,211,102,.18), 0 0 20px rgba(37,211,102,.24);}
+    .wa-card .private-badge{background:linear-gradient(135deg, rgba(37,211,102,.95), rgba(22,160,83,.72));}
+
+    .ig-card{--brand:#E1306C;}
+    .ig-card .social-icon{box-shadow:0 10px 24px rgba(225,48,108,.18), 0 0 20px rgba(225,48,108,.24);}
+    .ig-card .private-badge{background:linear-gradient(135deg, rgba(225,48,108,.95), rgba(255,91,137,.72));}
+
+    .tk-card{--brand:#000000;}
+    .tk-card .social-icon{box-shadow:0 10px 24px rgba(0, 0, 0, 0.20), 0 0 20px rgba(255,0,80,.24);}
+    .tk-card .private-badge{background:linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(180,0,60,.78));}
+
+    .ds-card{--brand:#5865F2;}
+    .ds-card .social-icon{box-shadow:0 10px 24px rgba(88,101,242,.18), 0 0 20px rgba(88,101,242,.24);}
+    .ds-card .private-badge{background:linear-gradient(135deg, rgba(88,101,242,.95), rgba(71,84,214,.72));}
+
+    .sc-card{--brand:#FFFC00;color:#000;}
+    .sc-card .social-title,
+    .sc-card .social-sub{color:#000;}
+    .sc-card .social-icon{
+      color:#000;
+      background:linear-gradient(145deg, rgba(255,252,0,.95), rgba(255,252,0,.58));
+      box-shadow:0 10px 24px rgba(255,252,0,.18), 0 0 20px rgba(255,252,0,.24);
+    }
+    .sc-card .private-badge{
+      background:linear-gradient(135deg, rgba(255,252,0,.95), rgba(255,217,0,.78));
+      color:#000;
+    }
+    .sc-card::before{opacity:.68;}
+
+    .st-card{--brand:#1b2838;}
+    .st-card .social-icon{box-shadow:0 10px 24px rgba(27,40,56,.18), 0 0 20px rgba(27,40,56,.22);}
+    .st-card .private-badge{background:linear-gradient(135deg, rgba(27,40,56,.95), rgba(50,66,90,.72));}
+
+    .vip-private-card{
+      position:relative;
+      overflow:visible !important;
+      padding-right:18px;
+      padding-left:92px;
+      min-height:96px;
+      background:#090c10 !important;
+      border:1px solid rgba(225, 48, 108, 0.5) !important;
+      box-shadow:0 10px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(225, 48, 108, 0.08) !important;
+    }
+    .vip-private-card::before{display:none}
+    .vip-outside{
+      position:absolute;
+      top:-18px;
+      right:-14px;
+      z-index:5;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      pointer-events:none;
+    }
+    .vip-face{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.55);
+      box-shadow:0 10px 22px rgba(0,0,0,.42);
+      background:#111;
+    }
+    .vip-badge{
+      position:static;
+      transform:none;
+      padding:5px 12px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.2px;
+      border-radius:999px;
+      background:linear-gradient(135deg, #E1306C, #ff5b87);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 10px 18px rgba(225,48,108,.25);
+    }
+    .vip-text{
+      margin-inline-start:68px;
+    }
+    .vip-private-card:hover .vip-face{
+      transform:scale(1.04);
+    }
+    .vip-private-card:hover .vip-badge{
+      box-shadow:0 12px 22px rgba(225,48,108,.35);
+    }
+    .vip-private-card .social-icon{
+      box-shadow:0 12px 28px rgba(225,48,108,.22), 0 0 22px rgba(225,48,108,.18);
+    }
+
+    .info{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:8px;
+      padding:14px 0;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      position:relative;
+      z-index:1;
+    }
+
+    .info-box{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:3px;
+      font-size:11px;
+      color:#9ca9b8;
+    }
+    .info-box span{
+      color:var(--accent);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:center;
+      margin-top:12px;
+      position:relative;
+      z-index:1;
+    }
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      color:#d6deea;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.07);
+    }
+
+    .epic-box{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:15px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      margin-top:10px;
+      position:relative;
+      z-index:1;
+    }
+    .epic-text{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      color:#fff;
+      text-align:right;
+      min-width:0;
+    }
+
+    .copy-btn{
+      --shadow-x:0px;
+      --shadow-y:0px;
+      border:none;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-family:inherit;
+      font-size:12px;
+      white-space:nowrap;
+      transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(6px + var(--shadow-y))
+        18px rgba(0,0,0,.18);
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .copy-btn:hover{
+      background:rgba(255,255,255,.14);
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(10px + var(--shadow-y))
+        22px rgba(0,0,0,.28);
+    }
+    .copy-btn:active{transform:scale(.97)}
+    .copy-btn.success{
+      background:#25D366 !important;
+      color:#fff !important;
+      transform:scale(1.05);
+      box-shadow:0 0 18px rgba(37,211,102,.35);
+    }
+
+    .work{
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+      text-align:right;
+      position:relative;
+      z-index:1;
+    }
+    .work p{
+      font-size:14px;
+      color:#cbd5e1;
+      margin-bottom:14px;
+    }
+    .work-link{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      text-decoration:none;
+      color:#fff;
+      border-radius:18px;
+      padding:8px 10px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      transition:transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      --shadow-x:0px;
+      --shadow-y:0px;
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(8px + var(--shadow-y))
+        20px rgba(0,0,0,.20);
+    }
+    .work-link:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.05);
+      border-color:rgba(255,255,255,.12);
+      box-shadow:
+        calc(0px + var(--shadow-x))
+        calc(14px + var(--shadow-y))
+        26px rgba(0,0,0,.30);
+    }
+    .work-logo{
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      overflow:hidden;
+      flex:0 0 auto;
+      background:#fff;
+      box-shadow:0 0 20px rgba(255,255,255,.18);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .work-logo:hover{
+      transform:scale(1.08) rotate(-3deg);
+      box-shadow:0 0 28px rgba(255,255,255,.28);
+    }
+    .work-logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .work-txt strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:3px;
+    }
+    .work-txt span{
+      font-size:12px;
+      color:#9eaabc;
+    }
+
+    .footer{
+      margin-top:16px;
+      font-size:12px;
+      color:rgba(230,237,243,.62);
+      position:relative;
+      z-index:1;
+    }
+    .footer em{
+      font-style:normal;
+      color:#b8f7ff;
+    }
+
+    .ripple{
+      position:fixed;
+      border-radius:50%;
+      background:rgba(0,242,255,.32);
+      transform:scale(0);
+      animation:ripple .6s linear;
+      pointer-events:none;
+      z-index:9998;
+    }
+    @keyframes ripple{to{transform:scale(4);opacity:0;}}
+
+    .confetti{
+      position:fixed;
+      width:6px;
+      height:10px;
+      pointer-events:none;
+      z-index:9999;
+      animation:explode .7s ease-out forwards;
+    }
+    @keyframes explode{
+      from{opacity:1;transform:translate(0,0) rotate(0)}
+      to{opacity:0;transform:translate(var(--x),var(--y)) rotate(720deg) scale(.4)}
+    }
+
+    #copiedGlow,#navHint{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%) scale(.7);
+      padding:12px 20px;
+      border:none;
+      border-radius:999px;
+      font-weight:800;
+      opacity:0;
+      pointer-events:none;
+      transition:.32s ease;
+      z-index:99999;
+      white-space:nowrap;
+    }
+    #copiedGlow{
+      bottom:20px;
+      background:#00f2ff;
+      color:#000;
+      box-shadow:0 0 25px rgba(0,242,255,.8);
+    }
+    #navHint{
+      top:20px;
+      background:rgba(10,14,22,.92);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 0 20px rgba(0,0,0,.35);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+    }
+    #copiedGlow.show,#navHint.show{
+      opacity:1;
+      transform:translateX(-50%) scale(1);
+    }
+
+    .floating-icons-bg{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      z-index:-1;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .floating-icons-bg i{
+      position:absolute;
+      bottom:-100px;
+      left:var(--left);
+      font-size:var(--size);
+      color:var(--color);
+      opacity:0.14;
+      filter:blur(1px);
+      text-shadow:0 0 15px var(--color);
+      animation:floatUp var(--dur) linear infinite;
+      animation-delay:var(--delay);
+    }
+
+    @keyframes floatUp{
+      0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:0}
+      10%{opacity:0.2}
+      50%{transform:translateY(-50vh) rotate(180deg) translateX(50px)}
+      90%{opacity:0.2}
+      100%{transform:translateY(-120vh) rotate(360deg) translateX(-20px);opacity:0}
+    }
+
+    ::-webkit-scrollbar{width:8px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{
+      background:linear-gradient(var(--accent), var(--accent2));
+      border-radius:10px;
+    }
+    ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+    @media (min-width:769px){
+      .music-dock{display:block}
+      .music-fab,.music-panel{display:none}
+    }
+
+    @media (max-width:768px){
+      .music-fab{display:flex}
+    }
+
+    @media (max-width:520px){
+      body{
+        padding:88px 12px 28px;
+      }
+      .card{
+        padding:84px 12px 22px;
+        border-radius:28px;
+      }
+      .avatar{
+        width:126px;
+        height:126px;
+        top:-62px;
+      }
+      h1{
+        font-size:22px;
+      }
+      .typing{
+        min-height:30px;
+        font-size:15px;
+      }
+      .info{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+      .info-box{
+        flex-direction:row;
+        justify-content:space-between;
+        width:100%;
+        padding:10px 12px;
+        border-radius:12px;
+        background:rgba(255,255,255,.03);
+      }
+      .epic-box{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .copy-btn{
+        width:100%;
+      }
+      .social-card{
+        padding:14px 14px 14px 86px;
+        min-height:84px;
+        border-radius:20px;
+      }
+      .social-icon{
+        width:50px;
+        height:50px;
+        font-size:22px;
+        left:12px;
+        border-radius:16px;
+      }
+      .social-text{
+        margin-inline-start:56px;
+      }
+      .social-title{
+        font-size:15px;
+      }
+      .social-sub{
+        font-size:11px;
+      }
+      .private-badge{
+        top:-10px;
+        left:10px;
+        font-size:10px;
+      }
+      .social-face{
+        width:40px;
+        height:40px;
+      }
+      .float-brand{
+        font-size:26px;
+      }
+      .floating-icons-bg i{
+        opacity:.08;
+      }
+      .music-panel{
+        top:auto;
+        bottom:76px;
+        left:50%;
+        transform:translateX(-50%) translateY(12px) scale(.98);
+        width:min(420px, calc(100vw - 24px));
+      }
+      .music-panel.open{
+        transform:translateX(-50%) translateY(0) scale(1);
+      }
+      .music-fab{
+        top:auto;
+        bottom:16px;
+        left:16px;
+        width:52px;
+        height:52px;
+      }
+      .music-cover{
+        width:58px;
+        height:58px;
+        border-radius:14px;
+      }
+      .music-meta .title{
+        font-size:14px;
+      }
+      .music-meta .artist{
+        font-size:11px;
+      }
+      .music-controls,
+      .panel-controls{
+        gap:10px;
+      }
+      .fake-btn{
+        width:36px;
+        height:36px;
+      }
+      .play-btn{
+        width:44px;
+        height:44px;
+      }
+      .vip-private-card{
+        padding-left:84px;
+        padding-right:14px;
+        min-height:88px;
+      }
+      .vip-outside{
+        top:-14px;
+        right:-10px;
+        gap:4px;
+      }
+      .vip-face{
+        width:42px;
+        height:42px;
+      }
+      .vip-badge{
+        padding:4px 10px;
+        font-size:10px;
+      }
+      .vip-text{
+        margin-inline-start:56px;
+      }
+    }
+
+    @media (min-width:900px){
+      body{
+        padding-top:100px;
+      }
+      .card{
+        max-width:780px;
+        padding:112px 28px 30px;
+      }
+      .social-section{
+        padding:16px;
+      }
+      .links{
+        gap:14px;
+      }
+      .social-card{
+        min-height:92px;
+        padding:18px 20px 18px 96px;
+      }
+      .social-title{
+        font-size:17px;
+      }
+      .social-sub{
+        font-size:12px;
+      }
+      .music-dock{
+        width:346px;
+      }
+    }
+
+    @media (hover: none){
+      .social-card:active{
+        transform:scale(.97) !important;
+        background:rgba(255,255,255,.08);
+      }
+      .social-card:active .brand-cloud i{
+        opacity:.2;
+      }
+      .work-link:active{
+        transform:scale(.99);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader">Loading...</div>
+
+  <div class="bg" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
   </div>
 
-  <!-- 3. صورتك الشخصية (مثبتة عاليمين) -->
-  <img src="my-face2.jpg" alt="Profile" class="prof-img">
-
-  <!-- 4. الشعار والكلام (بالمنتصف) -->
-  <div class="center-content">
-    <i class="fab fa-instagram"></i>
-    <span class="private-txt">انستا خاص</span>
+  <!-- حاوية الأيقونات العشوائية في الخلفية -->
+  <div class="floating-icons-bg" aria-hidden="true">
+    <i class="fa-brands fa-facebook-f" style="--color:#1877F2; --left:10%; --size:20px; --dur:15s; --delay:0s;"></i>
+    <i class="fa-brands fa-whatsapp" style="--color:#25D366; --left:25%; --size:25px; --dur:18s; --delay:2s;"></i>
+    <i class="fa-brands fa-instagram" style="--color:#E1306C; --left:45%; --size:18px; --dur:14s; --delay:5s;"></i>
+    <i class="fa-brands fa-snapchat" style="--color:#FFFC00; --left:65%; --size:22px; --dur:20s; --delay:1s;"></i>
+    <i class="fa-brands fa-tiktok" style="--color:#ff0050; --left:85%; --size:20px; --dur:16s; --delay:7s;"></i>
+    <i class="fa-brands fa-discord" style="--color:#5865F2; --left:15%; --size:24px; --dur:12s; --delay:3s;"></i>
+    <i class="fa-brands fa-steam" style="--color:#1b2838; --left:75%; --size:28px; --dur:22s; --delay:8s;"></i>
+    <i class="fa-brands fa-youtube" style="--color:#FF0000; --left:35%; --size:15px; --dur:15s; --delay:4s;"></i>
+    <i class="fa-brands fa-telegram" style="--color:#2AABEE; --left:58%; --size:22px; --dur:17s; --delay:6s;"></i>
   </div>
-</a> 
-    <div class="epic-box"> 
-      <div class="epic-text"> 
-        <i class="fa-brands fa-steam"></i> 
-        <span>Steam Friend Code: 1586913441</span> 
-      </div> 
-      <button class="copy-btn" type="button" onclick="copyText('1586913441')">نسخ الكود</button> 
-    </div> 
 
-<div class="epic-box"> 
-  <div class="epic-text">
-    <i class="fa-solid fa-gamepad"></i> <span>Epic Games: Omar-G4</span> 
-  </div> 
-  <button class="copy-btn" type="button" onclick="copyText('Omar-G4')">نسخ الاسم</button> </div>
- 
-    <div class="section-title">معلومات سريعة</div> 
-    <div class="info"> 
-      <div class="info-box">الحالة <span>مشغول دائماً</span></div> 
-      <div class="info-box">المجال <span>EV & Hybrid</span></div> 
-      <div class="info-box">الهواية <span>Web Dev</span></div> 
-    </div> 
- 
-    <div class="chips"> 
-      <div class="chip">بتعرف كلاش؟؟</div> 
-      <div class="chip">عفويه..</div> 
-    </div> 
- 
-    <div class="work"> 
-      <p>آخر أعمالي حالياً</p> 
-      <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer"> 
-        <div class="work-logo"> 
-          <img src="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" alt="تأمين"> 
-        </div> 
-        <div class="work-txt"> 
-          <strong>تأمين</strong> 
-          <span>اضغط على الشعار لفتح المشروع</span> 
-        </div> 
-      </a> 
-    </div> 
- 
-    <div class="footer">الفولو <em>ما بكهربك</em></div> 
-  </main> 
- 
-  <button id="copiedGlow" type="button" aria-live="polite">✓ تم النسخ</button> 
-  <div id="navHint" aria-live="polite">جاري الفتح...</div> 
- 
-  <script> 
-    const card = document.getElementById('card'); 
-    const cursor = document.getElementById('cursor'); 
-    const typing = document.getElementById('typing'); 
- 
-    const audio = document.getElementById('audio'); 
-    const playBtnDesktop = document.getElementById('playBtnDesktop'); 
-    const playBtnMobile = document.getElementById('playBtnMobile'); 
-    const playIconDesktop = document.getElementById('playIconDesktop'); 
-    const playIconMobile = document.getElementById('playIconMobile'); 
-    const progressDesktop = document.getElementById('progressDesktop'); 
-    const progressMobile = document.getElementById('progressMobile'); 
-    const seekBarDesktop = document.getElementById('seekBarDesktop'); 
-    const seekBarMobile = document.getElementById('seekBarMobile'); 
- 
-    const musicFab = document.getElementById('musicFab'); 
-    const musicPanel = document.getElementById('musicPanel'); 
-    const closePanel = document.getElementById('closePanel'); 
- 
-    const copiedGlow = document.getElementById('copiedGlow'); 
-    const navHint = document.getElementById('navHint'); 
- 
-    const text = "دامك دخلت، كمل معروفك وشوف الباقي!"; 
-    let i = 0; 
- 
-    function typeText() { 
-      if (i <= text.length) { 
-        typing.textContent = text.slice(0, i); 
-        i++; 
-        setTimeout(typeText, 28); 
-      } 
-    } 
-    typeText(); 
- 
-    function setPlayIcons(isPlaying){ 
-      const icon = isPlaying ? 'fa-pause' : 'fa-play'; 
-      playIconDesktop.className = `fa-solid ${icon}`; 
-      playIconMobile.className = `fa-solid ${icon}`; 
-    } 
- 
-    function togglePlay(){ 
-      if (audio.paused) { 
-        audio.play().catch(() => {}); 
-      } else { 
-        audio.pause(); 
-      } 
-    } 
- 
-    playBtnDesktop.addEventListener('click', togglePlay); 
-    playBtnMobile.addEventListener('click', togglePlay); 
- 
-    audio.addEventListener('play', () => setPlayIcons(true)); 
-    audio.addEventListener('pause', () => setPlayIcons(false)); 
-    audio.addEventListener('ended', () => setPlayIcons(false)); 
- 
-    function updateSeekUI() { 
-      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0; 
-      progressDesktop.style.width = pct + '%'; 
-      progressMobile.style.width = pct + '%'; 
-      if (document.activeElement !== seekBarDesktop) seekBarDesktop.value = pct; 
-      if (document.activeElement !== seekBarMobile) seekBarMobile.value = pct; 
-    } 
- 
-    audio.addEventListener('timeupdate', updateSeekUI); 
- 
-    audio.addEventListener('loadedmetadata', () => { 
-      updateSeekUI(); 
-    }); 
- 
-    [seekBarDesktop, seekBarMobile].forEach(bar => { 
-      bar.addEventListener('input', () => { 
-        if (audio.duration) { 
-          const newTime = (bar.value / 100) * audio.duration; 
-          audio.currentTime = newTime; 
-        } 
-      }); 
-    }); 
- 
-    musicFab.addEventListener('click', () => { 
-      musicPanel.classList.toggle('open'); 
-    }); 
- 
-    closePanel.addEventListener('click', () => { 
-      musicPanel.classList.remove('open'); 
-    }); 
- 
-    document.addEventListener('click', (e) => { 
-      if (window.innerWidth <= 768) { 
-        const insidePanel = musicPanel.contains(e.target); 
-        const onFab = musicFab.contains(e.target); 
-        if (!insidePanel && !onFab) { 
-          musicPanel.classList.remove('open'); 
-        } 
-      } 
-    }); 
- 
-    function showCopied(message = '✓ تم النسخ') { 
-      copiedGlow.textContent = message; 
-      copiedGlow.classList.add('show'); 
-      setTimeout(() => copiedGlow.classList.remove('show'), 1400); 
-    } 
- 
-    async function copyText(value) { 
-      try { 
-        await navigator.clipboard.writeText(value); 
-        showCopied('✓ تم النسخ'); 
-      } catch { 
-        const temp = document.createElement('textarea'); 
-        temp.value = value; 
-        document.body.appendChild(temp); 
-        temp.select(); 
-        document.execCommand('copy'); 
-        temp.remove(); 
-        showCopied('✓ تم النسخ'); 
-      } 
-    } 
- 
-    function showNavHint(message = 'جاري الفتح...') { 
-      navHint.textContent = message; 
-      navHint.classList.add('show'); 
-      setTimeout(() => navHint.classList.remove('show'), 220); 
-    } 
- 
-    function confettiBurst(x, y) { 
-      for (let i = 0; i < 18; i++) { 
-        const c = document.createElement('div'); 
-        c.className = 'confetti'; 
-        c.style.left = x + 'px'; 
-        c.style.top = y + 'px'; 
-        c.style.background = `hsl(${Math.random() * 360}, 90%, 60%)`; 
-        c.style.setProperty('--x', (Math.random() * 140 - 70) + 'px'); 
-        c.style.setProperty('--y', (Math.random() * 140 - 70) + 'px'); 
-        document.body.appendChild(c); 
-        setTimeout(() => c.remove(), 700); 
-      } 
-    } 
- 
-    document.querySelectorAll('a.btn, a.work-link').forEach(link => { 
-      link.addEventListener('click', (e) => { 
-        const href = link.getAttribute('href'); 
-        if (!href || href === '#') return; 
- 
-        e.preventDefault(); 
- 
-        const x = e.clientX || (window.innerWidth / 2); 
-        const y = e.clientY || (window.innerHeight / 2); 
- 
-        confettiBurst(x, y); 
-        showNavHint('جاري الفتح...'); 
- 
-        setTimeout(() => { 
-          const target = link.getAttribute('target'); 
-          if (target === '_blank') { 
-            window.open(href, '_blank', 'noopener,noreferrer'); 
-          } else { 
-            window.location.href = href; 
-          } 
-        }, 300); 
-      }); 
-    }); 
- 
-    document.addEventListener('click', (e) => { 
-      const r = document.createElement('div'); 
-      r.className = 'ripple'; 
-      r.style.left = e.clientX + 'px'; 
-      r.style.top = e.clientY + 'px'; 
-      r.style.width = r.style.height = '18px'; 
-      document.body.appendChild(r); 
-      setTimeout(() => r.remove(), 600); 
-    }); 
- 
-    const isDesktop = window.innerWidth > 768; 
- 
-    if (isDesktop) { 
-      cursor.style.display = 'block'; 
- 
-      document.addEventListener('mousemove', (e) => { 
-        cursor.style.left = e.clientX + 'px'; 
-        cursor.style.top = e.clientY + 'px'; 
- 
-        document.documentElement.style.setProperty('--mx', e.clientX + 'px'); 
-        document.documentElement.style.setProperty('--my', e.clientY + 'px'); 
- 
-        const x = (window.innerWidth / 2 - e.clientX) / 75; 
-        const y = (window.innerHeight / 2 - e.clientY) / 75; 
-        card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`; 
-      }); 
- 
-      document.addEventListener('mouseleave', () => { 
-        card.style.transform = 'rotateY(0deg) rotateX(0deg)'; 
-      }); 
-    } else { 
-      document.documentElement.style.setProperty('--mx', '50vw'); 
-      document.documentElement.style.setProperty('--my', '20vh'); 
-    } 
-  </script> 
-</body> 
+  <div class="cursor" id="cursor"></div>
+
+  <section class="music-dock" aria-label="مشغل الأغاني">
+    <div class="music-top">
+      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
+      <div class="music-meta">
+        <div class="label">Now Playing</div>
+        <div class="title">درب المهالك</div>
+        <div class="artist">ملف محلي داخل المشروع</div>
+      </div>
+    </div>
+
+    <div class="music-controls">
+      <button class="fake-btn" type="button" aria-label="السابق" title="السابق"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="play-btn" id="playBtnDesktop" type="button" aria-label="تشغيل/إيقاف"><i class="fa-solid fa-play" id="playIconDesktop"></i></button>
+      <button class="fake-btn" type="button" aria-label="التالي" title="التالي"><i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <div class="progress"><span id="progressDesktop"></span></div>
+    <input class="seek-bar" id="seekBarDesktop" type="range" min="0" max="100" value="0" step="0.1" />
+    <audio id="audio" preload="metadata" src="./درب المهالك.mp3"></audio>
+  </section>
+
+  <button class="music-fab" id="musicFab" type="button" aria-label="فتح مشغل الأغاني">
+    <i class="fa-solid fa-music"></i>
+  </button>
+
+  <section class="music-panel" id="musicPanel" aria-label="مشغل الأغاني على الجوال">
+    <button class="panel-close" id="closePanel" type="button" aria-label="إغلاق المشغل">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="panel-top">
+      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
+      <div class="music-meta">
+        <div class="label">Now Playing</div>
+        <div class="title">درب المهالك</div>
+      </div>
+    </div>
+
+    <div class="panel-controls">
+      <button class="fake-btn" type="button" aria-label="السابق" title="السابق"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="play-btn" id="playBtnMobile" type="button" aria-label="تشغيل/إيقاف"><i class="fa-solid fa-play" id="playIconMobile"></i></button>
+      <button class="fake-btn" type="button" aria-label="التالي" title="التالي"><i class="fa-solid fa-forward-step"></i></button>
+    </div>
+
+    <div class="panel-progress"><span id="progressMobile"></span></div>
+    <input class="seek-bar" id="seekBarMobile" type="range" min="0" max="100" value="0" step="0.1" />
+  </section>
+
+  <main class="card" id="card">
+    <div class="avatar">
+      <img src="https://omar-i9.github.io/my-profiles/profile.jpeg" alt="عمر">
+    </div>
+
+    <div class="pill"><i class="fa-solid fa-bolt"></i></div>
+    <h1></h1>
+    <div class="typing" id="typing"></div>
+    <div class="sub">هممممم...</div>
+
+    <div class="section-title">روابط التواصل</div>
+
+    <section class="social-section" id="socialSection">
+      <div class="social-backdrop" aria-hidden="true">
+        <i class="fa-brands fa-facebook-f float-brand big" style="left:4%; top:80%; animation-delay:0s; color:#1877F2;"></i>
+        <i class="fa-brands fa-whatsapp float-brand" style="left:18%; top:85%; animation-delay:1s; color:#25D366;"></i>
+        <i class="fa-brands fa-instagram float-brand small" style="left:30%; top:78%; animation-delay:2s; color:#E1306C;"></i>
+        <i class="fa-brands fa-snapchat-ghost float-brand big" style="left:47%; top:84%; animation-delay:2.8s; color:#FFFC00;"></i>
+        <i class="fa-brands fa-tiktok float-brand" style="left:63%; top:82%; animation-delay:3.4s; color:#000000;"></i>
+        <i class="fa-brands fa-discord float-brand small" style="left:78%; top:86%; animation-delay:4.3s; color:#5865F2;"></i>
+        <i class="fa-brands fa-steam float-brand" style="left:90%; top:83%; animation-delay:5.1s; color:#1b2838;"></i>
+      </div>
+
+      <div class="links">
+        <a class="social-card fb-card" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-facebook-f" style="left:18%; animation-delay:0s;"></i>
+            <i class="fa-brands fa-facebook-f" style="left:38%; animation-delay:1.2s;"></i>
+            <i class="fa-brands fa-facebook-f" style="left:62%; animation-delay:2.1s;"></i>
+            <i class="fa-brands fa-facebook-f" style="left:82%; animation-delay:3.1s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-facebook-f"></i></span>
+          <div class="social-text">
+            <div class="social-title">فيسبوك</div>
+            <div class="social-sub">Facebook</div>
+          </div>
+          <span class="private-badge">Private</span>
+        </a>
+
+        <a class="social-card wa-card" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-whatsapp" style="left:15%; animation-delay:.4s;"></i>
+            <i class="fa-brands fa-whatsapp" style="left:35%; animation-delay:1.4s;"></i>
+            <i class="fa-brands fa-whatsapp" style="left:58%; animation-delay:2.4s;"></i>
+            <i class="fa-brands fa-whatsapp" style="left:81%; animation-delay:3.4s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-whatsapp"></i></span>
+          <div class="social-text">
+            <div class="social-title">واتساب</div>
+            <div class="social-sub">WhatsApp</div>
+          </div>
+        </a>
+
+        <a class="social-card ig-card" href="https://www.instagram.com/omar.a.z3" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-instagram" style="left:14%; animation-delay:.2s;"></i>
+            <i class="fa-brands fa-instagram" style="left:34%; animation-delay:1.1s;"></i>
+            <i class="fa-brands fa-instagram" style="left:57%; animation-delay:2.2s;"></i>
+            <i class="fa-brands fa-instagram" style="left:80%; animation-delay:3.3s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-instagram"></i></span>
+          <div class="social-text">
+            <div class="social-title">انستجرام</div>
+            <div class="social-sub">Instagram</div>
+          </div>
+        </a>
+
+        <a class="social-card tk-card" href="https://www.tiktok.com/@gdmi_33" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-tiktok" style="left:14%; animation-delay:.4s;"></i>
+            <i class="fa-brands fa-tiktok" style="left:34%; animation-delay:1.4s;"></i>
+            <i class="fa-brands fa-tiktok" style="left:56%; animation-delay:2.4s;"></i>
+            <i class="fa-brands fa-tiktok" style="left:78%; animation-delay:3.4s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>
+          <div class="social-text">
+            <div class="social-title">تيك توك</div>
+            <div class="social-sub">TikTok</div>
+          </div>
+          <span class="private-badge">Private</span>
+        </a>
+
+        <a class="social-card ds-card" href="https://discord.gg/pxgwBCdD" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-discord" style="left:16%; animation-delay:.3s;"></i>
+            <i class="fa-brands fa-discord" style="left:36%; animation-delay:1.3s;"></i>
+            <i class="fa-brands fa-discord" style="left:59%; animation-delay:2.3s;"></i>
+            <i class="fa-brands fa-discord" style="left:82%; animation-delay:3.3s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
+          <div class="social-text">
+            <div class="social-title">ديسكورد</div>
+            <div class="social-sub">Discord</div>
+          </div>
+        </a>
+
+        <a class="social-card sc-card" href="https://www.snapchat.com/add/omar-gdmi" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-snapchat-ghost" style="left:14%; animation-delay:.2s;"></i>
+            <i class="fa-brands fa-snapchat-ghost" style="left:36%; animation-delay:1.1s;"></i>
+            <i class="fa-brands fa-snapchat-ghost" style="left:58%; animation-delay:2.2s;"></i>
+            <i class="fa-brands fa-snapchat-ghost" style="left:80%; animation-delay:3.3s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-snapchat-ghost"></i></span>
+          <div class="social-text">
+            <div class="social-title">سناب شات</div>
+            <div class="social-sub">Snapchat</div>
+          </div>
+          <span class="private-badge">Private</span>
+        </a>
+
+        <a class="social-card st-card" href="https://steamcommunity.com/profiles/76561199547179169/" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-steam" style="left:16%; animation-delay:.3s;"></i>
+            <i class="fa-brands fa-steam" style="left:36%; animation-delay:1.4s;"></i>
+            <i class="fa-brands fa-steam" style="left:59%; animation-delay:2.5s;"></i>
+            <i class="fa-brands fa-steam" style="left:82%; animation-delay:3.6s;"></i>
+          </div>
+          <span class="social-icon"><i class="fa-brands fa-steam"></i></span>
+          <div class="social-text">
+            <div class="social-title">ستيم</div>
+            <div class="social-sub">Steam</div>
+          </div>
+        </a>
+
+        <a class="social-card ig-card vip-private-card" href="https://www.instagram.com/3mar.close" target="_blank" rel="noopener noreferrer">
+          <div class="brand-cloud" aria-hidden="true">
+            <i class="fa-brands fa-instagram" style="left:16%; animation-delay:.1s;"></i>
+            <i class="fa-solid fa-lock" style="left:34%; animation-delay:1.1s; color:#fff;"></i>
+            <i class="fa-brands fa-instagram" style="left:58%; animation-delay:2.1s;"></i>
+            <i class="fa-solid fa-lock" style="left:80%; animation-delay:3.2s; color:#fff;"></i>
+          </div>
+
+          <span class="social-icon"><i class="fa-solid fa-user-lock"></i></span>
+
+          <div class="vip-outside">
+            <img class="social-face vip-face" src="./my-face2.jpg" alt="صورة الملف">
+            <span class="private-badge vip-badge">Private</span>
+          </div>
+
+          <div class="social-text vip-text">
+            <div class="social-title">انستغرام</div>
+            <div class="social-sub">Private Instagram</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="epic-box">
+      <div class="epic-text">
+        <i class="fa-brands fa-steam"></i>
+        <span>Steam Friend Code: 1586913441</span>
+      </div>
+      <button class="copy-btn" type="button" onclick="copyText('1586913441', this)">نسخ الكود</button>
+    </div>
+
+    <div class="epic-box">
+      <div class="epic-text">
+        <i class="fa-solid fa-gamepad"></i>
+        <span>Epic Games: Omar-G4</span>
+      </div>
+      <button class="copy-btn" type="button" onclick="copyText('Omar-G4', this)">نسخ الاسم</button>
+    </div>
+
+    <div class="section-title">معلومات سريعة</div>
+    <div class="info">
+      <div class="info-box">الحالة <span>مشغول دائماً</span></div>
+      <div class="info-box">المجال <span>EV &amp; Hybrid</span></div>
+      <div class="info-box">الهواية <span>Web Dev</span></div>
+    </div>
+
+    <div class="chips">
+      <div class="chip">بتعرف كلاش؟؟</div>
+      <div class="chip">عفويه..</div>
+    </div>
+
+    <div class="work">
+      <p>آخر أعمالي حالياً</p>
+      <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer">
+        <div class="work-logo">
+          <img src="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" alt="تأمين">
+        </div>
+        <div class="work-txt">
+          <strong>تأمين</strong>
+          <span>اضغط على الشعار لفتح المشروع</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="footer">الفولو <em>ما بكهربك</em></div>
+  </main>
+
+  <button id="copiedGlow" type="button" aria-live="polite">✓ تم النسخ</button>
+  <div id="navHint" aria-live="polite">جاري الفتح...</div>
+
+  <script>
+    const card = document.getElementById('card');
+    const cursor = document.getElementById('cursor');
+    const typing = document.getElementById('typing');
+    const audio = document.getElementById('audio');
+
+    const playBtnDesktop = document.getElementById('playBtnDesktop');
+    const playBtnMobile = document.getElementById('playBtnMobile');
+    const playIconDesktop = document.getElementById('playIconDesktop');
+    const playIconMobile = document.getElementById('playIconMobile');
+
+    const progressDesktop = document.getElementById('progressDesktop');
+    const progressMobile = document.getElementById('progressMobile');
+    const seekBarDesktop = document.getElementById('seekBarDesktop');
+    const seekBarMobile = document.getElementById('seekBarMobile');
+
+    const musicFab = document.getElementById('musicFab');
+    const musicPanel = document.getElementById('musicPanel');
+    const closePanel = document.getElementById('closePanel');
+
+    const copiedGlow = document.getElementById('copiedGlow');
+    const navHint = document.getElementById('navHint');
+    const socialSection = document.getElementById('socialSection');
+
+    const text = 'دامك دخلت، كمل معروفك وشوف الباقي!';
+    let i = 0;
+
+    function typeText(){
+      if(i <= text.length){
+        typing.textContent = text.slice(0, i);
+        i++;
+        setTimeout(typeText, 28);
+      }
+    }
+    typeText();
+
+    function setPlayIcons(isPlaying){
+      const icon = isPlaying ? 'fa-pause' : 'fa-play';
+      playIconDesktop.className = `fa-solid ${icon}`;
+      playIconMobile.className = `fa-solid ${icon}`;
+    }
+
+    function togglePlay(){
+      if(audio.paused){
+        audio.play().catch(()=>{});
+      }else{
+        audio.pause();
+      }
+    }
+
+    playBtnDesktop?.addEventListener('click', togglePlay);
+    playBtnMobile?.addEventListener('click', togglePlay);
+
+    audio?.addEventListener('play', ()=>setPlayIcons(true));
+    audio?.addEventListener('pause', ()=>setPlayIcons(false));
+    audio?.addEventListener('ended', ()=>setPlayIcons(false));
+
+    function updateSeekUI(){
+      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      progressDesktop.style.width = pct + '%';
+      progressMobile.style.width = pct + '%';
+      if(document.activeElement !== seekBarDesktop) seekBarDesktop.value = pct;
+      if(document.activeElement !== seekBarMobile) seekBarMobile.value = pct;
+    }
+
+    audio.addEventListener('timeupdate', updateSeekUI);
+    audio.addEventListener('loadedmetadata', updateSeekUI);
+
+    [seekBarDesktop, seekBarMobile].forEach(bar => {
+      bar.addEventListener('input', () => {
+        if(audio.duration) audio.currentTime = (bar.value / 100) * audio.duration;
+      });
+    });
+
+    musicFab.addEventListener('click', () => musicPanel.classList.toggle('open'));
+    closePanel.addEventListener('click', () => musicPanel.classList.remove('open'));
+
+    document.addEventListener('click', (e) => {
+      if(window.innerWidth <= 768){
+        if(!musicPanel.contains(e.target) && !musicFab.contains(e.target)){
+          musicPanel.classList.remove('open');
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){
+        musicPanel.classList.remove('open');
+      }
+    });
+
+    function showCopied(message='✓ تم النسخ'){
+      copiedGlow.textContent = message;
+      copiedGlow.classList.add('show');
+      setTimeout(()=>copiedGlow.classList.remove('show'), 1400);
+    }
+
+    async function copyText(value, btn){
+      try{
+        await navigator.clipboard.writeText(value);
+        if(btn){
+          const originalText = btn.textContent;
+          btn.textContent = 'تم النسخ! ✓';
+          btn.classList.add('success');
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('success');
+          }, 1600);
+        }
+        showCopied('✓ تم النسخ بنجاح');
+      }catch{
+        const temp = document.createElement('textarea');
+        temp.value = value;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        temp.remove();
+
+        if(btn){
+          const originalText = btn.textContent;
+          btn.textContent = 'تم النسخ! ✓';
+          btn.classList.add('success');
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('success');
+          }, 1600);
+        }
+        showCopied('✓ تم النسخ بنجاح');
+      }
+    }
+
+    function showNavHint(message='جاري الفتح...'){
+      navHint.textContent = message;
+      navHint.classList.add('show');
+      setTimeout(() => navHint.classList.remove('show'), 220);
+    }
+
+    function confettiBurst(x, y){
+      for(let i=0;i<18;i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = x + 'px';
+        c.style.top = y + 'px';
+        c.style.background = `hsl(${Math.random() * 360}, 90%, 60%)`;
+        c.style.setProperty('--x', (Math.random() * 140 - 70) + 'px');
+        c.style.setProperty('--y', (Math.random() * 140 - 70) + 'px');
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 700);
+      }
+    }
+
+    document.querySelectorAll('a.social-card, a.work-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if(!href || href === '#') return;
+
+        e.preventDefault();
+        const x = e.clientX || (window.innerWidth / 2);
+        const y = e.clientY || (window.innerHeight / 2);
+
+        confettiBurst(x, y);
+        showNavHint('جاري الفتح...');
+
+        setTimeout(() => {
+          const target = link.getAttribute('target');
+          if(target === '_blank') window.open(href, '_blank', 'noopener,noreferrer');
+          else window.location.href = href;
+        }, 300);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      r.style.width = r.style.height = '18px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+
+    const socialCards = document.querySelectorAll('.social-card');
+    function setSocialHover(active){
+      socialSection.classList.toggle('hovering', active);
+    }
+
+    function updateDirectionalShadow(el, e, strength = 14){
+      const rect = el.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+
+      const shadowX = (px - 0.5) * strength;
+      const shadowY = (py - 0.5) * strength;
+
+      el.style.setProperty('--shadow-x', `${shadowX.toFixed(1)}px`);
+      el.style.setProperty('--shadow-y', `${shadowY.toFixed(1)}px`);
+    }
+
+    function resetDirectionalShadow(el){
+      el.style.setProperty('--shadow-x', '0px');
+      el.style.setProperty('--shadow-y', '0px');
+    }
+
+    socialCards.forEach(cardItem => {
+      cardItem.addEventListener('mouseenter', () => setSocialHover(true));
+      cardItem.addEventListener('mouseleave', () => {
+        setSocialHover(false);
+        resetDirectionalShadow(cardItem);
+      });
+      cardItem.addEventListener('focusin', () => setSocialHover(true));
+      cardItem.addEventListener('focusout', () => setSocialHover(false));
+      cardItem.addEventListener('mousemove', (e) => updateDirectionalShadow(cardItem, e, 18));
+    });
+
+    document.querySelectorAll('.copy-btn, .work-link').forEach(el => {
+      el.addEventListener('mousemove', (e) => updateDirectionalShadow(el, e, 12));
+      el.addEventListener('mouseleave', () => resetDirectionalShadow(el));
+    });
+
+    const isDesktop = window.innerWidth > 768;
+    if(isDesktop){
+      cursor.style.display = 'block';
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
+        const x = (window.innerWidth / 2 - e.clientX) / 75;
+        const y = (window.innerHeight / 2 - e.clientY) / 75;
+        card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+      });
+      document.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
+    }else{
+      document.documentElement.style.setProperty('--mx', '50vw');
+      document.documentElement.style.setProperty('--my', '20vh');
+    }
+
+    window.addEventListener('load', () => {
+      const loader = document.querySelector('.loader');
+      if(loader) loader.style.display = 'none';
+    });
+  </script>
+</body>
 </html>
