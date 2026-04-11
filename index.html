@@ -1066,8 +1066,8 @@ const songs = [
 ].map((song, index) => ({
   ...song,
   index,
-  src: `./audio/${encodeURIComponent(song.base)}.mp3`,
-  cover: `./images/${encodeURIComponent(song.base)}.jpg`,
+  src: `./main/audio/${encodeURIComponent(song.base)}.mp3`,
+  cover: `./main/images/${encodeURIComponent(song.base)}.jpg`,
   fileLabel: `${song.base}.mp3`
 }));
 
