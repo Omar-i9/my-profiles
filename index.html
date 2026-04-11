@@ -1051,25 +1051,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const copyButtons = document.querySelectorAll("[data-copy]");
 
-  const songs = [
-    { base: "wildflower", title: "wildflower" },
-    { base: "درب المهالك", title: "درب المهالك" },
-    { base: "TV Girl - Cigarettes out the Window", title: "TV Girl - Cigarettes out the Window" },
-    { base: "Arctic Monkeys  505", title: "Arctic Monkeys  505" },
-    { base: "كلاش - نصيحة مشفق", title: "كلاش - نصيحة مشفق" },
-    { base: "Manu Chao - Me Gustas Tu", title: "Manu Chao - Me Gustas Tu" },
-    { base: "Dominic Fike Babydoll", title: "Dominic Fike Babydoll" },
-    { base: "Hotel Ugly - Shut Up My Moms Calling", title: "Hotel Ugly - Shut Up My Moms Calling" },
-    { base: "Powfu - death bed (coffee for your head)", title: "Powfu - death bed (coffee for your head)" },
-    { base: "Mohamed Alflahi – Athr Dhelak", title: "Mohamed Alflahi – Athr Dhelak" },
-    { base: "The Marيas - No One Noticed - Minimal Sounds", title: "The Marيas - No One Noticed - Minimal Sounds" }
-  ].map((song, index) => ({
-    ...song,
-    index,
-    src: `./main/${encodeURIComponent(song.base)}.mp3`,
-    cover: `./main/${encodeURIComponent(song.base)}.jpg`,
-    fileLabel: `${song.base}.mp3`
-  }));
+const songs = [
+  { base: "wildflower", title: "wildflower" },
+  { base: "arctic-505", title: "Arctic Monkeys 505" },
+  { base: "athr-dhelak", title: "Mohamed Alflahi – Athr Dhelak" },
+  { base: "babydoll", title: "Dominic Fike - Babydoll" },
+  { base: "death-bed", title: "Powfu - death bed (coffee for your head)" },
+  { base: "hotel-uglyy", title: "Hotel Ugly - Shut Up My Moms Calling" },
+  { base: "manu-chao", title: "Manu Chao - Me Gustas Tu" },
+  { base: "no-one-noticed", title: "The Marías - No One Noticed - Minimal Sounds" },
+  { base: "tv-girl", title: "TV Girl - Cigarettes out the Window" },
+  { base: "درب المهالك", title: "درب المهالك" },
+  { base: "كلاش - نصيحة مشفق", title: "كلاش - نصيحة مشفق" }
+].map((song, index) => ({
+  ...song,
+  index,
+  src: `./audio/${encodeURIComponent(song.base)}.mp3`,
+  cover: `./images/${encodeURIComponent(song.base)}.jpg`,
+  fileLabel: `${song.base}.mp3`
+}));
 
   let currentSongIndex = 0;
   let isSeeking = false;
