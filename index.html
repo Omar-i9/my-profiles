@@ -18,594 +18,554 @@
   <link rel="apple-touch-icon" href="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+  
   <style>
-    :root{
-  --bg:#0b0f16;
-  --card:rgba(17,22,31,.94);
-  --line:rgba(255,255,255,.08);
-  --text:#eef3f8;
-  --muted:#a9b4c3;
-  --shadow:0 18px 45px rgba(0,0,0,.45);
-}
+    :root {
+      --bg: #0b0f16;
+      --card: rgba(17,22,31,.94);
+      --line: rgba(255,255,255,.08);
+      --text: #eef3f8;
+      --muted: #a9b4c3;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+    }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  min-height:100dvh;
-  font-family:'Cairo',sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(0,242,255,.10), transparent 22%),
-    radial-gradient(circle at 82% 78%, rgba(129,140,248,.10), transparent 22%),
-    linear-gradient(180deg, #0b0f16, #090c12);
-  overflow-x:hidden;
-  padding:18px 12px 110px;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.app{
-  width:min(100%, 560px);
-  margin:0 auto;
-}
-
-.hero{
-  position:relative;
-  padding:78px 14px 18px;
-  border-radius:28px;
-  background:linear-gradient(180deg, rgba(28,34,47,.96), rgba(15,19,27,.96));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:var(--shadow);
-  overflow:visible;
-  text-align:center;
-  margin-bottom:14px;
-}
-
-.avatar {
-  position: absolute;
-  top: -58px; /* عشان تطلع نصها برا الكارد لفوق */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 118px;
-  height: 118px;
-  z-index: 10; /* عشان تضمن إنها فوق كل شي */
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* عشان الصورة ما تمط وتضل مرتبة */
-  border-radius: 50%;
-  border: 5px solid #0b0f16; /* الإطار اللي بيفصلها عن الكارد */
-  box-shadow: 0 12px 26px rgba(0,0,0,.5);
-}
-
-.status{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 12px;
-  border-radius:999px;
-  background:rgba(0,242,255,.10);
-  border:1px solid rgba(0,242,255,.16);
-  color:#bafcff;
-  font-size:12px;
-  margin-bottom:10px;
-}
-
-.hero h1{
-  font-size:24px;
-  font-weight:900;
-  line-height:1.2;
-}
-
-.hero p{
-  margin-top:8px;
-  color:var(--muted);
-  font-size:14px;
-}
-
-.hero-actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin-top:16px;
-  flex-wrap:wrap;
-}
-
-.mini-btn{
-  border:none;
-  min-height:44px;
-  padding:0 16px;
-  border-radius:14px;
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  transition:.2s ease;
-}
-
-.mini-btn:active{transform:scale(.98)}
-.mini-btn.primary{
-  background:#fff;
-  color:#000;
-}
-
-.section-title{
-  font-size:13px;
-  font-weight:900;
-  color:#c9d4e2;
-  margin:14px 2px 10px;
-}
-
-.links{
-  display:grid;
-  gap:10px;
-}
-
-.social-card{
-  --brand:#fff;
-  --brand-rgb:255,255,255;
-  --icon-hover:#fff;
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-height:78px;
-  padding:14px 14px 14px 82px;
-  border-radius:20px;
-  text-decoration:none;
-  color:#fff;
-  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 12px 24px rgba(0,0,0,.22);
-  transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
-  overflow:visible;
-}
-
-.social-card:hover,
-.social-card:focus-visible,
-.social-card:active{
-  background:#fff;
-  border-color:rgba(255,255,255,.55);
-  color:#000;
-  transform:translateY(-2px);
-  box-shadow:0 16px 34px rgba(0,0,0,.30);
-  outline:none;
-}
-
-.social-icon{
-  position:absolute;
-  left:12px;
-  top:50%;
-  width:50px;
-  height:50px;
-  transform:translateY(-50%);
-  border-radius:16px;
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  background:rgba(255,255,255,.08);
-  color:var(--brand);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 8px 18px rgba(0,0,0,.24);
-  transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
-}
-
-.social-card:hover .social-icon,
-.social-card:focus-visible .social-icon,
-.social-card:active .social-icon{
-  background:var(--icon-hover);
-  color:var(--brand);
-  transform:translateY(-50%) translateY(-2px) scale(1.04);
-}
-
-.social-text{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  text-align:right;
-  min-width:0;
-  margin-inline-start:56px;
-  position:relative;
-  z-index:1;
-}
-
-.social-text strong{
-  font-size:15px;
-  font-weight:900;
-}
-
-.social-text span{
-  font-size:11px;
-  color:rgba(255,255,255,.72);
-}
-
-.social-card:hover .social-text strong,
-.social-card:hover .social-text span,
-.social-card:focus-visible .social-text strong,
-.social-card:focus-visible .social-text span,
-.social-card:active .social-text strong,
-.social-card:active .social-text span{
-  color:#000;
-}
-
-.badge{
-  position:absolute;
-  top:-10px;
-  left:12px;
-  padding:4px 9px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-  color:#fff;
-  background:linear-gradient(135deg, #ff4d7d, #e1306c);
-  border:1px solid rgba(255,255,255,.12);
-}
-
-.vip{
-  background:linear-gradient(135deg, #7c3aed, #ec4899);
-}
-
-.fb-card{--brand:#1877F2; --icon-hover:#fff;}
-.wa-card{--brand:#25D366; --icon-hover:#fff;}
-.ig-card{--brand:#E1306C; --icon-hover:#fff;}
-.tk-card{--brand:#000000; --icon-hover:#fff;}
-.ds-card{--brand:#5865F2; --icon-hover:#fff;}
-.sc-card{
-  --brand:#111;
-  --icon-hover:#fff;
-}
-.sc-card .social-icon{
-  color:#000;
-  background:#FFFC00;
-  border-color:rgba(255,252,0,.26);
-}
-.sc-card:hover,
-.sc-card:focus-visible,
-.sc-card:active{
-  color:#000;
-}
-.sc-card:hover .social-text strong,
-.sc-card:hover .social-text span,
-.sc-card:focus-visible .social-text strong,
-.sc-card:focus-visible .social-text span,
-.sc-card:active .social-text strong,
-.sc-card:active .social-text span{
-  color:#000;
-}
-.st-card{--brand:#1b2838; --icon-hover:#fff;}
-
-.copy-list{
-  display:grid;
-  gap:10px;
-}
-.copy-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-}
-.copy-meta{
-  min-width:0;
-}
-.copy-meta span{
-  display:block;
-  color:#9ca9b8;
-  font-size:12px;
-}
-.copy-meta strong{
-  display:block;
-  margin-top:4px;
-  font-size:14px;
-}
-.copy-btn{
-  border:none;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  padding:10px 12px;
-  border-radius:12px;
-  cursor:pointer;
-  font-family:inherit;
-  font-size:12px;
-  white-space:nowrap;
-}
-
-.work-card{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  color:#fff;
-  padding:10px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.06);
-  transition:.18s ease;
-}
-.work-card:active{transform:scale(.99)}
-.work-logo{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  object-fit:cover;
-  flex:0 0 auto;
-  background:#fff;
-}
-.work-text{
-  flex:1;
-  min-width:0;
-  text-align:right;
-}
-.work-text strong{
-  display:block;
-  font-size:14px;
-  margin-bottom:3px;
-}
-.work-text span{
-  font-size:12px;
-  color:#9eaabc;
-}
-
-.footer{
-  margin-top:14px;
-  font-size:12px;
-  color:rgba(230,237,243,.62);
-  text-align:center;
-}
-.footer em{
-  font-style:normal;
-  color:#b8f7ff;
-}
-
-.music-fab{
-  position:fixed;
-  bottom:16px;
-  right:16px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  border:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:linear-gradient(135deg, #00f2ff, #818cf8);
-  color:#000;
-
-  box-shadow:0 10px 25px rgba(0,0,0,.4);
-  cursor:pointer;
-  z-index:999;
-  transition:.2s;
-}
-
-    .music-fab:active{
-  transform:scale(0.9);
-}
-    .music-fab i{
-  font-size:22px;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.38);
-  opacity:0;
-  pointer-events:none;
-  transition:.18s ease;
-  z-index:9996;
-}
-.overlay.open{
-  opacity:1;
-  pointer-events:auto;
-}
+    body {
+      min-height: 100dvh;
+      font-family: 'Cairo', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0,242,255,.10), transparent 22%),
+        radial-gradient(circle at 82% 78%, rgba(129,140,248,.10), transparent 22%),
+        linear-gradient(180deg, #0b0f16, #090c12);
+      overflow-x: hidden;
+      padding: 18px 12px 110px;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.music-sheet{
-  position:fixed;
-  left:50%;
-  bottom:84px;
-  transform:translateX(-50%) translateY(18px) scale(.98);
-  width:min(100vw - 24px, 420px);
-  background:rgba(10,14,22,.96);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  box-shadow:0 18px 40px rgba(0,0,0,.45);
-  padding:14px;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transition:.2s ease;
-  z-index:9997;
-}
-.music-sheet.open{
-  transform:translateX(-50%) translateY(0) scale(1);
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-}
+    .app {
+      width: min(100%, 560px);
+      margin: 0 auto;
+    }
 
-.sheet-close{
-  position:absolute;
-  top:10px;
-  left:10px;
-  width:34px;
-  height:34px;
-  border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-size:20px;
-}
+    .hero {
+      position: relative;
+      margin-top: 60px; /* تم إضافة هذا السطر لضمان عدم قص الصورة من الأعلى */
+      padding: 78px 14px 18px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(28,34,47,.96), rgba(15,19,27,.96));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      overflow: visible;
+      text-align: center;
+      margin-bottom: 14px;
+    }
 
-.music-top{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-.music-cover{
-  width:58px;
-  height:58px;
-  border-radius:14px;
-  object-fit:cover;
-  border:1px solid rgba(255,255,255,.08);
-  flex:0 0 auto;
-}
-.music-info{
-  flex:1;
-  min-width:0;
-  text-align:right;
-}
-.music-info .label{
-  display:block;
-  font-size:11px;
-  color:#93a4b5;
-  margin-bottom:2px;
-}
-.music-info strong{
-  display:block;
-  font-size:14px;
-  font-weight:900;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.music-info span:last-child{
-  display:block;
-  font-size:11px;
-  color:#a9b4c3;
-  margin-top:2px;
-}
+    .avatar {
+      position: absolute;
+      top: -58px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 118px;
+      z-index: 10;
+    }
 
-.music-controls{
-  margin-top:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-.control-btn,
-.play-btn{
-  border:none;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.control-btn{
-  width:36px;
-  height:36px;
-  background:rgba(255,255,255,.05);
-  color:#fff;
-  opacity:.75;
-}
-.play-btn{
-  width:46px;
-  height:46px;
-  background:#fff;
-  color:#000;
-  box-shadow:0 10px 20px rgba(0,0,0,.22);
-  font-size:16px;
-}
-.progress{
-  margin-top:10px;
-  width:100%;
-  height:4px;
-  background:rgba(255,255,255,.08);
-  border-radius:999px;
-  overflow:hidden;
-}
-.progress span{
-  display:block;
-  width:0%;
-  height:100%;
-  background:linear-gradient(90deg, #00f2ff, #818cf8);
-  border-radius:999px;
-}
-.seek{
-  width:100%;
-  margin-top:10px;
-  appearance:none;
-  height:5px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  outline:none;
-}
-.seek::-webkit-slider-thumb{
-  appearance:none;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:#fff;
-}
-.seek::-moz-range-thumb{
-  width:14px;
-  height:14px;
-  border:none;
-  border-radius:50%;
-  background:#fff;
-}
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid #0b0f16;
+      box-shadow: 0 12px 26px rgba(0,0,0,.5);
+    }
 
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:20px;
-  transform:translateX(-50%) translateY(18px);
-  opacity:0;
-  pointer-events:none;
-  background:rgba(15,23,42,.94);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:999px;
-  padding:11px 16px;
-  box-shadow:0 16px 40px rgba(0,0,0,.3);
-  transition:all .2s ease;
-  font-weight:800;
-  z-index:99999;
-}
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0,242,255,.10);
+      border: 1px solid rgba(0,242,255,.16);
+      color: #bafcff;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
 
-@media (min-width:700px){
-  body{padding-left:22px;padding-right:22px}
-  .app{max-width:620px}
-}
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
 
-@media (prefers-reduced-motion: reduce){
-  *{
-    animation-duration:.001ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.001ms !important;
-    scroll-behavior:auto !important;
- }
-  @keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(0,242,255,.6);}
-  70%{box-shadow:0 0 0 15px rgba(0,242,255,0);}
-  100%{box-shadow:0 0 0 0 rgba(0,242,255,0);}
-}
-}
+    .hero p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      border: none;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .mini-btn:active { transform: scale(.98); }
+    .mini-btn.primary { background: #fff; color: #000; }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #c9d4e2;
+      margin: 14px 2px 10px;
+    }
+
+    .links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .social-card {
+      --brand: #fff;
+      --brand-rgb: 255,255,255;
+      --icon-hover: #fff;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 78px;
+      padding: 14px 14px 14px 82px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 24px rgba(0,0,0,.22);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      overflow: visible;
+    }
+
+    .social-card:hover, .social-card:focus-visible, .social-card:active {
+      background: #fff;
+      border-color: rgba(255,255,255,.55);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(0,0,0,.30);
+      outline: none;
+    }
+
+    .social-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      width: 50px;
+      height: 50px;
+      transform: translateY(-50%);
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      background: rgba(255,255,255,.08);
+      color: var(--brand);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 8px 18px rgba(0,0,0,.24);
+      transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+    }
+
+    .social-card:hover .social-icon, .social-card:focus-visible .social-icon, .social-card:active .social-icon {
+      background: var(--icon-hover);
+      color: var(--brand);
+      transform: translateY(-50%) translateY(-2px) scale(1.04);
+    }
+
+    .social-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: right;
+      min-width: 0;
+      margin-inline-start: 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .social-text strong {
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .social-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,.72);
+    }
+
+    .social-card:hover .social-text strong, .social-card:hover .social-text span, 
+    .social-card:focus-visible .social-text strong, .social-card:focus-visible .social-text span, 
+    .social-card:active .social-text strong, .social-card:active .social-text span {
+      color: #000;
+    }
+
+    .badge {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #ff4d7d, #e1306c);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .vip { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+    .fb-card { --brand: #1877F2; --icon-hover: #fff; }
+    .wa-card { --brand: #25D366; --icon-hover: #fff; }
+    .ig-card { --brand: #E1306C; --icon-hover: #fff; }
+    .tk-card { --brand: #000000; --icon-hover: #fff; }
+    .ds-card { --brand: #5865F2; --icon-hover: #fff; }
+    .sc-card { --brand: #111; --icon-hover: #fff; }
+    
+    .sc-card .social-icon {
+      color: #000;
+      background: #FFFC00;
+      border-color: rgba(255,252,0,.26);
+    }
+    
+    .sc-card:hover, .sc-card:focus-visible, .sc-card:active { color: #000; }
+    
+    .sc-card:hover .social-text strong, .sc-card:hover .social-text span, 
+    .sc-card:focus-visible .social-text strong, .sc-card:focus-visible .social-text span, 
+    .sc-card:active .social-text strong, .sc-card:active .social-text span {
+      color: #000;
+    }
+    
+    .st-card { --brand: #1b2838; --icon-hover: #fff; }
+
+    .copy-list { display: grid; gap: 10px; }
+    
+    .copy-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    
+    .copy-meta { min-width: 0; }
+    .copy-meta span { display: block; color: #9ca9b8; font-size: 12px; }
+    .copy-meta strong { display: block; margin-top: 4px; font-size: 14px; }
+    
+    .copy-btn {
+      border: none;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .work-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      transition: .18s ease;
+    }
+    
+    .work-card:active { transform: scale(.99); }
+    
+    .work-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+      background: #fff;
+    }
+    
+    .work-text { flex: 1; min-width: 0; text-align: right; }
+    .work-text strong { display: block; font-size: 14px; margin-bottom: 3px; }
+    .work-text span { font-size: 12px; color: #9eaabc; }
+
+    .footer {
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(230,237,243,.62);
+      text-align: center;
+    }
+    
+    .footer em { font-style: normal; color: #b8f7ff; }
+
+    .music-fab {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #00f2ff, #818cf8);
+      color: #000;
+      box-shadow: 0 10px 25px rgba(0,0,0,.4);
+      cursor: pointer;
+      z-index: 999;
+      transition: .2s;
+    }
+
+    .music-fab:active { transform: scale(0.9); }
+    .music-fab i { font-size: 22px; }
+        
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.38);
+      opacity: 0;
+      pointer-events: none;
+      transition: .18s ease;
+      z-index: 9996;
+    }
+    
+    .overlay.open { opacity: 1; pointer-events: auto; }
+
+    .music-sheet {
+      position: fixed;
+      left: 50%;
+      bottom: 84px;
+      transform: translateX(-50%) translateY(18px) scale(.98);
+      width: min(100vw - 24px, 420px);
+      background: rgba(10,14,22,.96);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.45);
+      padding: 14px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: .2s ease;
+      z-index: 9997;
+    }
+    
+    .music-sheet.open {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .sheet-close {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .music-top {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .music-cover {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.08);
+      flex: 0 0 auto;
+    }
+    
+    .music-info { flex: 1; min-width: 0; text-align: right; }
+    .music-info .label { display: block; font-size: 11px; color: #93a4b5; margin-bottom: 2px; }
+    
+    .music-info strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .music-info span:last-child {
+      display: block;
+      font-size: 11px;
+      color: #a9b4c3;
+      margin-top: 2px;
+    }
+
+    .music-controls {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    
+    .control-btn, .play-btn {
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .control-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,.05);
+      color: #fff;
+      opacity: .75;
+      cursor: pointer;
+    }
+    
+    .play-btn {
+      width: 46px;
+      height: 46px;
+      background: #fff;
+      color: #000;
+      box-shadow: 0 10px 20px rgba(0,0,0,.22);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    .progress {
+      margin-top: 10px;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #00f2ff, #818cf8);
+      border-radius: 999px;
+    }
+    
+    .seek {
+      width: 100%;
+      margin-top: 10px;
+      appearance: none;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      outline: none;
+      cursor: pointer;
+    }
+    
+    .seek::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+    }
+    
+    .seek::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(15,23,42,.94);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      padding: 11px 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.3);
+      transition: all .2s ease;
+      font-weight: 800;
+      z-index: 99999;
+    }
+    
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (min-width:700px) {
+      body { padding-left: 22px; padding-right: 22px; }
+      .app { max-width: 620px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,242,255,.6); }
+      70% { box-shadow: 0 0 0 15px rgba(0,242,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,242,255,0); }
+    }
   </style>
+</head>
 <body>
 
   <main class="app">
-<section class="hero">
-  <img src="assets/img/profile.jpeg" alt="صورة عمر" class="avatar">
-
-  <div class="hero-text">
-    <span class="status">BUSY</span>
-    <h1>Omar Profiles</h1>
-    <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
-  </div>
-
-  <div class="hero-actions">
-    </div>
-</section>
-      <div class="hero-actions">
+    <section class="hero">
+      <div class="avatar">
+        <img src="assets/img/profile.jpeg" alt="صورة عمر">
       </div>
+
+      <div class="hero-text">
+        <span class="status">BUSY</span>
+        <h1>Omar Profiles</h1>
+        <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
+      </div>
+
+      <div class="hero-actions">
+        </div>
     </section>
 
     <section class="section-title">روابط التواصل</section>
@@ -724,18 +684,18 @@ body{
     <button class="sheet-close" id="closeMusicBtn" type="button" aria-label="إغلاق">×</button>
 
     <div class="music-top">
-      <img src="assets/img/music-cover.jpg" alt="غلاف الأغنية" class="music-cover">
+      <img src="" id="musicCover" alt="غلاف الأغنية" class="music-cover">
       <div class="music-info">
         <span class="label">Now Playing</span>
-        <strong>درب المهالك</strong>
-        <span>ملف محلي داخل المشروع</span>
+        <strong id="songTitle">اسم الأغنية</strong>
+        <span id="songArtist">الفنان</span>
       </div>
     </div>
 
     <div class="music-controls">
-      <button class="control-btn" type="button"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="control-btn" id="prevSongBtn" type="button"><i class="fa-solid fa-backward-step"></i></button>
       <button class="play-btn" id="playBtn" type="button"><i class="fa-solid fa-play" id="playIcon"></i></button>
-      <button class="control-btn" type="button"><i class="fa-solid fa-forward-step"></i></button>
+      <button class="control-btn" id="nextSongBtn" type="button"><i class="fa-solid fa-forward-step"></i></button>
     </div>
 
     <div class="progress">
@@ -744,7 +704,7 @@ body{
 
     <input id="seekBar" class="seek" type="range" min="0" max="100" value="0" step="0.1">
 
-    <audio id="audio" preload="metadata" src="assets/audio/song.mp3"></audio>
+    <audio id="audio" preload="metadata" src=""></audio>
   </section>
 
   <div class="toast" id="toast">تم النسخ</div>
@@ -759,14 +719,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicSheet = document.getElementById("musicSheet");
   const overlay = document.getElementById("overlay");
   const closeMusicBtn = document.getElementById("closeMusicBtn");
-  const openMusicBtn = document.getElementById("openMusicBtn");
   const audio = document.getElementById("audio");
   const playBtn = document.getElementById("playBtn");
   const playIcon = document.getElementById("playIcon");
   const progressBar = document.getElementById("progressBar");
   const seekBar = document.getElementById("seekBar");
-  const copyNameBtn = document.getElementById("copyNameBtn");
-
+  
+  // المتغيرات اللي كانت ناقصة بالـ HTML وضفناها عشان تشتغل الديناميكية صح
   const songTitle = document.getElementById("songTitle");
   const songArtist = document.getElementById("songArtist");
   const musicCover = document.getElementById("musicCover");
@@ -774,28 +733,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextSongBtn = document.getElementById("nextSongBtn");
 
   // =========================
-  // Playlist
+  // Playlist الذكية
   // =========================
-  const songs = [
-    {
-      title: "درب المهالك",
-      artist: "ملف محلي داخل المشروع",
-      src: "./assets/audio/song1.mp3",
-      cover: "./assets/img/song1.jpg"
-    },
-    {
-      title: "الأغنية الثانية",
-      artist: "ملف محلي داخل المشروع",
-      src: "./assets/audio/song2.mp3",
-      cover: "./assets/img/song2.jpg"
-    },
-    {
-      title: "الأغنية الثالثة",
-      artist: "ملف محلي داخل المشروع",
-      src: "./assets/audio/song3.mp3",
-      cover: "./assets/img/song3.jpg"
-    }
+  // هون بتضيف الأغاني بكل سهولة! 
+  // 'filename' هو اسم الملف اللي بالـ GitHub (بدون .mp3 وبدون .jpg)
+  // 'displayName' هو الاسم اللي بدك اياه يطلع للمستخدم بالعربي
+  const playlistData = [
+    { filename: "song1", displayName: "درب المهالك" },
+    { filename: "song2", displayName: "الأغنية الثانية" },
+    { filename: "song3", displayName: "الأغنية الثالثة" }
   ];
+
+  // النظام الذكي اللي بيبني الروابط لحاله بناءً على الأسماء اللي فوق
+  const songs = playlistData.map(song => ({
+    title: song.displayName,
+    artist: "ملف محلي داخل المشروع",
+    src: `./assets/audio/${song.filename}.mp3`,
+    cover: `./assets/img/${song.filename}.jpg`
+  }));
 
   let currentSongIndex = 0;
 
@@ -868,36 +823,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     audio.src = song.src;
 
+    // تحديث المعلومات بشكل مباشر وحي
     if (songTitle) songTitle.textContent = song.title;
     if (songArtist) songArtist.textContent = song.artist;
+    
+    // إذا الصورة مش موجودة بحط صورة افتراضية أو بتركها فاضية، بس إنت تأكد إنه الصور موجودة
     if (musicCover) musicCover.src = song.cover;
 
     audio.load();
 
     if (autoplay) {
-      audio.play().catch(() => {});
+      audio.play().catch(e => console.log("تحتاج تفاعل من المستخدم لتشغيل الصوت"));
     }
-
-    showToast(`تم تحميل: ${song.title}`);
   }
 
   function nextSong() {
     if (!songs.length) return;
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadSong(currentSongIndex, true);
+    showToast(`تم تشغيل الأغنية التالية`);
   }
 
   function prevSong() {
     if (!songs.length) return;
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     loadSong(currentSongIndex, true);
+    showToast(`تم تشغيل الأغنية السابقة`);
   }
 
   function togglePlay() {
     if (!audio) return;
 
     if (audio.paused) {
-      audio.play().catch(() => {});
+      audio.play().catch(e => showToast("عذراً، المتصفح يمنع التشغيل التلقائي"));
     } else {
       audio.pause();
     }
@@ -914,7 +872,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Events - Music panel
   // =========================
   if (musicFab) musicFab.addEventListener("click", openMusic);
-  if (openMusicBtn) openMusicBtn.addEventListener("click", openMusic);
   if (closeMusicBtn) closeMusicBtn.addEventListener("click", closeMusic);
   if (overlay) overlay.addEventListener("click", closeMusic);
 
@@ -936,7 +893,7 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.addEventListener("ended", () => {
       setPlayIcon(false);
       updatePulse(false);
-      nextSong();
+      nextSong(); // تقلب لحالها لما تخلص الأغنية
     });
 
     audio.addEventListener("timeupdate", updateProgress);
@@ -954,10 +911,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // Copy actions
   // =========================
-  if (copyNameBtn) {
-    copyNameBtn.addEventListener("click", () => copyText("Omar"));
-  }
-
   document.querySelectorAll("[data-copy]").forEach((btn) => {
     btn.addEventListener("click", () => copyText(btn.dataset.copy));
   });
@@ -969,17 +922,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") closeMusic();
     if (e.key === "ArrowRight") prevSong();
     if (e.key === "ArrowLeft") nextSong();
-  });
-
-  // =========================
-  // Safe close if clicked outside sheet
-  // =========================
-  document.addEventListener("click", (e) => {
-    if (!musicSheet || !musicFab) return;
-    if (!musicSheet.contains(e.target) && !musicFab.contains(e.target)) {
-      // لا تغلق إلا إذا كانت مفتوحة
-      if (musicSheet.classList.contains("open")) closeMusic();
-    }
   });
 });
 </script>
