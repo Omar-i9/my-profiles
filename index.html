@@ -5,1167 +5,974 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0f16" />
   <meta name="color-scheme" content="dark" />
-
-  <meta property="og:title" content="Omar Profiles | عمر">
-  <meta property="og:description" content="كل حساباتي في مكان واحد.. حياكم الله!">
-  <meta property="og:image" content="https://omar-i9.github.io/my-profiles/profile.jpeg">
-  <meta property="og:url" content="https://omar-i9.github.io/my-profiles/">
-  <meta name="twitter:card" content="summary_large_image">
-
   <title>Omar Profiles</title>
 
-  <link rel="icon" href="https://omar-i9.github.io/my-profiles/profile.jpeg" type="image/jpeg" />
-  <link rel="apple-touch-icon" href="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
   <style>
     :root{
-      --bg:#0b0f16;
-      --card:rgba(17,22,31,.92);
-      --line:rgba(255,255,255,.08);
-      --text:#eef3f8;
-      --muted:#a9b4c3;
-      --accent:#00f2ff;
-      --accent2:#818cf8;
-      --shadow:0 18px 45px rgba(0,0,0,.45);
-      --music-bg:rgba(10,14,22,.96);
-      --brand:#fff;
-      --brand-rgb:255,255,255;
-      --icon-hover:#fff;
-    }
+  --bg:#0b0f16;
+  --card:rgba(17,22,31,.94);
+  --line:rgba(255,255,255,.08);
+  --text:#eef3f8;
+  --muted:#a9b4c3;
+  --shadow:0 18px 45px rgba(0,0,0,.45);
+}
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{
-      min-height:100dvh;
-      font-family:'Cairo',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(0,242,255,.10), transparent 22%),
-        radial-gradient(circle at 82% 78%, rgba(129,140,248,.10), transparent 22%),
-        linear-gradient(180deg, #0b0f16, #090c12);
-      overflow-x:hidden;
-      padding:18px 12px 110px;
-      -webkit-tap-highlight-color:transparent;
-    }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100dvh;
+  font-family:'Cairo',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(0,242,255,.10), transparent 22%),
+    radial-gradient(circle at 82% 78%, rgba(129,140,248,.10), transparent 22%),
+    linear-gradient(180deg, #0b0f16, #090c12);
+  overflow-x:hidden;
+  padding:18px 12px 110px;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 10% 18%, rgba(255,255,255,.05), transparent 12%),
-        radial-gradient(circle at 84% 26%, rgba(255,255,255,.05), transparent 14%),
-        radial-gradient(circle at 24% 72%, rgba(255,255,255,.05), transparent 12%),
-        radial-gradient(circle at 72% 86%, rgba(255,255,255,.05), transparent 12%);
-      opacity:.55;
-      z-index:-3;
-    }
+.app{
+  width:min(100%, 560px);
+  margin:0 auto;
+}
 
-    .bg{
-      position:fixed;
-      inset:0;
-      z-index:-2;
-      pointer-events:none;
-      overflow:hidden;
-    }
-    .orb{
-      position:absolute;
-      border-radius:50%;
-      filter:blur(55px);
-      opacity:.10;
-      animation:drift 18s ease-in-out infinite alternate;
-    }
-    .orb.one{width:220px;height:220px;top:6%;left:-40px;background:var(--accent)}
-    .orb.two{width:200px;height:200px;right:-30px;bottom:10%;background:var(--accent2);animation-duration:22s}
-    .orb.three{width:140px;height:140px;left:36%;top:48%;background:#22c55e;opacity:.05;animation-duration:26s}
-    @keyframes drift{
-      from{transform:translate(0,0) scale(1)}
-      to{transform:translate(16px,-12px) scale(1.06)}
-    }
+.hero{
+  position:relative;
+  padding:78px 14px 18px;
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(28,34,47,.96), rgba(15,19,27,.96));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  overflow:visible;
+  text-align:center;
+  margin-bottom:14px;
+}
 
-    .floating-icons-bg{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
-      overflow:hidden;
-      opacity:.55;
-    }
-    .floating-icons-bg i{
-      position:absolute;
-      bottom:-90px;
-      left:var(--left);
-      font-size:var(--size);
-      color:var(--color);
-      opacity:0.10;
-      animation:floatUp var(--dur) linear infinite;
-      animation-delay:var(--delay);
-      text-shadow:0 0 12px currentColor;
-    }
-    @keyframes floatUp{
-      0%{transform:translateY(0) rotate(0deg);opacity:0}
-      12%{opacity:.16}
-      100%{transform:translateY(-120vh) rotate(360deg);opacity:0}
-    }
+.avatar-wrap{
+  position:absolute;
+  top:-52px;
+  left:50%;
+  transform:translateX(-50%);
+  width:106px;
+  height:106px;
+}
 
-    .card{
-      width:min(100%, 560px);
-      margin:0 auto;
-      padding:84px 14px 18px;
-      border-radius:28px;
-      background:linear-gradient(180deg, rgba(28,34,47,.94), rgba(15,19,27,.94));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:visible;
-    }
+.avatar{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+  border:5px solid #0b0f16;
+  box-shadow:0 12px 26px rgba(0,0,0,.5);
+  background:#fff;
+}
 
-    .avatar{
-      position:absolute;
-      top:-58px;
-      left:50%;
-      transform:translateX(-50%);
-      width:118px;
-      height:118px;
-      z-index:2;
-    }
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      border-radius:50%;
-      border:5px solid #0b0f16;
-      box-shadow:0 12px 26px rgba(0,0,0,.5);
-      background:#fff;
-    }
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(0,242,255,.10);
+  border:1px solid rgba(0,242,255,.16);
+  color:#bafcff;
+  font-size:12px;
+  margin-bottom:10px;
+}
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:42px;
-      height:42px;
-      margin:0 auto 12px;
-      border-radius:999px;
-      background:rgba(0,242,255,.10);
-      border:1px solid rgba(0,242,255,.16);
-      color:#bafcff;
-    }
+.hero h1{
+  font-size:24px;
+  font-weight:900;
+  line-height:1.2;
+}
 
-    h1{
-      font-size:24px;
-      line-height:1.3;
-      margin-bottom:8px;
-      font-weight:900;
-      text-align:center;
-    }
+.hero p{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:14px;
+}
 
-    .typing{
-      min-height:28px;
-      font-size:15px;
-      color:var(--muted);
-      margin-bottom:12px;
-      line-height:1.8;
-      text-align:center;
-    }
+.hero-actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-top:16px;
+  flex-wrap:wrap;
+}
 
-    .sub{
-      display:block;
-      width:fit-content;
-      margin:0 auto 14px;
-      font-size:12px;
-      color:#93a4b5;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:12px;
-      padding:8px 12px;
-    }
+.mini-btn{
+  border:none;
+  min-height:44px;
+  padding:0 16px;
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
+}
 
-    .section-title{
-      text-align:right;
-      font-size:13px;
-      font-weight:800;
-      color:#c9d4e2;
-      margin:14px 2px 10px;
-    }
+.mini-btn:active{transform:scale(.98)}
+.mini-btn.primary{
+  background:#fff;
+  color:#000;
+}
 
-    .social-section{
-      position:relative;
-      border-radius:24px;
-      padding:12px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);
-      overflow:hidden;
-    }
+.section-title{
+  font-size:13px;
+  font-weight:900;
+  color:#c9d4e2;
+  margin:14px 2px 10px;
+}
 
-    .social-backdrop{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:.55;
-      filter:blur(8px);
-      overflow:hidden;
-    }
-    .float-brand{
-      position:absolute;
-      font-size:26px;
-      opacity:.08;
-      animation:floatBrand 10s linear infinite;
-    }
-    @keyframes floatBrand{
-      0%{transform:translateY(110%) rotate(-8deg);opacity:0}
-      15%{opacity:.12}
-      100%{transform:translateY(-130%) rotate(10deg);opacity:0}
-    }
+.links{
+  display:grid;
+  gap:10px;
+}
 
-    .links{
-      display:grid;
-      gap:10px;
-      position:relative;
-      z-index:1;
-    }
+.social-card{
+  --brand:#fff;
+  --brand-rgb:255,255,255;
+  --icon-hover:#fff;
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:78px;
+  padding:14px 14px 14px 82px;
+  border-radius:20px;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 24px rgba(0,0,0,.22);
+  transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+  overflow:visible;
+}
 
-    .social-card{
-      --brand:#fff;
-      --brand-rgb:255,255,255;
-      --icon-hover:#fff;
-      position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      min-height:78px;
-      padding:14px 14px 14px 84px;
-      border-radius:20px;
-      text-decoration:none;
-      color:#fff;
-      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 12px 24px rgba(0,0,0,.22);
-      transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
-      user-select:none;
-      overflow:visible;
-    }
+.social-card:hover,
+.social-card:focus-visible,
+.social-card:active{
+  background:#fff;
+  border-color:rgba(255,255,255,.55);
+  color:#000;
+  transform:translateY(-2px);
+  box-shadow:0 16px 34px rgba(0,0,0,.30);
+  outline:none;
+}
 
-    .social-card::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.07) 50%, transparent 100%);
-      opacity:.4;
-      pointer-events:none;
-      transition:opacity .18s ease;
-    }
+.social-icon{
+  position:absolute;
+  left:12px;
+  top:50%;
+  width:50px;
+  height:50px;
+  transform:translateY(-50%);
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  background:rgba(255,255,255,.08);
+  color:var(--brand);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 18px rgba(0,0,0,.24);
+  transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+}
 
-    .social-card:hover,
-    .social-card:focus-visible,
-    .social-card:active{
-      background:linear-gradient(180deg, rgba(var(--brand-rgb),.96), rgba(var(--brand-rgb),.72));
-      border-color:rgba(var(--brand-rgb),.38);
-      box-shadow:0 16px 34px rgba(0,0,0,.30);
-      transform:translateY(-2px);
-      outline:none;
-    }
+.social-card:hover .social-icon,
+.social-card:focus-visible .social-icon,
+.social-card:active .social-icon{
+  background:var(--icon-hover);
+  color:var(--brand);
+  transform:translateY(-50%) translateY(-2px) scale(1.04);
+}
 
-    .social-card:hover::before,
-    .social-card:focus-visible::before{
-      opacity:.2;
-    }
+.social-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  text-align:right;
+  min-width:0;
+  margin-inline-start:56px;
+  position:relative;
+  z-index:1;
+}
 
-    .social-icon{
-      position:absolute;
-      left:12px;
-      top:50%;
-      width:50px;
-      height:50px;
-      transform:translateY(-50%);
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      font-size:22px;
-      background:rgba(255,255,255,.08);
-      color:var(--brand);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 8px 18px rgba(0,0,0,.24);
-      transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
-    }
+.social-text strong{
+  font-size:15px;
+  font-weight:900;
+}
 
-    .social-icon i{
-      transition:transform .18s ease;
-    }
+.social-text span{
+  font-size:11px;
+  color:rgba(255,255,255,.72);
+}
 
-    .social-card:hover .social-icon,
-    .social-card:focus-visible .social-icon,
-    .social-card:active .social-icon{
-      background:var(--icon-hover);
-      color:var(--brand);
-      transform:translateY(-50%) translateY(-3px) scale(1.04);
-      box-shadow:0 10px 20px rgba(0,0,0,.26);
-    }
+.social-card:hover .social-text strong,
+.social-card:hover .social-text span,
+.social-card:focus-visible .social-text strong,
+.social-card:focus-visible .social-text span,
+.social-card:active .social-text strong,
+.social-card:active .social-text span{
+  color:#000;
+}
 
-    .social-card:hover .social-icon i,
-    .social-card:focus-visible .social-icon i,
-    .social-card:active .social-icon i{
-      transform:translateY(-3px) scale(1.08);
-    }
+.badge{
+  position:absolute;
+  top:-10px;
+  left:12px;
+  padding:4px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  color:#fff;
+  background:linear-gradient(135deg, #ff4d7d, #e1306c);
+  border:1px solid rgba(255,255,255,.12);
+}
 
-    .social-face{
-      position:absolute;
-      right:10px;
-      top:50%;
-      width:40px;
-      height:40px;
-      transform:translateY(-50%);
-      object-fit:cover;
-      border-radius:50%;
-      border:2px solid rgba(255,255,255,.28);
-      box-shadow:0 8px 18px rgba(0,0,0,.32);
-    }
+.vip{
+  background:linear-gradient(135deg, #7c3aed, #ec4899);
+}
 
-    .social-text{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      text-align:right;
-      min-width:0;
-      margin-inline-start:56px;
-      z-index:1;
-      position:relative;
-    }
+.fb-card{--brand:#1877F2; --icon-hover:#fff;}
+.wa-card{--brand:#25D366; --icon-hover:#fff;}
+.ig-card{--brand:#E1306C; --icon-hover:#fff;}
+.tk-card{--brand:#000000; --icon-hover:#fff;}
+.ds-card{--brand:#5865F2; --icon-hover:#fff;}
+.sc-card{
+  --brand:#111;
+  --icon-hover:#fff;
+}
+.sc-card .social-icon{
+  color:#000;
+  background:#FFFC00;
+  border-color:rgba(255,252,0,.26);
+}
+.sc-card:hover,
+.sc-card:focus-visible,
+.sc-card:active{
+  color:#000;
+}
+.sc-card:hover .social-text strong,
+.sc-card:hover .social-text span,
+.sc-card:focus-visible .social-text strong,
+.sc-card:focus-visible .social-text span,
+.sc-card:active .social-text strong,
+.sc-card:active .social-text span{
+  color:#000;
+}
+.st-card{--brand:#1b2838; --icon-hover:#fff;}
 
-    .social-title{
-      font-size:15px;
-      font-weight:900;
-      line-height:1.2;
-    }
-    .social-sub{
-      font-size:11px;
-      color:rgba(255,255,255,.72);
-      transition:color .18s ease;
-    }
+.copy-list{
+  display:grid;
+  gap:10px;
+}
+.copy-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+}
+.copy-meta{
+  min-width:0;
+}
+.copy-meta span{
+  display:block;
+  color:#9ca9b8;
+  font-size:12px;
+}
+.copy-meta strong{
+  display:block;
+  margin-top:4px;
+  font-size:14px;
+}
+.copy-btn{
+  border:none;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:12px;
+  white-space:nowrap;
+}
 
-    .social-card:hover .social-title,
-    .social-card:focus-visible .social-title,
-    .social-card:active .social-title,
-    .social-card:hover .social-sub,
-    .social-card:focus-visible .social-sub,
-    .social-card:active .social-sub{
-      color:#fff;
-    }
+.work-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:#fff;
+  padding:10px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  transition:.18s ease;
+}
+.work-card:active{transform:scale(.99)}
+.work-logo{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  object-fit:cover;
+  flex:0 0 auto;
+  background:#fff;
+}
+.work-text{
+  flex:1;
+  min-width:0;
+  text-align:right;
+}
+.work-text strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:3px;
+}
+.work-text span{
+  font-size:12px;
+  color:#9eaabc;
+}
 
-    .private-badge{
-      position:absolute;
-      top:-10px;
-      left:12px;
-      padding:4px 9px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:900;
-      color:#fff;
-      background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 8px 14px rgba(0,0,0,.22);
-    }
+.footer{
+  margin-top:14px;
+  font-size:12px;
+  color:rgba(230,237,243,.62);
+  text-align:center;
+}
+.footer em{
+  font-style:normal;
+  color:#b8f7ff;
+}
 
-    .fb-card{--brand:#1877F2; --brand-rgb:24,119,242; --icon-hover:#fff;}
-    .wa-card{--brand:#25D366; --brand-rgb:37,211,102; --icon-hover:#fff;}
-    .ig-card{--brand:#E1306C; --brand-rgb:225,48,108; --icon-hover:#fff;}
-    .tk-card{--brand:#000000; --brand-rgb:0,0,0; --icon-hover:#fff;}
-    .ds-card{--brand:#5865F2; --brand-rgb:88,101,242; --icon-hover:#fff;}
-    .sc-card{--brand:#FFFC00; --brand-rgb:255,252,0; --icon-hover:#000; color:#000;}
-    .sc-card .social-title,
-    .sc-card .social-sub{color:#000;}
-    .sc-card .social-icon{
-      color:#000;
-      background:rgba(255,252,0,.92);
-      border-color:rgba(255,252,0,.22);
-    }
-    .sc-card:hover .social-title,
-    .sc-card:hover .social-sub,
-    .sc-card:focus-visible .social-title,
-    .sc-card:focus-visible .social-sub,
-    .sc-card:active .social-title,
-    .sc-card:active .social-sub{
-      color:#000;
-    }
-    .st-card{--brand:#1b2838; --brand-rgb:27,40,56; --icon-hover:#fff;}
+.music-fab{
+  position:fixed;
+  bottom:16px;
+  right:16px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-    .vip-private-card{
-      background:#090c10 !important;
-      border:1px solid rgba(225,48,108,.48) !important;
-      min-height:88px;
-      padding-right:12px;
-      padding-left:84px;
-    }
-    .vip-outside{
-      position:absolute;
-      top:-14px;
-      right:-10px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:4px;
-      pointer-events:none;
-      z-index:3;
-    }
-    .vip-face{
-      width:40px;
-      height:40px;
-    }
-    .vip-badge{
-      position:static;
-      transform:none;
-      background:linear-gradient(135deg, #E1306C, #ff5b87);
-      box-shadow:0 10px 18px rgba(225,48,108,.25);
-    }
-    .vip-text{
-      margin-inline-start:56px;
-    }
+  background:linear-gradient(135deg, #00f2ff, #818cf8);
+  color:#000;
 
-    .epic-box{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.06);
-      margin-top:10px;
-    }
-    .epic-text{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:13px;
-      color:#fff;
-      text-align:right;
-      min-width:0;
-    }
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+  cursor:pointer;
+  z-index:999;
+  transition:.2s;
+}
 
-    .copy-btn{
-      border:none;
-      background:rgba(255,255,255,.08);
-      color:#fff;
-      padding:8px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-family:inherit;
-      font-size:12px;
-      white-space:nowrap;
-      transition:background .18s ease, transform .18s ease;
-    }
-    .copy-btn:active{transform:scale(.97)}
-    .copy-btn.success{
-      background:#25D366 !important;
-      color:#fff !important;
-    }
-
-    .info{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:8px;
-      padding:14px 0;
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-    }
-    .info-box{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      width:100%;
-      padding:10px 12px;
-      border-radius:12px;
-      background:rgba(255,255,255,.03);
-      font-size:12px;
-      color:#9ca9b8;
-    }
-    .info-box span{
-      color:var(--accent);
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:center;
-      margin-top:12px;
-    }
-    .chip{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      color:#d6deea;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .work{
-      margin-top:16px;
-      padding-top:14px;
-      border-top:1px solid var(--line);
-      text-align:right;
-    }
-    .work p{
-      font-size:14px;
-      color:#cbd5e1;
-      margin-bottom:12px;
-    }
-    .work-link{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      text-decoration:none;
-      color:#fff;
-      border-radius:18px;
-      padding:8px 10px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);
-      transition:transform .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .work-link:active{
-      transform:scale(.99);
-      background:rgba(255,255,255,.05);
-    }
-    .work-logo{
-      width:68px;
-      height:68px;
-      border-radius:50%;
-      overflow:hidden;
-      flex:0 0 auto;
-      background:#fff;
-      box-shadow:0 0 16px rgba(255,255,255,.14);
-    }
-    .work-logo img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-    .work-txt strong{
-      display:block;
-      font-size:14px;
-      margin-bottom:3px;
-    }
-    .work-txt span{
-      font-size:12px;
-      color:#9eaabc;
-    }
-
-    .footer{
-      margin-top:14px;
-      font-size:12px;
-      color:rgba(230,237,243,.62);
-      text-align:center;
-    }
-    .footer em{
-      font-style:normal;
-      color:#b8f7ff;
-    }
-
-    #copiedGlow,#navHint{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%) scale(.9);
-      padding:11px 18px;
-      border:none;
-      border-radius:999px;
-      font-weight:800;
-      opacity:0;
-      pointer-events:none;
-      transition:.24s ease;
-      z-index:99999;
-      white-space:nowrap;
-    }
-    #copiedGlow{
-      bottom:18px;
-      background:#00f2ff;
-      color:#000;
-      box-shadow:0 0 22px rgba(0,242,255,.55);
-    }
-    #navHint{
-      top:18px;
-      background:rgba(10,14,22,.92);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 0 18px rgba(0,0,0,.32);
-      backdrop-filter:blur(10px);
-    }
-    #copiedGlow.show,#navHint.show{
-      opacity:1;
-      transform:translateX(-50%) scale(1);
-    }
-
-    .ripple{
-      position:fixed;
-      border-radius:50%;
-      background:rgba(0,242,255,.24);
-      transform:scale(0);
-      animation:ripple .45s linear;
-      pointer-events:none;
-      z-index:9998;
-    }
-    @keyframes ripple{
-      to{transform:scale(3.8);opacity:0}
-    }
-
-    .music-fab{
-      position:fixed;
-      right:14px;
-      bottom:14px;
-      width:58px;
-      height:58px;
-      border:none;
-      border-radius:50%;
-      background:linear-gradient(145deg, #111827, #0b1220);
-      color:#fff;
-      box-shadow:0 14px 30px rgba(0,0,0,.38);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9998;
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.08);
-    }
+    .music-fab:active{
+  transform:scale(0.9);
+}
     .music-fab i{
-      font-size:22px;
-    }
+  font-size:22px;
+}
+    
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.38);
+  opacity:0;
+  pointer-events:none;
+  transition:.18s ease;
+  z-index:9996;
+}
+.overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
 
-    .music-overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.35);
-      backdrop-filter:blur(3px);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .18s ease;
-      z-index:9996;
-    }
-    .music-overlay.open{
-      opacity:1;
-      pointer-events:auto;
-    }
+.music-sheet{
+  position:fixed;
+  left:50%;
+  bottom:84px;
+  transform:translateX(-50%) translateY(18px) scale(.98);
+  width:min(100vw - 24px, 420px);
+  background:rgba(10,14,22,.96);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  padding:14px;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:.2s ease;
+  z-index:9997;
+}
+.music-sheet.open{
+  transform:translateX(-50%) translateY(0) scale(1);
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
 
-    .music-panel{
-      position:fixed;
-      left:50%;
-      bottom:84px;
-      transform:translateX(-50%) translateY(18px) scale(.98);
-      width:min(100vw - 24px, 420px);
-      background:var(--music-bg);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:22px;
-      box-shadow:0 18px 40px rgba(0,0,0,.45);
-      padding:12px;
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-      transition:.2s ease;
-      z-index:9997;
-      overflow:hidden;
-    }
-    .music-panel.open{
-      transform:translateX(-50%) translateY(0) scale(1);
-      opacity:1;
-      visibility:visible;
-      pointer-events:auto;
-    }
-    .music-top{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .music-cover{
-      width:58px;
-      height:58px;
-      border-radius:14px;
-      object-fit:cover;
-      border:1px solid rgba(255,255,255,.08);
-      flex:0 0 auto;
-    }
-    .music-meta{
-      flex:1;
-      min-width:0;
-      text-align:right;
-    }
-    .music-meta .label{
-      font-size:11px;
-      color:#93a4b5;
-      margin-bottom:2px;
-    }
-    .music-meta .title{
-      font-size:14px;
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .music-meta .artist{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .music-controls{
-      margin-top:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .fake-btn{
-      width:36px;
-      height:36px;
-      border:none;
-      border-radius:50%;
-      background:rgba(255,255,255,.05);
-      color:#fff;
-      opacity:.55;
-    }
-    .play-btn{
-      width:44px;
-      height:44px;
-      border:none;
-      border-radius:50%;
-      background:#fff;
-      color:#000;
-      box-shadow:0 10px 20px rgba(0,0,0,.22);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-    }
-    .progress{
-      margin-top:10px;
-      width:100%;
-      height:4px;
-      background:rgba(255,255,255,.08);
-      border-radius:999px;
-      overflow:hidden;
-    }
-    .progress span{
-      display:block;
-      width:0%;
-      height:100%;
-      background:linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius:999px;
-    }
-    .seek-bar{
-      width:100%;
-      margin-top:10px;
-      appearance:none;
-      height:5px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      outline:none;
-    }
-    .seek-bar::-webkit-slider-thumb{
-      appearance:none;
-      width:14px;
-      height:14px;
-      border-radius:50%;
-      background:#fff;
-      box-shadow:0 0 10px rgba(255,255,255,.3);
-    }
-    .seek-bar::-moz-range-thumb{
-      width:14px;
-      height:14px;
-      border:none;
-      border-radius:50%;
-      background:#fff;
-      box-shadow:0 0 10px rgba(255,255,255,.3);
-    }
+.sheet-close{
+  position:absolute;
+  top:10px;
+  left:10px;
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:20px;
+}
 
-    @media (min-width:700px){
-      body{
-        padding-left:22px;
-        padding-right:22px;
-      }
-      .card{
-        max-width:620px;
-      }
-      .music-panel{
-        width:min(420px, calc(100vw - 32px));
-      }
-    }
+.music-top{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.music-cover{
+  width:58px;
+  height:58px;
+  border-radius:14px;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.08);
+  flex:0 0 auto;
+}
+.music-info{
+  flex:1;
+  min-width:0;
+  text-align:right;
+}
+.music-info .label{
+  display:block;
+  font-size:11px;
+  color:#93a4b5;
+  margin-bottom:2px;
+}
+.music-info strong{
+  display:block;
+  font-size:14px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.music-info span:last-child{
+  display:block;
+  font-size:11px;
+  color:#a9b4c3;
+  margin-top:2px;
+}
 
-    @media (prefers-reduced-motion: reduce){
-      *{
-        animation-duration:.001ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.001ms !important;
-        scroll-behavior:auto !important;
-      }
-    }
+.music-controls{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.control-btn,
+.play-btn{
+  border:none;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.control-btn{
+  width:36px;
+  height:36px;
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  opacity:.75;
+}
+.play-btn{
+  width:46px;
+  height:46px;
+  background:#fff;
+  color:#000;
+  box-shadow:0 10px 20px rgba(0,0,0,.22);
+  font-size:16px;
+}
+.progress{
+  margin-top:10px;
+  width:100%;
+  height:4px;
+  background:rgba(255,255,255,.08);
+  border-radius:999px;
+  overflow:hidden;
+}
+.progress span{
+  display:block;
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg, #00f2ff, #818cf8);
+  border-radius:999px;
+}
+.seek{
+  width:100%;
+  margin-top:10px;
+  appearance:none;
+  height:5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  outline:none;
+}
+.seek::-webkit-slider-thumb{
+  appearance:none;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#fff;
+}
+.seek::-moz-range-thumb{
+  width:14px;
+  height:14px;
+  border:none;
+  border-radius:50%;
+  background:#fff;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%) translateY(18px);
+  opacity:0;
+  pointer-events:none;
+  background:rgba(15,23,42,.94);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  padding:11px 16px;
+  box-shadow:0 16px 40px rgba(0,0,0,.3);
+  transition:all .2s ease;
+  font-weight:800;
+  z-index:99999;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media (min-width:700px){
+  body{padding-left:22px;padding-right:22px}
+  .app{max-width:620px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+ }
+  @keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(0,242,255,.6);}
+  70%{box-shadow:0 0 0 15px rgba(0,242,255,0);}
+  100%{box-shadow:0 0 0 0 rgba(0,242,255,0);}
+}
+}
   </style>
-</head>
 <body>
-  <div class="bg" aria-hidden="true">
-    <div class="orb one"></div>
-    <div class="orb two"></div>
-    <div class="orb three"></div>
-  </div>
 
-  <div class="floating-icons-bg" aria-hidden="true">
-    <i class="fa-brands fa-facebook-f" style="--color:#1877F2; --left:6%; --size:16px; --dur:17s; --delay:0s;"></i>
-    <i class="fa-brands fa-whatsapp" style="--color:#25D366; --left:14%; --size:20px; --dur:19s; --delay:1s;"></i>
-    <i class="fa-brands fa-instagram" style="--color:#E1306C; --left:24%; --size:17px; --dur:15s; --delay:2.2s;"></i>
-    <i class="fa-brands fa-snapchat-ghost" style="--color:#FFFC00; --left:33%; --size:18px; --dur:21s; --delay:.6s;"></i>
-    <i class="fa-brands fa-tiktok" style="--color:#ff0050; --left:44%; --size:16px; --dur:16s; --delay:4s;"></i>
-    <i class="fa-brands fa-discord" style="--color:#5865F2; --left:55%; --size:19px; --dur:20s; --delay:1.8s;"></i>
-    <i class="fa-brands fa-steam" style="--color:#1b2838; --left:66%; --size:18px; --dur:23s; --delay:3.1s;"></i>
-    <i class="fa-brands fa-youtube" style="--color:#FF0000; --left:76%; --size:15px; --dur:18s; --delay:2.8s;"></i>
-    <i class="fa-brands fa-telegram" style="--color:#2AABEE; --left:88%; --size:18px; --dur:22s; --delay:5s;"></i>
-    <i class="fa-solid fa-lock" style="--color:#ffffff; --left:50%; --size:14px; --dur:14s; --delay:7s;"></i>
-  </div>
-
-  <div class="loader" id="loader" style="
-    position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
-    background:#000;color:#fff;letter-spacing:2px;font-size:18px;
-  ">Loading...</div>
-
-  <main class="card" id="card">
-    <div class="avatar">
-      <img src="https://omar-i9.github.io/my-profiles/profile.jpeg" alt="عمر">
-    </div>
-
-    <div class="pill"><i class="fa-solid fa-bolt"></i></div>
-    <h1>Omar Profiles</h1>
-    <div class="typing" id="typing"></div>
-    <div class="sub">هممممم...</div>
-
-    <div class="section-title">روابط التواصل</div>
-
-    <section class="social-section" id="socialSection">
-      <div class="social-backdrop" aria-hidden="true">
-        <i class="fa-brands fa-facebook-f float-brand" style="left:5%; top:84%; animation-delay:0s; color:#1877F2;"></i>
-        <i class="fa-brands fa-whatsapp float-brand" style="left:14%; top:90%; animation-delay:1.2s; color:#25D366;"></i>
-        <i class="fa-brands fa-instagram float-brand" style="left:24%; top:78%; animation-delay:2.1s; color:#E1306C;"></i>
-        <i class="fa-brands fa-snapchat-ghost float-brand" style="left:36%; top:88%; animation-delay:1.8s; color:#FFFC00;"></i>
-        <i class="fa-brands fa-tiktok float-brand" style="left:47%; top:82%; animation-delay:3.4s; color:#000;"></i>
-        <i class="fa-brands fa-discord float-brand" style="left:58%; top:91%; animation-delay:4.1s; color:#5865F2;"></i>
-        <i class="fa-brands fa-steam float-brand" style="left:68%; top:79%; animation-delay:5s; color:#1b2838;"></i>
-        <i class="fa-brands fa-youtube float-brand" style="left:78%; top:87%; animation-delay:2.6s; color:#FF0000;"></i>
-        <i class="fa-brands fa-telegram float-brand" style="left:88%; top:81%; animation-delay:3.6s; color:#2AABEE;"></i>
-        <i class="fa-solid fa-lock float-brand" style="left:94%; top:90%; animation-delay:6s; color:#fff;"></i>
+  <main class="app">
+    <section class="hero">
+      <div class="avatar-wrap">
+        <img src="assets/img/profile.jpg" alt="صورة عمر" class="avatar">
       </div>
 
-      <div class="links">
-        <a class="social-card fb-card" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-facebook-f"></i></span>
-          <div class="social-text">
-            <div class="social-title">فيسبوك</div>
-            <div class="social-sub">Facebook</div>
-          </div>
-          <span class="private-badge">Private</span>
-        </a>
+      <div class="hero-text">
+        <span class="status">BUSY</span>
+        <h1>Omar Profiles</h1>
+        <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
+      </div>
 
-        <a class="social-card wa-card" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-whatsapp"></i></span>
-          <div class="social-text">
-            <div class="social-title">واتساب</div>
-            <div class="social-sub">WhatsApp</div>
-          </div>
-        </a>
-
-        <a class="social-card ig-card" href="https://www.instagram.com/omar.a.z3" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-instagram"></i></span>
-          <div class="social-text">
-            <div class="social-title">انستجرام</div>
-            <div class="social-sub">Instagram</div>
-          </div>
-        </a>
-
-        <a class="social-card tk-card" href="https://www.tiktok.com/@gdmi_33" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>
-          <div class="social-text">
-            <div class="social-title">تيك توك</div>
-            <div class="social-sub">TikTok</div>
-          </div>
-          <span class="private-badge">Private</span>
-        </a>
-
-        <a class="social-card ds-card" href="https://discord.gg/pxgwBCdD" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
-          <div class="social-text">
-            <div class="social-title">ديسكورد</div>
-            <div class="social-sub">Discord</div>
-          </div>
-        </a>
-
-        <a class="social-card sc-card" href="https://www.snapchat.com/add/omar-gdmi" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-snapchat-ghost"></i></span>
-          <div class="social-text">
-            <div class="social-title">سناب شات</div>
-            <div class="social-sub">Snapchat</div>
-          </div>
-          <span class="private-badge">Private</span>
-        </a>
-
-        <a class="social-card st-card" href="https://steamcommunity.com/profiles/76561199547179169/" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-brands fa-steam"></i></span>
-          <div class="social-text">
-            <div class="social-title">ستيم</div>
-            <div class="social-sub">Steam</div>
-          </div>
-        </a>
-
-        <a class="social-card ig-card vip-private-card" href="https://www.instagram.com/3mar.close" target="_blank" rel="noopener noreferrer">
-          <span class="social-icon"><i class="fa-solid fa-user-lock"></i></span>
-
-          <div class="vip-outside">
-            <span class="private-badge vip-badge">Private</span>
-          </div>
-
-          <div class="social-text vip-text">
-            <div class="social-title">انستغرام</div>
-            <div class="social-sub">Private Instagram</div>
-          </div>
-        </a>
+      <div class="hero-actions">
       </div>
     </section>
 
-    <div class="epic-box">
-      <div class="epic-text">
-        <i class="fa-brands fa-steam"></i>
-        <span>Steam Friend Code: 1586913441</span>
-      </div>
-      <button class="copy-btn" type="button" onclick="copyText('1586913441', this)">نسخ الكود</button>
-    </div>
+    <section class="section-title">روابط التواصل</section>
 
-    <div class="epic-box">
-      <div class="epic-text">
-        <i class="fa-solid fa-gamepad"></i>
-        <span>Epic Games: Omar-G4</span>
-      </div>
-      <button class="copy-btn" type="button" onclick="copyText('Omar-G4', this)">نسخ الاسم</button>
-    </div>
-
-    <div class="section-title">معلومات سريعة</div>
-    <div class="info">
-      <div class="info-box">الحالة <span>مشغول دائماً</span></div>
-      <div class="info-box">المجال <span>EV &amp; Hybrid</span></div>
-      <div class="info-box">الهواية <span>Web Dev</span></div>
-    </div>
-
-    <div class="chips">
-      <div class="chip">الموقع ما زال تحت الانشاء</div>
-      <div class="chip">عفويه..</div>
-    </div>
-
-    <div class="work">
-      <p>آخر أعمالي حالياً</p>
-      <a class="work-link" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer">
-        <div class="work-logo">
-          <img src="https://omar-i9.github.io/my-profiles/tameen-logo.jpeg" alt="تأمين">
+    <section class="links">
+      <a class="social-card fb-card" href="https://www.facebook.com/share/1J5v2pJmfX/" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-facebook-f"></i></span>
+        <div class="social-text">
+          <strong>فيسبوك</strong>
+          <span>Facebook</span>
         </div>
-        <div class="work-txt">
-          <strong>تأمين</strong>
-          <span>اضغط على الشعار لفتح المشروع</span>
+        <span class="badge">Private</span>
+      </a>
+
+      <a class="social-card wa-card" href="https://wa.me/message/BZTIWEE5JKS3A1" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-whatsapp"></i></span>
+        <div class="social-text">
+          <strong>واتساب</strong>
+          <span>WhatsApp</span>
         </div>
       </a>
-    </div>
 
-    <div class="footer">الفولو <em>ما بكهربك</em></div>
+      <a class="social-card ig-card" href="https://www.instagram.com/omar.a.z3" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-instagram"></i></span>
+        <div class="social-text">
+          <strong>انستجرام</strong>
+          <span>Instagram</span>
+        </div>
+      </a>
+
+      <a class="social-card tk-card" href="https://www.tiktok.com/@gdmi_33" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>
+        <div class="social-text">
+          <strong>تيك توك</strong>
+          <span>TikTok</span>
+        </div>
+        <span class="badge">Private</span>
+      </a>
+
+      <a class="social-card ds-card" href="https://discord.gg/pxgwBCdD" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
+        <div class="social-text">
+          <strong>ديسكورد</strong>
+          <span>Discord</span>
+        </div>
+      </a>
+
+      <a class="social-card sc-card" href="https://www.snapchat.com/add/omar-gdmi" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-snapchat-ghost"></i></span>
+        <div class="social-text">
+          <strong>سناب شات</strong>
+          <span>Snapchat</span>
+        </div>
+        <span class="badge">Private</span>
+      </a>
+
+      <a class="social-card st-card" href="https://steamcommunity.com/profiles/76561199547179169/" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-steam"></i></span>
+        <div class="social-text">
+          <strong>ستيم</strong>
+          <span>Steam</span>
+        </div>
+      </a>
+
+      <a class="social-card ig-card vip-card" href="https://www.instagram.com/3mar.close" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-solid fa-user-lock"></i></span>
+        <div class="social-text">
+          <strong>انستغرام خاص</strong>
+          <span>Private Instagram</span>
+        </div>
+        <span class="badge vip">Private</span>
+      </a>
+    </section>
+
+    <section class="section-title">نسخ سريع</section>
+
+    <section class="copy-list">
+      <div class="copy-row">
+        <div class="copy-meta">
+          <span>Steam Friend Code</span>
+          <strong>1586913441</strong>
+        </div>
+        <button class="copy-btn" data-copy="1586913441" type="button">نسخ</button>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-meta">
+          <span>Epic Games</span>
+          <strong>Omar-G4</strong>
+        </div>
+        <button class="copy-btn" data-copy="Omar-G4" type="button">نسخ</button>
+      </div>
+    </section>
+
+    <section class="section-title">مشروعي</section>
+
+    <a class="work-card" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer">
+      <img src="assets/img/tameen-logo.jpg" alt="تأمين" class="work-logo">
+      <div class="work-text">
+        <strong>تأمين</strong>
+        <span>اضغط لفتح المشروع</span>
+      </div>
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <footer class="footer">الفولو <em>ما بكهربك</em></footer>
   </main>
 
-  <button class="music-fab" id="musicFab" type="button" aria-label="فتح أغنية">
+  <button class="music-fab" id="musicFab" type="button" aria-label="فتح الموسيقى">
     <i class="fa-solid fa-music"></i>
   </button>
 
-  <div class="music-overlay" id="musicOverlay"></div>
+  <div class="overlay" id="overlay"></div>
 
-  <section class="music-panel" id="musicPanel" aria-label="مشغل الأغنية">
+  <section class="music-sheet" id="musicSheet" aria-label="قائمة الموسيقى">
+    <button class="sheet-close" id="closeMusicBtn" type="button" aria-label="إغلاق">×</button>
+
     <div class="music-top">
-      <img class="music-cover" src="./درب المهالك.jpg" alt="غلاف درب المهالك" />
-      <div class="music-meta">
-        <div class="label">Now Playing</div>
-        <div class="title">درب المهالك</div>
-        <div class="artist">ملف محلي داخل المشروع</div>
+      <img src="assets/img/music-cover.jpg" alt="غلاف الأغنية" class="music-cover">
+      <div class="music-info">
+        <span class="label">Now Playing</span>
+        <strong>درب المهالك</strong>
+        <span>ملف محلي داخل المشروع</span>
       </div>
     </div>
 
     <div class="music-controls">
-      <button class="fake-btn" type="button" aria-label="السابق"><i class="fa-solid fa-backward-step"></i></button>
-      <button class="play-btn" id="playBtn" type="button" aria-label="تشغيل/إيقاف"><i class="fa-solid fa-play" id="playIcon"></i></button>
-      <button class="fake-btn" type="button" aria-label="التالي"><i class="fa-solid fa-forward-step"></i></button>
+      <button class="control-btn" type="button"><i class="fa-solid fa-backward-step"></i></button>
+      <button class="play-btn" id="playBtn" type="button"><i class="fa-solid fa-play" id="playIcon"></i></button>
+      <button class="control-btn" type="button"><i class="fa-solid fa-forward-step"></i></button>
     </div>
 
-    <div class="progress"><span id="progress"></span></div>
-    <input class="seek-bar" id="seekBar" type="range" min="0" max="100" value="0" step="0.1" />
-    <audio id="audio" preload="metadata" src="./درب المهالك.mp3"></audio>
+    <div class="progress">
+      <span id="progressBar"></span>
+    </div>
+
+    <input id="seekBar" class="seek" type="range" min="0" max="100" value="0" step="0.1">
+
+    <audio id="audio" preload="metadata" src="assets/audio/song.mp3"></audio>
   </section>
 
-  <button id="copiedGlow" type="button" aria-live="polite">✓ تم النسخ</button>
-  <div id="navHint" aria-live="polite">جاري الفتح...</div>
+  <div class="toast" id="toast">تم النسخ</div>
 
-  <script>
-    const typing = document.getElementById('typing');
-    const audio = document.getElementById('audio');
-    const playBtn = document.getElementById('playBtn');
-    const playIcon = document.getElementById('playIcon');
-    const progress = document.getElementById('progress');
-    const seekBar = document.getElementById('seekBar');
-    const musicFab = document.getElementById('musicFab');
-    const musicPanel = document.getElementById('musicPanel');
-    const musicOverlay = document.getElementById('musicOverlay');
-    const copiedGlow = document.getElementById('copiedGlow');
-    const navHint = document.getElementById('navHint');
-    const loader = document.getElementById('loader');
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // =========================
+  // Elements
+  // =========================
+  const toast = document.getElementById("toast");
+  const musicFab = document.getElementById("musicFab");
+  const musicSheet = document.getElementById("musicSheet");
+  const overlay = document.getElementById("overlay");
+  const closeMusicBtn = document.getElementById("closeMusicBtn");
+  const openMusicBtn = document.getElementById("openMusicBtn");
+  const audio = document.getElementById("audio");
+  const playBtn = document.getElementById("playBtn");
+  const playIcon = document.getElementById("playIcon");
+  const progressBar = document.getElementById("progressBar");
+  const seekBar = document.getElementById("seekBar");
+  const copyNameBtn = document.getElementById("copyNameBtn");
 
-    const text = 'دامك دخلت، كمل معروفك وشوف الباقي!';
-    let i = 0;
+  const songTitle = document.getElementById("songTitle");
+  const songArtist = document.getElementById("songArtist");
+  const musicCover = document.getElementById("musicCover");
+  const prevSongBtn = document.getElementById("prevSongBtn");
+  const nextSongBtn = document.getElementById("nextSongBtn");
 
-    function typeText(){
-      if(i <= text.length){
-        typing.textContent = text.slice(0, i);
-        i++;
-        setTimeout(typeText, 28);
+  // =========================
+  // Playlist
+  // =========================
+  const songs = [
+    {
+      title: "درب المهالك",
+      artist: "ملف محلي داخل المشروع",
+      src: "./assets/audio/song1.mp3",
+      cover: "./assets/img/song1.jpg"
+    },
+    {
+      title: "الأغنية الثانية",
+      artist: "ملف محلي داخل المشروع",
+      src: "./assets/audio/song2.mp3",
+      cover: "./assets/img/song2.jpg"
+    },
+    {
+      title: "الأغنية الثالثة",
+      artist: "ملف محلي داخل المشروع",
+      src: "./assets/audio/song3.mp3",
+      cover: "./assets/img/song3.jpg"
+    }
+  ];
+
+  let currentSongIndex = 0;
+
+  // =========================
+  // Helpers
+  // =========================
+  function showToast(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 1400);
+  }
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("تم النسخ");
+    } catch {
+      const temp = document.createElement("textarea");
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      temp.remove();
+      showToast("تم النسخ");
+    }
+  }
+
+  function openMusic() {
+    if (!musicSheet || !overlay) return;
+    musicSheet.classList.add("open");
+    overlay.classList.add("open");
+  }
+
+  function closeMusic() {
+    if (!musicSheet || !overlay) return;
+    musicSheet.classList.remove("open");
+    overlay.classList.remove("open");
+  }
+
+  function setPlayIcon(isPlaying) {
+    if (!playIcon) return;
+    playIcon.className = `fa-solid ${isPlaying ? "fa-pause" : "fa-play"}`;
+  }
+
+  function updatePulse(isPlaying) {
+    if (!musicFab) return;
+    musicFab.style.animation = isPlaying ? "pulse 1s infinite" : "none";
+  }
+
+  function updateProgress() {
+    if (!audio || !progressBar || !seekBar) return;
+
+    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    progressBar.style.width = `${pct}%`;
+
+    if (document.activeElement !== seekBar) {
+      seekBar.value = pct;
+    }
+  }
+
+  function loadSong(index, autoplay = false) {
+    if (!audio || !songs.length) return;
+
+    const song = songs[index];
+    if (!song) return;
+
+    audio.src = song.src;
+
+    if (songTitle) songTitle.textContent = song.title;
+    if (songArtist) songArtist.textContent = song.artist;
+    if (musicCover) musicCover.src = song.cover;
+
+    audio.load();
+
+    if (autoplay) {
+      audio.play().catch(() => {});
+    }
+
+    showToast(`تم تحميل: ${song.title}`);
+  }
+
+  function nextSong() {
+    if (!songs.length) return;
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex, true);
+  }
+
+  function prevSong() {
+    if (!songs.length) return;
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    loadSong(currentSongIndex, true);
+  }
+
+  function togglePlay() {
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  }
+
+  // =========================
+  // Init
+  // =========================
+  loadSong(currentSongIndex, false);
+  setPlayIcon(false);
+  updatePulse(false);
+
+  // =========================
+  // Events - Music panel
+  // =========================
+  if (musicFab) musicFab.addEventListener("click", openMusic);
+  if (openMusicBtn) openMusicBtn.addEventListener("click", openMusic);
+  if (closeMusicBtn) closeMusicBtn.addEventListener("click", closeMusic);
+  if (overlay) overlay.addEventListener("click", closeMusic);
+
+  if (playBtn) playBtn.addEventListener("click", togglePlay);
+  if (prevSongBtn) prevSongBtn.addEventListener("click", prevSong);
+  if (nextSongBtn) nextSongBtn.addEventListener("click", nextSong);
+
+  if (audio) {
+    audio.addEventListener("play", () => {
+      setPlayIcon(true);
+      updatePulse(true);
+    });
+
+    audio.addEventListener("pause", () => {
+      setPlayIcon(false);
+      updatePulse(false);
+    });
+
+    audio.addEventListener("ended", () => {
+      setPlayIcon(false);
+      updatePulse(false);
+      nextSong();
+    });
+
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("loadedmetadata", updateProgress);
+  }
+
+  if (seekBar && audio) {
+    seekBar.addEventListener("input", () => {
+      if (audio.duration) {
+        audio.currentTime = (seekBar.value / 100) * audio.duration;
       }
-    }
-    typeText();
-
-    function showCopied(message='✓ تم النسخ'){
-      copiedGlow.textContent = message;
-      copiedGlow.classList.add('show');
-      setTimeout(() => copiedGlow.classList.remove('show'), 1200);
-    }
-
-    async function copyText(value, btn){
-      try{
-        await navigator.clipboard.writeText(value);
-        btn.classList.add('success');
-        const old = btn.textContent;
-        btn.textContent = 'تم النسخ! ✓';
-        setTimeout(() => {
-          btn.textContent = old;
-          btn.classList.remove('success');
-        }, 1200);
-        showCopied('✓ تم النسخ بنجاح');
-      }catch{
-        const temp = document.createElement('textarea');
-        temp.value = value;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        temp.remove();
-
-        btn.classList.add('success');
-        const old = btn.textContent;
-        btn.textContent = 'تم النسخ! ✓';
-        setTimeout(() => {
-          btn.textContent = old;
-          btn.classList.remove('success');
-        }, 1200);
-        showCopied('✓ تم النسخ بنجاح');
-      }
-    }
-
-    function showNavHint(message='جاري الفتح...'){
-      navHint.textContent = message;
-      navHint.classList.add('show');
-      setTimeout(() => navHint.classList.remove('show'), 250);
-    }
-
-    function setPlayIcon(isPlaying){
-      playIcon.className = `fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`;
-    }
-
-    function togglePlay(){
-      if(audio.paused){
-        audio.play().catch(()=>{});
-      }else{
-        audio.pause();
-      }
-    }
-
-    playBtn.addEventListener('click', togglePlay);
-    audio.addEventListener('play', () => setPlayIcon(true));
-    audio.addEventListener('pause', () => setPlayIcon(false));
-    audio.addEventListener('ended', () => setPlayIcon(false));
-
-    function updateSeekUI(){
-      const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-      progress.style.width = pct + '%';
-      if(document.activeElement !== seekBar) seekBar.value = pct;
-    }
-
-    audio.addEventListener('timeupdate', updateSeekUI);
-    audio.addEventListener('loadedmetadata', updateSeekUI);
-
-    seekBar.addEventListener('input', () => {
-      if(audio.duration) audio.currentTime = (seekBar.value / 100) * audio.duration;
     });
+  }
 
-    function openMusic(){
-      musicPanel.classList.add('open');
-      musicOverlay.classList.add('open');
+  // =========================
+  // Copy actions
+  // =========================
+  if (copyNameBtn) {
+    copyNameBtn.addEventListener("click", () => copyText("Omar"));
+  }
+
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", () => copyText(btn.dataset.copy));
+  });
+
+  // =========================
+  // Keyboard
+  // =========================
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMusic();
+    if (e.key === "ArrowRight") prevSong();
+    if (e.key === "ArrowLeft") nextSong();
+  });
+
+  // =========================
+  // Safe close if clicked outside sheet
+  // =========================
+  document.addEventListener("click", (e) => {
+    if (!musicSheet || !musicFab) return;
+    if (!musicSheet.contains(e.target) && !musicFab.contains(e.target)) {
+      // لا تغلق إلا إذا كانت مفتوحة
+      if (musicSheet.classList.contains("open")) closeMusic();
     }
-
-    function closeMusic(){
-      musicPanel.classList.remove('open');
-      musicOverlay.classList.remove('open');
-    }
-
-    musicFab.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if(musicPanel.classList.contains('open')){
-        closeMusic();
-      }else{
-        openMusic();
-      }
-    });
-
-    musicOverlay.addEventListener('click', closeMusic);
-    musicPanel.addEventListener('click', e => e.stopPropagation());
-
-    document.addEventListener('click', (e) => {
-      if(!musicPanel.contains(e.target) && !musicFab.contains(e.target)) closeMusic();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape') closeMusic();
-    });
-
-    document.querySelectorAll('a.social-card, a.work-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
-        if(!href || href === '#') return;
-
-        e.preventDefault();
-        const x = e.clientX || window.innerWidth / 2;
-        const y = e.clientY || window.innerHeight / 2;
-
-        const r = document.createElement('div');
-        r.className = 'ripple';
-        r.style.left = x + 'px';
-        r.style.top = y + 'px';
-        r.style.width = r.style.height = '18px';
-        document.body.appendChild(r);
-        setTimeout(() => r.remove(), 500);
-
-        showNavHint('جاري الفتح...');
-
-        setTimeout(() => {
-          const target = link.getAttribute('target');
-          if(target === '_blank') window.open(href, '_blank', 'noopener,noreferrer');
-          else window.location.href = href;
-        }, 180);
-      });
-    });
-
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        if(loader) loader.style.display = 'none';
-      }, 250);
-    });
-  </script>
+  });
+});
+</script>
 </body>
 </html>
