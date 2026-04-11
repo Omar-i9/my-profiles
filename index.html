@@ -1064,8 +1064,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ].map((song, index) => ({
     ...song,
     index,
-    src: `./main/${song.base}.mp3`,
-    cover: `./main/${song.base}.jpg`
+    src: `./main/${encodeURIComponent(song.base)}.mp3`,
+    cover: `./main/${encodeURIComponent(song.base)}.jpg`,
     fileLabel: `${song.base}.mp3`
   }));
 
