@@ -37,7 +37,7 @@
   <main class="app">
     <section class="hero">
       <div class="avatar">
-        <img src="profile.jpeg" alt="صورة الملف الشخصي">
+      <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
       </div>
 
       <div class="hero-text">
@@ -144,7 +144,7 @@
     <section class="section-title">مشروعي</section>
 
     <a class="work-card" href="https://omar-i9.github.io/taamenn/" target="_blank" rel="noopener noreferrer">
-      <img src="tameen-logo.jpeg" alt="تأمين" class="work-logo">
+      <img src="photo/tameen-logo.jpeg" alt="تأمين" class="work-logo">
       <div class="work-text">
         <strong>تأمين</strong>
         <span>اضغط لفتح المشروع</span>
@@ -221,106 +221,5 @@
   </section>
 
   <div class="toast" id="toast">تم النسخ</div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const toast = document.getElementById("toast");
-
-  const musicFab = document.getElementById("musicFab");
-  const musicSheet = document.getElementById("musicSheet");
-  const overlay = document.getElementById("overlay");
-  const closeMusicBtn = document.getElementById("closeMusicBtn");
-
-  const audio = document.getElementById("audio");
-  const playBtn = document.getElementById("playBtn");
-  const playIcon = document.getElementById("playIcon");
-  const progressBar = document.getElementById("progressBar");
-  const seekBar = document.getElementById("seekBar");
-  const seekWrap = document.getElementById("seekWrap");
-  const seekTooltip = document.getElementById("seekTooltip");
-  const currentTimeEl = document.getElementById("currentTime");
-  const totalTimeEl = document.getElementById("totalTime");
-
-  const volumeBar = document.getElementById("volumeBar");
-  const volumeIcon = document.getElementById("volumeIcon");
-  const volumeIconBtn = document.getElementById("volumeIconBtn");
-  const volumeValue = document.getElementById("volumeValue");
-
-  const songTitle = document.getElementById("songTitle");
-  const songArtist = document.getElementById("songArtist");
-  const musicCover = document.getElementById("musicCover");
-
-  const prevSongBtn = document.getElementById("prevSongBtn");
-  const nextSongBtn = document.getElementById("nextSongBtn");
-
-  const playlistEl = document.getElementById("playlist");
-  const playlistCount = document.getElementById("playlistCount");
-  const audioState = document.getElementById("audioState");
-
-  const copyButtons = document.querySelectorAll("[data-copy]");
-
-  const ayahFloat = document.getElementById("ayahFloat");
-  const ayahNum = document.getElementById("ayahNum");
-  const ayahText = document.getElementById("ayahText");
-  const ayahRef = document.getElementById("ayahRef");
-  const ayahNote = document.getElementById("ayahNote");
-  const ayahDetail = document.getElementById("ayahDetail");
-
-  const songs = [
-    { base: "wildflower", title: "wildflower", coverExt: "png" },
-    { base: "arctic-505", title: "Arctic Monkeys 505" },
-    { base: "athr-dhelak", title: "Mohamed Alflahi – Athr Dhelak" },
-    { base: "babydoll", title: "Dominic Fike - Babydoll" },
-    { base: "death-bed", title: "Powfu - death bed (coffee for your head)" },
-    { base: "hotel-uglyy", title: "Hotel Ugly - Shut Up My Moms Calling" },
-    { base: "manu-chao", title: "Manu Chao - Me Gustas Tu" },
-    { base: "no-one-noticed", title: "The Marías - No One Noticed - Minimal Sounds" },
-    { base: "tv-girl", title: "TV Girl - Cigarettes out the Window" },
-    { base: "درب المهالك", title: "درب المهالك" },
-    { base: "كلاش - نصيحة مشفق", title: "كلاش - نصيحة مشفق" }
-  ].map((song, index) => ({
-    ...song,
-    index,
-    src: `./audio/${encodeURIComponent(song.base)}.mp3`,
-    cover: `./images/${encodeURIComponent(song.base)}.${song.coverExt || "jpg"}`,
-    fileLabel: `${song.base}.mp3`
-  }));
-
-  let currentSongIndex = 0;
-  let isSeeking = false;
-  let hideTooltipTimer = null;
-  let toastTimer = null;
-
-  let ayahIndex = 0;
-  let ayahDelay = 7000;
-  let ayahTimer = null;
-  let ayahExpanded = false;
-
-  const ayahs = [
-    {
-      num: 1,
-      text: "﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾",
-      ref: "[الزمر: 53]",
-      note: "عن عدم اليأس.",
-      detail: "هذه الآية تفتح باب الرجاء مهما كان الذنب أو الثقل أو الضعف. معناها أن رحمة الله أوسع من الحالة التي يمر بها الإنسان، وأن الانكسار ليس نهاية الطريق."
-    },
-    {
-      num: 2,
-      text: "﴿قُلْ إِن كُنتُمْ تُحِبُّونَ اللَّهَ فَاتَّبِعُونِي يُحْبِبْكُمُ اللَّهُ﴾",
-      ref: "[آل عمران: 31]",
-      note: "المحبة لها أثر وسلوك.",
-      detail: "المعنى هنا أن الحب الصادق لا يبقى مجرد كلام، بل يظهر في الاتباع والعمل. الآية تربط بين الشعور الداخلي والسلوك الظاهر، وتبين أن المحبة الحقيقية لها علامة واضحة."
-    },
-    {
-      num: 3,
-      text: "﴿إِنَّمَا أَشْكُو بَثِّي وَحُزْنِي إِلَى اللَّهِ﴾",
-      ref: "[يوسف: 86]",
-      note: "للشكوى الصامتة.",
-      detail: "هذه من أقرب الآيات لمن يحمل همًا داخليًا لا يشرحه للناس. فيها صدق وهدوء، وتصور أن القلب حين يضيق يجد مخرجًا في البوح إلى الله وحده."
-    },
-    {
-      num: 4,
-      text: "﴿وَهُوَ الَّذِي يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِ﴾",
-      ref: "[الشورى: 25]",
-      note: "الأمل بعد الخطأ.",
 </body>
 </html>
