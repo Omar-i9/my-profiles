@@ -21,25 +21,26 @@
 
   <meta name="p:domain_verify" content="2bceaee4e3d7c3a47ea83686e0fd2281"/>
 
-<link rel="stylesheet" href="main/styles.css">
-<script src="main/script.js" defer></script>  
+  <link rel="stylesheet" href="main/styles.css">
+  <script src="main/script.js" defer></script>
 </head>
 <body>
-<div class="ayah-float" id="ayahFloat" aria-label="آية قرآنية متغيرة">
-  <div class="ayah-top">
-    <span class="ayah-pill">آية</span>
-    <span class="ayah-num" id="ayahNum">1</span>
+  <div class="ayah-float" id="ayahFloat" aria-label="آية قرآنية متغيرة">
+    <div class="ayah-top">
+      <span class="ayah-pill">آية</span>
+      <span class="ayah-num" id="ayahNum">1</span>
+    </div>
+
+    <div class="ayah-text" id="ayahText"></div>
+    <div class="ayah-ref" id="ayahRef"></div>
+    <div class="ayah-note" id="ayahNote"></div>
+    <div class="ayah-detail" id="ayahDetail"></div>
   </div>
 
-  <div class="ayah-text" id="ayahText"></div>
-  <div class="ayah-ref" id="ayahRef"></div>
-  <div class="ayah-note" id="ayahNote"></div>
-  <div class="ayah-detail" id="ayahDetail"></div>
-</div>
   <main class="app">
     <section class="hero">
       <div class="avatar">
-      <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
+        <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
       </div>
 
       <div class="hero-text">
@@ -121,7 +122,15 @@
         </div>
         <span class="badge vip">Private</span>
       </a>
-      
+
+      <a class="social-card more-socials-card" href="#" id="moreSocialsBtn">
+        <span class="social-icon"><i class="fa-solid fa-globe"></i></span>
+        <div class="social-text">
+          <strong>مواقع تواصل أخرى</strong>
+          <span>Threads · GitHub · Chess · Twitch · Pinterest</span>
+        </div>
+        <span class="badge special-badge">Open</span>
+      </a>
     </section>
 
     <section class="section-title">نسخ سريع</section>
@@ -217,6 +226,57 @@
 
   <div class="toast" id="toast">تم النسخ</div>
 
-</section>
+  <div class="drawer-backdrop" id="moreSocialsBackdrop"></div>
+
+  <section class="social-drawer" id="moreSocialsDrawer" aria-label="مواقع تواصل أخرى">
+    <button class="drawer-close" id="moreSocialsClose" type="button" aria-label="إغلاق">×</button>
+
+    <div class="drawer-head">
+      <strong>مواقع تواصل أخرى</strong>
+      <span>اضغط على أي رابط لفتحه</span>
+    </div>
+
+    <div class="drawer-list">
+      <a class="social-card drawer-card threads-card" href="https://www.threads.com/@omar.a.z3" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-threads"></i></span>
+        <div class="social-text">
+          <strong>Threads</strong>
+          <span>@omar.a.z3</span>
+        </div>
+      </a>
+
+      <a class="social-card drawer-card github-card" href="https://github.com/Omar-i9" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-github"></i></span>
+        <div class="social-text">
+          <strong>GitHub</strong>
+          <span>Omar-i9</span>
+        </div>
+      </a>
+
+      <a class="social-card drawer-card chess-card" href="https://www.chess.com/member/omar-g4" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-solid fa-chess"></i></span>
+        <div class="social-text">
+          <strong>Chess.com</strong>
+          <span>omar-g4</span>
+        </div>
+      </a>
+
+      <a class="social-card drawer-card twitch-card" href="https://www.twitch.tv/gdmi3" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-twitch"></i></span>
+        <div class="social-text">
+          <strong>Twitch</strong>
+          <span>gdmi3</span>
+        </div>
+      </a>
+
+      <a class="social-card drawer-card pinterest-card" href="https://pin.it/5hZADmFhk" target="_blank" rel="noopener noreferrer">
+        <span class="social-icon"><i class="fa-brands fa-pinterest"></i></span>
+        <div class="social-text">
+          <strong>Pinterest</strong>
+          <span>Pin it</span>
+        </div>
+      </a>
+    </div>
+  </section>
 </body>
 </html>
