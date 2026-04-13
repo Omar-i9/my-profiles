@@ -1494,27 +1494,63 @@ const moreSocialsClose = document.getElementById("moreSocialsClose");
 
 function openMoreSocials() {
   document.body.classList.add("drawer-open");
-  moreSocialsDrawer.classList.add("open");
-  moreSocialsBackdrop.classList.add("open");
+  moreSocialsDrawer?.classList.add("open");
+  moreSocialsBackdrop?.classList.add("open");
 }
 
 function closeMoreSocials() {
   document.body.classList.remove("drawer-open");
-  moreSocialsDrawer.classList.remove("open");
-  moreSocialsBackdrop.classList.remove("open");
+  moreSocialsDrawer?.classList.remove("open");
+  moreSocialsBackdrop?.classList.remove("open");
 }
 
-function waveAnimate(el) {
+function pulseWave(el) {
   if (!el) return;
-  el.classList.remove("anim-wave");
+  el.classList.remove("pulse-hit");
   void el.offsetWidth;
-  el.classList.add("anim-wave");
-  setTimeout(() => el.classList.remove("anim-wave"), 650);
+  el.classList.add("pulse-hit");
+  setTimeout(() => el.classList.remove("pulse-hit"), 650);
 }
+
+function makeRipple(e, el) {
+  const rect = el.getBoundingClientRect();
+  const circle = document.createElement("span");
+  const size = Math.max(rect.width, rect.height) * 1.4;
+
+  circle.style.position = "absolute";
+  circle.style.width = `${size}px`;
+  circle.style.height = `${size}px`;
+  circle.style.left = `${e.clientX - rect.left - size / 2}px`;
+  circle.style.top = `${e.clientY - rect.top - size / 2}px`;
+  circle.style.borderRadius = "50%";
+  circle.style.pointerEvents = "none";
+  circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
+  circle.style.transform = "scale(0)";
+  circle.style.opacity = "1";
+  circle.style.animation = "rippleAnim 620ms ease-out forwards";
+
+  el.appendChild(circle);
+  setTimeout(() => circle.remove(), 650);
+}
+
+if (!document.getElementById("rippleAnimStyle")) {
+  const style = document.createElement("style");
+  style.id = "rippleAnimStyle";
+  style.textContent = `
+    @keyframes rippleAnim {
+      0%   { transform: scale(0); opacity: .55; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+moreSocialsBtn?.classList.add("soft-float", "wave-auto");
 
 moreSocialsBtn?.addEventListener("click", (e) => {
   e.preventDefault();
-  waveAnimate(moreSocialsBtn);
+  pulseWave(moreSocialsBtn);
+  makeRipple(e, moreSocialsBtn);
   openMoreSocials();
 });
 
