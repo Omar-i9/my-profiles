@@ -1367,44 +1367,63 @@ button {
   50% { transform: translateY(-4px); }
 }
 
+/* ===== More socials button + drawer ===== */
+
 .more-socials-card {
   --brand: #7dd3fc;
   --icon-hover: #fff;
-  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
-  border: 1px solid rgba(125, 211, 252, 0.20);
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
+  border: 1px solid rgba(125, 211, 252, 0.20);
+  isolation: isolate;
 }
 
 .more-socials-card::before {
   content: "";
   position: absolute;
-  inset: -2px;
-  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.20), transparent 36%);
-  opacity: .75;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.24), transparent 58%);
+  opacity: 0;
+  transform: scale(.35);
   pointer-events: none;
+}
+
+.more-socials-card.wave-auto::before {
+  animation: wavePulse 6s ease-in-out infinite;
+}
+
+.more-socials-card.soft-float {
+  animation: softFloat 4s ease-in-out infinite;
+}
+
+.more-socials-card.pulse-hit {
+  animation: pressWave 620ms cubic-bezier(.2,.9,.2,1);
 }
 
 .special-badge {
   background: linear-gradient(135deg, #22c55e, #06b6d4);
 }
 
-body.drawer-open .app,
-body.drawer-open .hero,
-body.drawer-open .links,
-body.drawer-open .copy-list,
-body.drawer-open .work-card,
-body.drawer-open .footer {
-  filter: blur(2.2px) saturate(.82);
+/* الغبش يطبق على المحتوى الأساسي فقط */
+body.drawer-open .app {
+  filter: blur(2.2px) saturate(.84);
   transform: scale(.985);
   pointer-events: none;
   user-select: none;
 }
 
+/* النافذة والزر يبقون واضحين */
+body.drawer-open .drawer-backdrop,
+body.drawer-open .social-drawer {
+  filter: none;
+}
+
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .28);
+  background: rgba(0,0,0,.28);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
@@ -1436,6 +1455,8 @@ body.drawer-open .footer {
   pointer-events: none;
   transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .22s ease, visibility .22s ease;
   z-index: 9995;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .social-drawer.open {
@@ -1457,6 +1478,15 @@ body.drawer-open .footer {
   color: #fff;
   font-size: 20px;
   cursor: pointer;
+  transition: transform .15s ease, background .15s ease;
+}
+
+.drawer-close:hover {
+  background: rgba(255,255,255,.12);
+}
+
+.drawer-close:active {
+  transform: scale(.96);
 }
 
 .drawer-head {
@@ -1499,20 +1529,34 @@ body.drawer-open .footer {
 }
 
 .threads-card { --brand: #fff; --icon-hover: #fff; }
-.github-card { --brand: #fff; --icon-hover: #fff; }
-.chess-card { --brand: #fff; --icon-hover: #fff; }
-.twitch-card { --brand: #fff; --icon-hover: #fff; }
-.pinterest-card { --brand: #fff; --icon-hover: #fff; }
+.github-card  { --brand: #fff; --icon-hover: #fff; }
+.chess-card   { --brand: #fff; --icon-hover: #fff; }
+.twitch-card   { --brand: #fff; --icon-hover: #fff; }
+.pinterest-card{ --brand: #fff; --icon-hover: #fff; }
 
-.more-socials-card.anim-wave {
-  animation: wavePop 620ms cubic-bezier(.2,.9,.2,1);
+.music-sheet .music-top,
+.music-sheet .now-playing-card {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-@keyframes wavePop {
-  0%   { transform: scale(1); box-shadow: 0 10px 25px rgba(0,0,0,.20); }
-  35%  { transform: scale(1.04); box-shadow: 0 16px 34px rgba(0,242,255,.18); }
-  70%  { transform: scale(.99); box-shadow: 0 12px 28px rgba(0,0,0,.22); }
-  100% { transform: scale(1); box-shadow: 0 10px 25px rgba(0,0,0,.20); }
+@keyframes wavePulse {
+  0%   { opacity: 0; transform: scale(.35); }
+  12%  { opacity: .42; }
+  38%  { opacity: 0; transform: scale(2.7); }
+  100% { opacity: 0; transform: scale(2.7); }
+}
+
+@keyframes pressWave {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.04); }
+  70%  { transform: scale(.99); }
+  100% { transform: scale(1); }
+}
+
+@keyframes softFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 @media (max-width: 520px) {
