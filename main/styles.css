@@ -234,15 +234,12 @@ button {
 }
 
 .social-card:hover,
-.social-card:focus-visible {
-  background: var(--hover-bg);
-  border-color: var(--hover-border);
-  color: var(--hover-fg);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
-  outline: none;
+.social-card:focus-visible,
+.social-card:active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
 }
-
 .social-icon {
   position: absolute;
   left: 12px;
@@ -263,13 +260,12 @@ button {
 }
 
 .social-card:hover .social-icon,
-.social-card:focus-visible .social-icon {
-  background: var(--hover-icon-bg);
-  color: var(--hover-icon-fg);
-  border-color: rgba(255,255,255,.14);
-  transform: translateY(-50%) translateY(-2px) scale(1.04);
+.social-card:focus-visible .social-icon,
+.social-card:active .social-icon {
+  background: #fff;
+  color: var(--brand);
+  transform: translateY(-50%) scale(1.08);
 }
-
 .social-text {
   display: flex;
   flex-direction: column;
@@ -390,15 +386,17 @@ button {
 .ig-card .social-icon { color: #E1306C; }
 .tk-card .social-icon { color: #000000; }
 .ds-card .social-icon { color: #5865F2; }
-.sc-card .social-icon { color: #FFFC00; background: #121212; border-color: rgba(255,252,0,.25); }
-.st-card .social-icon { color: #1b2838; }
-
+.tk-card { --brand: #000000; }
+.sc-card { --brand: #FFFC00; }
 /* سناب يحتاج قلب خاص */
-.sc-card:hover,
-.sc-card:focus-visible {
+.sc-card:hover {
   color: #000;
 }
 
+.sc-card:hover .social-icon {
+  background: #000;
+  color: #FFFC00;
+}
 .sc-card:hover .social-icon,
 .sc-card:focus-visible .social-icon {
   background: #000;
@@ -1818,3 +1816,17 @@ body.drawer-open .social-drawer {
 .chess-card:hover .social-icon   { color: #1f2937; background: #fff; }
 .twitch-card:hover .social-icon  { color: #9146FF; background: #fff; }
 .pinterest-card:hover .social-icon { color: #E60023; background: #fff; }
+
+.social-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.social-card:active::after {
+  opacity: 1;
+  transition: 0s;
+}
