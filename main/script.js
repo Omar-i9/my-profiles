@@ -1553,7 +1553,6 @@ moreSocialsBtn?.addEventListener("click", (e) => {
   makeRipple(e, moreSocialsBtn);
   openMoreSocials();
 });
-
 moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
 moreSocialsClose?.addEventListener("click", closeMoreSocials);
 
