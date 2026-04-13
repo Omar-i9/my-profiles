@@ -1445,19 +1445,19 @@ a {
 
 .threads-card { --brand: #fff; --hover-bg: #0f172a; --hover-fg: #fff; --icon-bg: #111827; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #111827; }
 .github-card  { --brand: #fff; --hover-bg: #181717; --hover-fg: #fff; --icon-bg: #181717; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #181717; }
-.chess-card   { --brand: #fff; --hover-bg: #1f2937; --hover-fg: #fff; --icon-bg: #1f2937; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #1f2937; }
+.chess-card   { --brand: #fff; --hover-bg: #69923E; --hover-fg: #fff; --icon-bg: #69923E; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #69923E; }
 .twitch-card  { --brand: #fff; --hover-bg: #9146FF; --hover-fg: #fff; --icon-bg: #9146FF; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #9146FF; }
 .pinterest-card { --brand: #fff; --hover-bg: #E60023; --hover-fg: #fff; --icon-bg: #E60023; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #E60023; }
 
 .threads-card .social-icon { color: #fff; background: #111827; }
 .github-card .social-icon  { color: #fff; background: #181717; }
-.chess-card .social-icon   { color: #fff; background: #1f2937; }
+.chess-card .social-icon   { color: #fff; background: #69923E; }
 .twitch-card .social-icon  { color: #fff; background: #9146FF; }
 .pinterest-card .social-icon { color: #fff; background: #E60023; }
 
 .threads-card:hover .social-icon { color: #111827; background: #fff; }
 .github-card:hover .social-icon  { color: #181717; background: #fff; }
-.chess-card:hover .social-icon   { color: #1f2937; background: #fff; }
+.chess-card:hover .social-icon   { color: #69923E; background: #fff; }
 .twitch-card:hover .social-icon  { color: #9146FF; background: #fff; }
 .pinterest-card:hover .social-icon { color: #E60023; background: #fff; }
 
