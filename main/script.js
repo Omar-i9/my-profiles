@@ -1487,3 +1487,40 @@ document.addEventListener("DOMContentLoaded", () => {
   savePlaybackSnapshot();
 });
 
+const moreSocialsBtn = document.getElementById("moreSocialsBtn");
+const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
+const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
+const moreSocialsClose = document.getElementById("moreSocialsClose");
+
+function openMoreSocials() {
+  document.body.classList.add("drawer-open");
+  moreSocialsDrawer.classList.add("open");
+  moreSocialsBackdrop.classList.add("open");
+}
+
+function closeMoreSocials() {
+  document.body.classList.remove("drawer-open");
+  moreSocialsDrawer.classList.remove("open");
+  moreSocialsBackdrop.classList.remove("open");
+}
+
+function waveAnimate(el) {
+  if (!el) return;
+  el.classList.remove("anim-wave");
+  void el.offsetWidth;
+  el.classList.add("anim-wave");
+  setTimeout(() => el.classList.remove("anim-wave"), 650);
+}
+
+moreSocialsBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  waveAnimate(moreSocialsBtn);
+  openMoreSocials();
+});
+
+moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
+moreSocialsClose?.addEventListener("click", closeMoreSocials);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMoreSocials();
+});
