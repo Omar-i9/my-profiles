@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentTimeRestore = Math.max(0, getNumber(STORAGE.lastTime, 0));
   let saveResumeTime = currentTimeRestore;
   let wasPlayingRestore = getBoolean(STORAGE.wasPlaying, false);
-  let pendingResume = wasPlayingRestore;
+  let pendingResume = false;
   let shuffleEnabled = getBoolean(STORAGE.shuffle, false);
   let repeatMode = getString(STORAGE.repeat, "off"); // off | one | all
   let searchTerm = getString(STORAGE.search, "").trim().toLowerCase();
@@ -1486,3 +1486,4 @@ document.addEventListener("DOMContentLoaded", () => {
   updateNowPlayingCard();
   savePlaybackSnapshot();
 });
+
