@@ -1282,7 +1282,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function toggleAyahExpanded(nextState) {
     ayahExpanded = nextState;
     if (ayahFloat) ayahFloat.classList.toggle("expanded", ayahExpanded);
-    ayahDelay = ayahExpanded ? 10000 : 5000;
+    ayahDelay = ayahExpanded ? 13000 : 6000;
     restartAyahRotation();
   }
 
