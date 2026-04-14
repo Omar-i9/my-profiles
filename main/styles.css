@@ -309,8 +309,8 @@ a {
 
 /* عند التعيين */
 .social-card:hover .badge {
-  background: #000000;
-  color: #ffffff;
+  background: #ffffff;
+  color: #000000;
   transform: translateY(-2px);
 }
 .vip {
