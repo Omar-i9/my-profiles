@@ -231,7 +231,6 @@ a {
   --hover-icon-bg: #fff;
   --hover-icon-fg: #000;
   --hover-border: rgba(255,255,255,.14);
-  --glow: rgba(255,255,255,.10);
 }
 
 .social-card::before {
@@ -1446,7 +1445,7 @@ a {
 .threads-card { --brand: #fff; --hover-bg: #0f172a; --hover-fg: #fff; --icon-bg: #111827; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #111827; }
 .github-card  { --brand: #fff; --hover-bg: #181717; --hover-fg: #fff; --icon-bg: #181717; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #181717; }
 .chess-card   { --brand: #fff; --hover-bg: #69923E; --hover-fg: #fff; --icon-bg: #69923E; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #69923E; }
-.twitch-card  { --brand: #fff; --hover-bg: #9146FF; --hover-fg: #fff; --icon-bg: #9146FF; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #9146FF; }
+.twitch-card   { --brand: #fff; --hover-bg: #9146FF; --hover-fg: #fff; --icon-bg: #9146FF; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #9146FF; }
 .pinterest-card { --brand: #fff; --hover-bg: #E60023; --hover-fg: #fff; --icon-bg: #E60023; --icon-fg: #fff; --hover-icon-bg: #fff; --hover-icon-fg: #E60023; }
 
 .threads-card .social-icon { color: #fff; background: #111827; }
@@ -1503,7 +1502,7 @@ a {
 }
 
 .more-socials-card:hover {
-  background: linear-gradient(135deg, rgba(0,242,255,.92), rgba(129,140,248,.92));
+  background: linear-gradient(135deg, #00f2ff, #818cf8);
 }
 
 .more-socials-card:hover .social-icon {
