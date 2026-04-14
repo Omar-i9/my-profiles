@@ -295,21 +295,24 @@ a {
 
 .badge {
   position: absolute;
-  top: -12px;   /* يطلع لفوق */
-  left: -6px;   /* يطلع لبرا */
-  padding: 4px 10px;
+  top: -8px;
+  left: 12px;
+  padding: 3px 8px;
   border-radius: 999px;
   font-size: 10px;
-  font-weight: 900;
-  color: #fff;
-  background: linear-gradient(135deg, #ff4d7d, #e1306c);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-  z-index: 5;
-  transform: rotate(-8deg);
-
+  font-weight: 700;
+  color: #d1d5db;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all .18s ease;
 }
 
+/* عند التعيين */
+.social-card:hover .badge {
+  background: #ffffff;
+  color: #000;
+  transform: translateY(-2px);
+}
 .vip {
   background: linear-gradient(135deg, #FFD700, #C9A227);
   color: #2d1b4e;
@@ -321,7 +324,14 @@ a {
 .ig-card { --brand: #E1306C; --icon-bg: rgb(255, 255, 255); --icon-fg: #E1306C; --hover-icon-bg: #E1306C; --hover-icon-fg: #fff; }
 .tk-card { --brand: #000000; --icon-bg: rgb(255, 255, 255); --icon-fg: #000000; --hover-icon-bg: #000000; --hover-icon-fg: #fff; }
 .ds-card { --brand: #5865F2; --icon-bg: rgb(255, 255, 255); --icon-fg: #5865F2; --hover-icon-bg: #5865F2; --hover-icon-fg: #fff; }
-.sc-card { --brand: #FFFC00; --icon-bg: #FFFC00; --icon-fg: #ffffff; --hover-icon-bg: #ffffff; --hover-icon-fg: #FFFC00; --hover-border: rgb(255, 255, 255);
+.sc-card {
+  --brand: #FFFC00;
+  --icon-bg: #FFFC00;
+  --icon-fg: #111827;
+  --hover-icon-bg: #111827;
+  --hover-icon-fg: #FFFC00;
+  --hover-border: rgba(255,252,0,.28);
+}
 .st-card { --brand: #1b2838; --icon-bg: rgb(255, 255, 255); --icon-fg: #1b2838; --hover-icon-bg: #1b2838; --hover-icon-fg: #fff; }
 /* سناب يحتاج قلب خاص */
 .sc-card:hover .social-icon,
@@ -1436,34 +1446,33 @@ a {
 .pinterest-card:hover .social-icon { color: #E60023; background: #fff; }
 
 .more-socials-card {
-  --brand: #7dd3fc;
-  --icon-bg: rgba(125, 211, 252, 0.14);
-  --icon-fg: #7dd3fc;
-  --hover-icon-bg: linear-gradient(135deg, #00f2ff, #818cf8);
-  --hover-icon-fg: #fff;
-  --hover-border: rgba(125, 211, 252, 0.20);
-  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
-  border: 1px solid rgba(125, 211, 252, 0.20);
-  isolation: isolate;
+  --brand: #374151;
+  --icon-bg: rgba(255,255,255,.08);
+  --icon-fg: #ffffff;
+  --hover-icon-bg: #ffffff;
+  --hover-icon-fg: #111827;
+  --hover-border: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
 }
 
 .more-socials-card .social-icon {
-  color: #7dd3fc;
+  background: var(--icon-bg);
+  color: var(--icon-fg);
 }
 
-.more-socials-card:hover {
-  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
+.more-socials-card:hover,
+.more-socials-card:focus-visible,
+.more-socials-card:active {
+  background: rgba(255,255,255,.08);
+  border-color: var(--hover-border);
 }
 
-.more-socials-card:hover .social-icon {
-  background: linear-gradient(135deg, #00f2ff, #818cf8);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(0,0,0,.22);
-}
-
-.more-socials-card:hover .social-text strong,
-.more-socials-card:hover .social-text span {
-  color: #fff;
+.more-socials-card:hover .social-icon,
+.more-socials-card:focus-visible .social-icon,
+.more-socials-card:active .social-icon {
+  background: var(--hover-icon-bg);
+  color: var(--hover-icon-fg);
 }
 .special-badge {
   background: linear-gradient(135deg, #22c55e, #06b6d4);
