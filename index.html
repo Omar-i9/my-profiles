@@ -25,18 +25,35 @@
   <script src="main/script.js" defer></script>
 </head>
 <body>
-  <div class="ayah-float" id="ayahFloat" aria-label="آية قرآنية متغيرة">
-    <div class="ayah-top">
+<div class="ayah-float" id="ayahFloat" aria-label="آيات قرآنية">
+  <div class="ayah-head">
+    <div class="ayah-head-left">
       <span class="ayah-pill">آية</span>
-      <span class="ayah-num" id="ayahNum">1</span>
+      <span class="ayah-mode" id="ayahModeTag">مختصر</span>
     </div>
 
+    <button class="ayah-view-btn" id="ayahViewBtn" type="button">عرض الصفحات</button>
+  </div>
+
+  <div class="ayah-summary" id="ayahSummary">
     <div class="ayah-text" id="ayahText"></div>
     <div class="ayah-ref" id="ayahRef"></div>
     <div class="ayah-note" id="ayahNote"></div>
     <div class="ayah-detail" id="ayahDetail"></div>
   </div>
 
+  <div class="ayah-pages" id="ayahPages" hidden>
+    <div class="ayah-list" id="ayahList"></div>
+
+    <div class="ayah-pagination">
+      <button class="ayah-page-btn" id="ayahPrevPage" type="button">السابق</button>
+      <span class="ayah-page-info" id="ayahPageInfo">1 / 1</span>
+      <button class="ayah-page-btn" id="ayahNextPage" type="button">التالي</button>
+    </div>
+
+    <div class="ayah-hint" id="ayahHint">اضغط على آية لعرض التفاصيل، واضغط مرة ثانية للرجوع.</div>
+  </div>
+</div>
   <main class="app">
     <section class="hero">
       <div class="avatar">
