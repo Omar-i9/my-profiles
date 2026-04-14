@@ -155,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trackMenu = null;
   let menuIndex = -1;
-  const playbackHistory = [];
 
   ensureExtraStyles();
   ensurePageDivider();
@@ -166,1013 +165,1130 @@ document.addEventListener('DOMContentLoaded', () => {
   decorateSectionTitles();
   restoreAyahVisibility();
 
-  function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, n));
-  }
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
 
-  function getNumber(key, fallback) {
-    const v = Number(localStorage.getItem(key));
-    return Number.isFinite(v) ? v : fallback;
-  }
+function getNumber(key, fallback) {
+  const v = Number(localStorage.getItem(key));
+  return Number.isFinite(v) ? v : fallback;
+}
 
-  function getBoolean(key, fallback) {
+function getBoolean(key, fallback) {
+  const raw = localStorage.getItem(key);
+  if (raw === null) return fallback;
+  return raw === 'true';
+}
+
+function getString(key, fallback) {
+  const raw = localStorage.getItem(key);
+  return raw === null ? fallback : raw;
+}
+
+function getArray(key, fallback) {
+  try {
     const raw = localStorage.getItem(key);
-    if (raw === null) return fallback;
-    return raw === 'true';
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
   }
+}
 
-  function getString(key, fallback) {
-    const raw = localStorage.getItem(key);
-    return raw === null ? fallback : raw;
-  }
+function setStored(key, value) {
+  localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+}
 
-  function getArray(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return fallback;
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : fallback;
-    } catch {
-      return fallback;
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function normalizeText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .trim();
+}
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+}
+
+function copyText(text) {
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(
+    () => showToast('تم النسخ'),
+    () => {
+      const temp = document.createElement('textarea');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      temp.remove();
+      showToast('تم النسخ');
     }
-  }
+  );
+}
 
-  function setStored(key, value) {
-    localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
-  }
+function songFavorite(index) {
+  return favorites.has(index);
+}
 
-  function escapeHtml(value) {
-    return String(value || '')
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#39;');
-  }
+function saveFavorites() {
+  setStored(STORAGE.favorites, Array.from(favorites));
+}
 
-  function normalizeText(value) {
-    return String(value || '')
-      .toLowerCase()
-      .replace(/[\u064B-\u065F\u0670]/g, '')
-      .trim();
+function savePlaybackSnapshot() {
+  setStored(STORAGE.lastIndex, String(currentSongIndex));
+  setStored(STORAGE.lastTime, String(Math.max(0, audio.currentTime || 0)));
+  setStored(STORAGE.volume, String(Math.round((audio.volume || 0) * 100)));
+  setStored(STORAGE.wasPlaying, String(!audio.paused));
+  setStored(STORAGE.shuffle, String(shuffleEnabled));
+  setStored(STORAGE.repeat, repeatMode);
+  setStored(STORAGE.search, searchTerm);
+  setStored(STORAGE.ayahVisible, String(ayahVisible));
+  setStored(STORAGE.ayahMode, ayahMode);
+  setStored(STORAGE.ayahPage, String(ayahPage));
+  if (ayahFloat) {
+    const rect = ayahFloat.getBoundingClientRect();
+    setStored(STORAGE.ayahX, String(Math.round(rect.left)));
+    setStored(STORAGE.ayahY, String(Math.round(rect.top)));
   }
+}
 
-  function formatTime(seconds) {
-    if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${String(s).padStart(2, '0')}`;
+function baseTrackSearch(song) {
+  return `${song.title} ${song.fileLabel} ${song.base}`.toLowerCase();
+}
+
+function updateRepeatButton() {
+  const repeatBtn = document.getElementById('repeatBtn');
+  if (!repeatBtn) return;
+  const label = repeatMode === 'one' ? 'Repeat 1' : repeatMode === 'all' ? 'Repeat All' : 'Repeat Off';
+  repeatBtn.textContent = label;
+  repeatBtn.classList.toggle('active', repeatMode !== 'off');
+  repeatBtn.setAttribute('aria-pressed', repeatMode !== 'off' ? 'true' : 'false');
+}
+
+function updateShuffleButton() {
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  if (!shuffleBtn) return;
+  shuffleBtn.classList.toggle('active', shuffleEnabled);
+  shuffleBtn.setAttribute('aria-pressed', shuffleEnabled ? 'true' : 'false');
+}
+
+function updateNowPlayingCard() {
+  const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+  const nowPlayingSub = document.getElementById('nowPlayingSub');
+  const nowPlayingIndex = document.getElementById('nowPlayingIndex');
+  if (!nowPlayingTitle || !nowPlayingSub || !nowPlayingIndex) return;
+
+  const song = songs[currentSongIndex];
+  nowPlayingTitle.textContent = song ? song.title : 'اسم الأغنية';
+  nowPlayingSub.textContent = audio.paused ? 'متوقف' : 'يعمل الآن';
+  nowPlayingIndex.textContent = `${currentSongIndex + 1} / ${songs.length}`;
+}
+
+function setVolumeTheme(value) {
+  const pct = clamp(value, 0, 100);
+  const hue = Math.round((pct / 100) * 140);
+  const color = `hsl(${hue} 92% 56%)`;
+  document.documentElement.style.setProperty('--volume-color', color);
+  if (volumeBar) {
+    volumeBar.style.background = `linear-gradient(90deg, ${color} 0%, ${color} ${pct}%, rgba(255,255,255,.08) ${pct}%, rgba(255,255,255,.08) 100%)`;
   }
-
-  function showToast(message) {
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+  if (volumeValue) volumeValue.textContent = `${pct}%`;
+  if (volumeIcon) {
+    if (pct === 0) volumeIcon.className = 'fa-solid fa-volume-xmark';
+    else if (pct < 35) volumeIcon.className = 'fa-solid fa-volume-low';
+    else volumeIcon.className = 'fa-solid fa-volume-high';
   }
+}
 
-  function copyText(text) {
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(
-      () => showToast('تم النسخ'),
-      () => {
-        const temp = document.createElement('textarea');
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand('copy');
-        temp.remove();
-        showToast('تم النسخ');
-      }
-    );
+function updateProgress() {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  if (progressBar) progressBar.style.width = `${pct}%`;
+  if (!isSeeking && seekBar) seekBar.value = String(pct);
+  if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
+  if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
+}
+
+function updateSeekTooltipFromValue(value) {
+  if (!audio.duration || !seekTooltip || !seekWrap) return;
+  const ratio = clamp(Number(value), 0, 100) / 100;
+  const time = ratio * audio.duration;
+  seekTooltip.textContent = formatTime(time);
+  const rect = seekWrap.getBoundingClientRect();
+  seekTooltip.style.left = `${rect.width * ratio}px`;
+}
+
+function showSeekTooltip() {
+  if (!seekTooltip) return;
+  seekTooltip.classList.add('show');
+  clearTimeout(hideTooltipTimer);
+}
+
+function hideSeekTooltipSoon() {
+  if (!seekTooltip) return;
+  clearTimeout(hideTooltipTimer);
+  hideTooltipTimer = setTimeout(() => {
+    if (!isSeeking) seekTooltip.classList.remove('show');
+  }, 220);
+}
+
+function setPlayIcon(isPlaying) {
+  if (!playIcon) return;
+  playIcon.className = `fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`;
+}
+
+function updatePulse(isPlaying) {
+  if (!musicFab) return;
+  musicFab.style.animation = isPlaying ? 'pulse 1s infinite' : 'none';
+}
+
+function getCoverCandidates(song) {
+  const exts = Array.isArray(song.coverCandidates) && song.coverCandidates.length
+    ? song.coverCandidates
+    : ['jpg', 'jpeg', 'png'];
+
+  const bases = (typeof IMAGE_BASES !== 'undefined' && Array.isArray(IMAGE_BASES) && IMAGE_BASES.length)
+    ? IMAGE_BASES
+    : [IMAGE_BASE];
+
+  const candidates = [];
+  for (const base of bases) {
+    for (const ext of exts) candidates.push(`${base}${encodeURIComponent(song.base)}.${ext}`);
   }
+  candidates.push(FALLBACK_COVER);
+  return candidates;
+}
 
-  function songFavorite(index) {
-    return favorites.has(index);
-  }
-
-  function saveFavorites() {
-    setStored(STORAGE.favorites, Array.from(favorites));
-  }
-
-  function savePlaybackSnapshot() {
-    setStored(STORAGE.lastIndex, String(currentSongIndex));
-    setStored(STORAGE.lastTime, String(Math.max(0, audio.currentTime || 0)));
-    setStored(STORAGE.volume, String(Math.round((audio.volume || 0) * 100)));
-    setStored(STORAGE.wasPlaying, String(!audio.paused));
-    setStored(STORAGE.shuffle, String(shuffleEnabled));
-    setStored(STORAGE.repeat, repeatMode);
-    setStored(STORAGE.search, searchTerm);
-    setStored(STORAGE.ayahVisible, String(ayahVisible));
-    setStored(STORAGE.ayahMode, ayahMode);
-    setStored(STORAGE.ayahPage, String(ayahPage));
-    if (ayahFloat) {
-      const rect = ayahFloat.getBoundingClientRect();
-      setStored(STORAGE.ayahX, String(Math.round(rect.left)));
-      setStored(STORAGE.ayahY, String(Math.round(rect.top)));
+function applyImageFallback(img, candidates) {
+  let idx = 0;
+  const tryNext = () => {
+    if (idx >= candidates.length) {
+      img.src = FALLBACK_COVER;
+      return;
     }
+    const nextUrl = candidates[idx++];
+    img.onerror = tryNext;
+    img.src = nextUrl;
+  };
+  tryNext();
+}
+
+function currentSong() {
+  return songs[currentSongIndex] || songs[0];
+}
+
+function setActiveTrack() {
+  document.querySelectorAll('.track').forEach((track) => {
+    track.classList.toggle('active', Number(track.dataset.index) === currentSongIndex);
+  });
+  updateNowPlayingCard();
+}
+
+function refreshToolbarState() {
+  updateShuffleButton();
+  updateRepeatButton();
+  const searchInput = document.getElementById('songSearch');
+  if (searchInput && searchInput.value !== searchTerm) searchInput.value = searchTerm;
+}
+
+function getVisibleSongIndexes() {
+  const normalized = normalizeText(searchTerm);
+  let indexes = songs.map((_, i) => i);
+
+  if (normalized) {
+    indexes = indexes.filter((i) => normalizeText(baseTrackSearch(songs[i])).includes(normalized));
   }
 
-  function baseTrackSearch(song) {
-    return `${song.title} ${song.fileLabel} ${song.base}`.toLowerCase();
+  indexes.sort((a, b) => {
+    const af = songFavorite(a) ? 1 : 0;
+    const bf = songFavorite(b) ? 1 : 0;
+    if (af !== bf) return bf - af;
+    return a - b;
+  });
+
+  return indexes;
+}
+
+function buildPlaylist() {
+  if (!playlistEl) return;
+  visibleIndexes = getVisibleSongIndexes();
+  playlistCount.textContent = `${visibleIndexes.length} / ${songs.length} أغنية`;
+
+  if (!visibleIndexes.length) {
+    playlistEl.innerHTML = '<div class="track-empty">لا توجد نتائج</div>';
+    return;
   }
 
-  function updateRepeatButton() {
-    const repeatBtn = document.getElementById('repeatBtn');
-    if (!repeatBtn) return;
-    const label = repeatMode === 'one' ? 'Repeat 1' : repeatMode === 'all' ? 'Repeat All' : 'Repeat Off';
-    repeatBtn.textContent = label;
-    repeatBtn.classList.toggle('active', repeatMode !== 'off');
-    repeatBtn.setAttribute('aria-pressed', repeatMode !== 'off' ? 'true' : 'false');
-  }
+  playlistEl.innerHTML = visibleIndexes.map((index) => {
+    const song = songs[index];
+    const fav = songFavorite(index);
+    const coverCandidates = getCoverCandidates(song);
+    return `
+      <div class="track${index === currentSongIndex ? ' active' : ''}${fav ? ' fav' : ''}" data-index="${index}" tabindex="0" role="button" aria-label="تشغيل ${escapeHtml(song.title)}">
+        <img class="track-cover" src="${coverCandidates[0]}" alt="غلاف ${escapeHtml(song.title)}" data-cover-index="${index}">
+        <div class="track-meta">
+          <strong>${escapeHtml(song.title)}</strong>
+          <span>${escapeHtml(song.fileLabel)}</span>
+        </div>
+        <button class="track-star ${fav ? 'active' : ''}" type="button" data-fav-index="${index}" aria-label="مفضلة">
+          <i class="fa-solid fa-star"></i>
+        </button>
+      </div>
+    `;
+  }).join('');
 
-  function updateShuffleButton() {
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    if (!shuffleBtn) return;
-    shuffleBtn.classList.toggle('active', shuffleEnabled);
-    shuffleBtn.setAttribute('aria-pressed', shuffleEnabled ? 'true' : 'false');
-  }
+  playlistEl.querySelectorAll('.track-cover').forEach((img) => {
+    const index = Number(img.dataset.coverIndex);
+    applyImageFallback(img, getCoverCandidates(songs[index]));
+  });
 
-  function updateNowPlayingCard() {
-    const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-    const nowPlayingSub = document.getElementById('nowPlayingSub');
-    const nowPlayingIndex = document.getElementById('nowPlayingIndex');
-    if (!nowPlayingTitle || !nowPlayingSub || !nowPlayingIndex) return;
+  playlistEl.querySelectorAll('.track').forEach((track) => {
+    const index = Number(track.dataset.index);
+    attachLongPress(track, index);
 
-    const song = songs[currentSongIndex];
-    nowPlayingTitle.textContent = song ? song.title : 'اسم الأغنية';
-    nowPlayingSub.textContent = audio.paused ? 'متوقف' : 'يعمل الآن';
-    nowPlayingIndex.textContent = `${currentSongIndex + 1} / ${songs.length}`;
-  }
-
-  function setVolumeTheme(value) {
-    const pct = clamp(value, 0, 100);
-    const hue = Math.round((pct / 100) * 140);
-    const color = `hsl(${hue} 92% 56%)`;
-    document.documentElement.style.setProperty('--volume-color', color);
-    if (volumeBar) {
-      volumeBar.style.background = `linear-gradient(90deg, ${color} 0%, ${color} ${pct}%, rgba(255,255,255,.08) ${pct}%, rgba(255,255,255,.08) 100%)`;
-    }
-    if (volumeValue) volumeValue.textContent = `${pct}%`;
-    if (volumeIcon) {
-      if (pct === 0) volumeIcon.className = 'fa-solid fa-volume-xmark';
-      else if (pct < 35) volumeIcon.className = 'fa-solid fa-volume-low';
-      else volumeIcon.className = 'fa-solid fa-volume-high';
-    }
-  }
-
-  function updateProgress() {
-    if (!audio.duration) return;
-    const pct = (audio.currentTime / audio.duration) * 100;
-    if (progressBar) progressBar.style.width = `${pct}%`;
-    if (!isSeeking && seekBar) seekBar.value = String(pct);
-    if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
-    if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
-  }
-
-  function updateSeekTooltipFromValue(value) {
-    if (!audio.duration || !seekTooltip || !seekWrap) return;
-    const ratio = clamp(Number(value), 0, 100) / 100;
-    const time = ratio * audio.duration;
-    seekTooltip.textContent = formatTime(time);
-    const rect = seekWrap.getBoundingClientRect();
-    seekTooltip.style.left = `${rect.width * ratio}px`;
-  }
-
-  function showSeekTooltip() {
-    if (!seekTooltip) return;
-    seekTooltip.classList.add('show');
-    clearTimeout(hideTooltipTimer);
-  }
-
-  function hideSeekTooltipSoon() {
-    if (!seekTooltip) return;
-    clearTimeout(hideTooltipTimer);
-    hideTooltipTimer = setTimeout(() => {
-      if (!isSeeking) seekTooltip.classList.remove('show');
-    }, 220);
-  }
-
-  function setPlayIcon(isPlaying) {
-    if (!playIcon) return;
-    playIcon.className = `fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`;
-  }
-
-  function updatePulse(isPlaying) {
-    if (!musicFab) return;
-    musicFab.style.animation = isPlaying ? 'pulse 1s infinite' : 'none';
-  }
-
-  function getCoverCandidates(song) {
-    const exts = Array.isArray(song.coverCandidates) && song.coverCandidates.length ? song.coverCandidates : ['jpg', 'jpeg', 'png'];
-    const candidates = [];
-    for (const base of IMAGE_BASES) {
-      for (const ext of exts) candidates.push(`${base}${encodeURIComponent(song.base)}.${ext}`);
-    }
-    candidates.push(FALLBACK_COVER);
-    return candidates;
-  }
-
-  function applyImageFallback(img, candidates) {
-    let idx = 0;
-    const tryNext = () => {
-      if (idx >= candidates.length) {
-        img.src = FALLBACK_COVER;
+    track.addEventListener('click', (e) => {
+      if (track.dataset.ignoreClick === '1') {
+        track.dataset.ignoreClick = '0';
         return;
       }
-      const nextUrl = candidates[idx++];
-      img.onerror = tryNext;
-      img.src = nextUrl;
-    };
-    tryNext();
-  }
-
-  function currentSong() {
-    return songs[currentSongIndex] || songs[0];
-  }
-
-  function setActiveTrack() {
-    document.querySelectorAll('.track').forEach((track) => {
-      track.classList.toggle('active', Number(track.dataset.index) === currentSongIndex);
-    });
-    updateNowPlayingCard();
-  }
-
-  function refreshToolbarState() {
-    updateShuffleButton();
-    updateRepeatButton();
-    const searchInput = document.getElementById('songSearch');
-    if (searchInput && searchInput.value !== searchTerm) searchInput.value = searchTerm;
-  }
-
-  function getVisibleSongIndexes() {
-    const normalized = normalizeText(searchTerm);
-    let indexes = songs.map((_, i) => i);
-    if (normalized) {
-      indexes = indexes.filter((i) => normalizeText(baseTrackSearch(songs[i])).includes(normalized));
-    }
-    indexes.sort((a, b) => {
-      const af = songFavorite(a) ? 1 : 0;
-      const bf = songFavorite(b) ? 1 : 0;
-      if (af !== bf) return bf - af;
-      return a - b;
-    });
-    return indexes;
-  }
-
-  function buildPlaylist() {
-    if (!playlistEl) return;
-    visibleIndexes = getVisibleSongIndexes();
-    playlistCount.textContent = `${visibleIndexes.length} / ${songs.length} أغنية`;
-
-    if (!visibleIndexes.length) {
-      playlistEl.innerHTML = '<div class="track-empty">لا توجد نتائج</div>';
-      return;
-    }
-
-    playlistEl.innerHTML = visibleIndexes.map((index) => {
-      const song = songs[index];
-      const fav = songFavorite(index);
-      const coverCandidates = getCoverCandidates(song);
-      return `
-        <div class="track${index === currentSongIndex ? ' active' : ''}${fav ? ' fav' : ''}" data-index="${index}" tabindex="0" role="button" aria-label="تشغيل ${escapeHtml(song.title)}">
-          <img class="track-cover" src="${coverCandidates[0]}" alt="غلاف ${escapeHtml(song.title)}" data-cover-index="${index}">
-          <div class="track-meta">
-            <strong>${escapeHtml(song.title)}</strong>
-            <span>${escapeHtml(song.fileLabel)}</span>
-          </div>
-          <button class="track-star ${fav ? 'active' : ''}" type="button" data-fav-index="${index}" aria-label="مفضلة">
-            <i class="fa-solid fa-star"></i>
-          </button>
-        </div>
-      `;
-    }).join('');
-
-    playlistEl.querySelectorAll('.track-cover').forEach((img) => {
-      const index = Number(img.dataset.coverIndex);
-      applyImageFallback(img, getCoverCandidates(songs[index]));
+      if (e.target.closest('.track-star')) return;
+      playSong(index);
     });
 
-    playlistEl.querySelectorAll('.track').forEach((track) => {
-      const index = Number(track.dataset.index);
-      attachLongPress(track, index);
-      track.addEventListener('click', (e) => {
-        if (track.dataset.ignoreClick === '1') {
-          track.dataset.ignoreClick = '0';
-          return;
-        }
-        if (e.target.closest('.track-star')) return;
-        playSong(index);
-      });
-      track.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          playSong(index);
-        }
-      });
-    });
-
-    playlistEl.querySelectorAll('.track-star').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleFavorite(Number(btn.dataset.favIndex));
-      });
-    });
-
-    setActiveTrack();
-  }
-
-  function toggleFavorite(index) {
-    if (favorites.has(index)) favorites.delete(index);
-    else favorites.add(index);
-    saveFavorites();
-    buildPlaylist();
-    showToast(favorites.has(index) ? 'تمت الإضافة للمفضلة' : 'تمت الإزالة من المفضلة');
-  }
-
-  function cycleRepeatMode() {
-    repeatMode = repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off';
-    setStored(STORAGE.repeat, repeatMode);
-    updateRepeatButton();
-    showToast(repeatMode === 'off' ? 'Repeat Off' : repeatMode === 'one' ? 'Repeat 1' : 'Repeat All');
-  }
-
-  function toggleShuffle() {
-    shuffleEnabled = !shuffleEnabled;
-    setStored(STORAGE.shuffle, String(shuffleEnabled));
-    updateShuffleButton();
-    showToast(shuffleEnabled ? 'Shuffle On' : 'Shuffle Off');
-  }
-
-  function loadSong(index, autoplay = false, options = {}) {
-    if (!songs.length) return;
-    const { pushHistory = true, restoreTime = null } = options;
-
-    if (pushHistory && index !== currentSongIndex) {
-      playbackHistory.push(currentSongIndex);
-      if (playbackHistory.length > 50) playbackHistory.shift();
-    }
-
-    currentSongIndex = (index + songs.length) % songs.length;
-    const song = currentSong();
-
-    if (!song) return;
-
-    if (audioState) audioState.textContent = 'جاري التحميل...';
-    if (songTitle) songTitle.textContent = song.title;
-    if (songArtist) songArtist.textContent = song.fileLabel;
-
-    if (musicCover) {
-      musicCover.onerror = function () {
-        this.onerror = null;
-        this.src = FALLBACK_COVER;
-      };
-      applyImageFallback(musicCover, getCoverCandidates(song));
-    }
-
-    audio.src = song.src;
-    audio.load();
-    setActiveTrack();
-    updateNowPlayingCard();
-    savePlaybackSnapshot();
-
-    if (restoreTime !== null) {
-      currentTimeRestore = restoreTime;
-      loadedResumeApplied = false;
-    }
-
-    if (autoplay) {
-      audio.play().catch(() => showToast('المتصفح منع التشغيل التلقائي'));
-    }
-  }
-
-  function playSong(index) {
-    if (index === currentSongIndex && audio.src) {
-      audio.play().catch(() => showToast('المتصفح منع التشغيل'));
-      return;
-    }
-    loadSong(index, true, { pushHistory: true });
-  }
-
-  function nextSong() {
-    if (repeatMode === 'one') {
-      loadSong(currentSongIndex, true, { pushHistory: false });
-      return;
-    }
-    if (shuffleEnabled) {
-      if (songs.length <= 1) {
-        loadSong(currentSongIndex, true, { pushHistory: false });
-        return;
-      }
-      let nextIndex = currentSongIndex;
-      while (nextIndex === currentSongIndex) nextIndex = Math.floor(Math.random() * songs.length);
-      loadSong(nextIndex, true, { pushHistory: true });
-      return;
-    }
-    loadSong((currentSongIndex + 1) % songs.length, true, { pushHistory: true });
-  }
-
-  function prevSong() {
-    if (repeatMode === 'one') {
-      loadSong(currentSongIndex, true, { pushHistory: false });
-      return;
-    }
-    if (shuffleEnabled && playbackHistory.length) {
-      const prevIndex = playbackHistory.pop();
-      if (Number.isInteger(prevIndex)) {
-        loadSong(prevIndex, true, { pushHistory: false });
-        return;
-      }
-    }
-    loadSong((currentSongIndex - 1 + songs.length) % songs.length, true, { pushHistory: true });
-  }
-
-  function togglePlay() {
-    if (audio.paused) audio.play().catch(() => showToast('المتصفح منع التشغيل'));
-    else audio.pause();
-  }
-
-  function ensureExtraStyles() {
-    if (document.getElementById('addonStyles')) return;
-    const style = document.createElement('style');
-    style.id = 'addonStyles';
-    style.textContent = `
-      .section-title.enhanced{display:flex;align-items:center;gap:8px}
-      .section-title .section-icon{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;font-size:11px;background:rgba(255,255,255,.06);color:#d8f9ff;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-      .page-divider{height:1px;width:min(100%,560px);margin:16px auto 10px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
-      .music-toolbar{display:grid;gap:10px;margin:10px 0 12px}
-      .music-search{width:100%;min-height:44px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.04);color:#fff;padding:0 14px;outline:none;font-family:inherit;transition:border-color .18s ease,background .18s ease,transform .18s ease}
-      .music-search:focus{border-color:rgba(0,242,255,.3);background:rgba(255,255,255,.06)}
-      .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
-      .tool-btn{min-height:38px;padding:0 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
-      .tool-btn.active{background:rgba(0,242,255,.12);border-color:rgba(0,242,255,.24);color:#d8ffff}
-      .tool-btn:active{transform:scale(.98)}
-      .now-playing-card{display:grid;gap:2px;margin:10px 0 8px;padding:10px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.07);box-shadow:0 8px 18px rgba(0,0,0,.10)}
-      .now-playing-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#a7b5c4;font-weight:800}
-      .now-playing-title{font-size:14px;font-weight:900;line-height:1.4}
-      .now-playing-sub{font-size:11px;color:#98a8b8}
-      .track{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}
-      .track:hover,.track:focus-visible{transform:translateY(-1px);box-shadow:0 12px 22px rgba(0,0,0,.16);border-color:rgba(255,255,255,.12)}
-      .track.fav{border-color:rgba(255,215,0,.22)}
-      .track-star{width:34px;height:34px;border-radius:10px;border:none;background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);cursor:pointer;transition:transform .18s ease,color .18s ease,background .18s ease}
-      .track-star.active{color:#ffd54a;background:rgba(255,213,74,.10)}
-      .track-star:active{transform:scale(.96)}
-      .track-empty{padding:16px;text-align:center;color:#8f9dad;border:1px dashed rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.03)}
-      .track-menu{position:fixed;z-index:99999;min-width:190px;padding:8px;border-radius:16px;background:rgba(10,14,22,.97);border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.35);display:none;gap:6px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-      .track-menu.open{display:grid}
-      .track-menu button{text-align:right;padding:10px 12px;border:none;border-radius:12px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:12px;cursor:pointer}
-      .track-menu button:active{transform:scale(.99)}
-      .ayah-toggle-btn{position:fixed;top:12px;left:12px;z-index:996;width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(10,14,22,.86);color:#dffcff;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.2);transition:transform .15s ease,background .15s ease,border-color .15s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-      .ayah-toggle-btn:hover{background:rgba(10,14,22,.96);border-color:rgba(255,255,255,.12)}
-      .ayah-toggle-btn:active{transform:scale(.96)}
-      .ayah-float{position:fixed;top:12px;left:12px;z-index:995;width:min(320px,calc(100vw - 24px));padding:10px;border-radius:18px;background:linear-gradient(180deg,rgba(14,19,28,.94),rgba(9,13,20,.90));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f3f7fb;user-select:none;touch-action:none;cursor:grab}
-      .ayah-float:active{cursor:grabbing}
-      .ayah-float.swap{opacity:.35}
-      .ayah-top,.ayah-page-info,.ayah-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
-      .ayah-mode-btn,.ayah-mini-btn,.ayah-nav button{border:none;border-radius:12px;min-height:34px;padding:0 12px;background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
-      .ayah-pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:900;color:#bffcff;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.12)}
-      .ayah-page-info{margin:8px 0;font-size:11px;color:#9fb0c1}
-      .ayah-view{display:none}
-      .ayah-view.active{display:block}
-      .ayah-compact-card{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:16px;padding:10px;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
-      .ayah-compact-card:hover{transform:translateY(-1px);background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.12)}
-      .ayah-compact-card.expanded .ayah-compact-detail{display:block}
-      .ayah-compact-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:10px;color:#9fefff}
-      .ayah-compact-text{font-size:13px;line-height:1.7;font-weight:800}
-      .ayah-compact-note{margin-top:4px;font-size:10px;color:#b2bfcc}
-      .ayah-compact-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;line-height:1.7;color:#d4dee8}
-      .ayah-list{display:grid;gap:8px}
-      .ayah-item{width:100%;text-align:right;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04);color:#fff;border-radius:16px;padding:10px;cursor:pointer;transition:transform .16s ease,background .16s ease,border-color .16s ease}
-      .ayah-item:hover,.ayah-item:focus-visible{transform:translateY(-1px);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06);outline:none}
-      .ayah-item-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:10px;color:#9fefff}
-      .ayah-item-text{font-size:13px;line-height:1.7;font-weight:800}
-      .ayah-item-note{margin-top:4px;font-size:10px;color:#b2bfcc}
-      .ayah-item-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;line-height:1.7;color:#d4dee8}
-      .ayah-item.expanded .ayah-item-detail{display:block}
-      .ayah-hint{margin-top:8px;font-size:10px;color:#98a8b8;text-align:center}
-      .track-empty,.copy-row,.work-card,.social-card,.music-sheet,.now-playing-card,.ayah-float{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-      .drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:9994}
-      .drawer-backdrop.open{opacity:1;pointer-events:auto}
-      .social-drawer{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.94);width:min(92vw,420px);max-height:min(80dvh,720px);overflow:auto;padding:16px;border-radius:24px;background:linear-gradient(180deg,rgba(12,17,26,.98),rgba(10,14,22,.95));border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 60px rgba(0,0,0,.45);opacity:0;visibility:hidden;pointer-events:none;transition:transform .22s cubic-bezier(.2,.9,.2,1),opacity .22s ease,visibility .22s ease;z-index:9995;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-      .social-drawer.open{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible;pointer-events:auto}
-      .drawer-close{position:absolute;top:12px;left:12px;width:34px;height:34px;border:none;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:20px;cursor:pointer;transition:transform .15s ease,background .15s ease}
-      .drawer-close:active{transform:scale(.96)}
-      .drawer-head{padding:8px 44px 14px 2px}
-      .drawer-head strong{display:block;font-size:16px;font-weight:900;color:#fff}
-      .drawer-head span{display:block;margin-top:4px;font-size:12px;color:#9fb0c1}
-      .drawer-list{display:grid;gap:10px}
-      .drawer-card{min-height:74px;padding:12px 14px 12px 82px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);transition:transform .18s ease,background .18s ease,box-shadow .18s ease,border-color .18s ease}
-      .drawer-card:hover,.drawer-card:focus-visible{transform:translateY(-2px);background:rgba(255,255,255,.08);box-shadow:0 14px 26px rgba(0,0,0,.20)}
-      .threads-card{--brand:#fff;--hover-bg:#0f172a;--hover-fg:#fff;--icon-bg:#111827;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#111827}
-      .github-card{--brand:#fff;--hover-bg:#181717;--hover-fg:#fff;--icon-bg:#181717;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#181717}
-      .chess-card{--brand:#fff;--hover-bg:#69923E;--hover-fg:#fff;--icon-bg:#69923E;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#69923E}
-      .twitch-card{--brand:#fff;--hover-bg:#9146FF;--hover-fg:#fff;--icon-bg:#9146FF;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#9146FF}
-      .pinterest-card{--brand:#fff;--hover-bg:#E60023;--hover-fg:#fff;--icon-bg:#E60023;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#E60023}
-      .threads-card .social-icon{color:#fff;background:#111827}.github-card .social-icon{color:#fff;background:#181717}.chess-card .social-icon{color:#fff;background:#69923E}.twitch-card .social-icon{color:#fff;background:#9146FF}.pinterest-card .social-icon{color:#fff;background:#E60023}
-      .threads-card:hover .social-icon,.threads-card:focus-visible .social-icon{color:#111827;background:#fff}.github-card:hover .social-icon,.github-card:focus-visible .social-icon{color:#181717;background:#fff}.chess-card:hover .social-icon,.chess-card:focus-visible .social-icon{color:#69923E;background:#fff}.twitch-card:hover .social-icon,.twitch-card:focus-visible .social-icon{color:#9146FF;background:#fff}.pinterest-card:hover .social-icon,.pinterest-card:focus-visible .social-icon{color:#E60023;background:#fff}
-      .more-socials-card{--brand:#7dd3fc;--hover-bg:linear-gradient(135deg,#00f2ff,#818cf8);--hover-fg:#fff;--icon-bg:rgba(125,211,252,.14);--icon-fg:#7dd3fc;--hover-icon-bg:#fff;--hover-icon-fg:#000;--hover-border:rgba(125,211,252,.20);background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(168,85,247,.16));border:1px solid rgba(125,211,252,.20);isolation:isolate;overflow:hidden}
-      .more-socials-card .social-icon{color:#7dd3fc}
-      .more-socials-card.soft-float{animation:softFloat 4s ease-in-out infinite}
-      .more-socials-card.wave-auto::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.24), transparent 58%);opacity:0;transform:scale(.35);pointer-events:none;animation:wavePulse 6s ease-in-out infinite}
-      .more-socials-card.pulse-hit{animation:pressWave 620ms cubic-bezier(.2,.9,.2,1)}
-      .special-badge{background:linear-gradient(135deg,#22c55e,#06b6d4)}
-      .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(18px);opacity:0;pointer-events:none;background:rgba(15,23,42,.94);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:11px 16px;box-shadow:0 16px 40px rgba(0,0,0,.3);transition:all .2s ease;font-weight:800;z-index:99999;text-align:center;max-width:calc(100vw - 24px)}
-      .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-      @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,242,255,.6)}70%{box-shadow:0 0 0 15px rgba(0,242,255,0)}100%{box-shadow:0 0 0 0 rgba(0,242,255,0)}}
-      @keyframes hintFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-      @keyframes wavePulse{0%{opacity:0;transform:scale(.35)}12%{opacity:.42}38%{opacity:0;transform:scale(2.7)}100%{opacity:0;transform:scale(2.7)}}
-      @keyframes pressWave{0%{transform:scale(1)}35%{transform:scale(1.04)}70%{transform:scale(.99)}100%{transform:scale(1)}}
-      @keyframes softFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-      @keyframes rippleAnim{0%{transform:scale(0);opacity:.55}100%{transform:scale(1.9);opacity:0}}
-      @media (max-width:520px){.music-hint{max-width:150px;right:74px}.track{grid-template-columns:46px 1fr auto}.track-cover{width:46px;height:46px}.social-drawer{width:calc(100vw - 18px);border-radius:20px}.drawer-card{padding-left:76px;min-height:70px}.ayah-float{width:min(240px,calc(100vw - 18px));top:10px;left:10px;padding:9px}.ayah-compact-text,.ayah-item-text{font-size:12px}}
-      @media (min-width:700px){body{padding-left:22px;padding-right:22px}.app{max-width:620px}}
-      @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}}
-    `;
-    document.head.appendChild(style);
-  }
-
-  function ensurePageDivider() {
-    if (document.getElementById('pageDivider')) return;
-    const divider = document.createElement('div');
-    divider.id = 'pageDivider';
-    divider.className = 'page-divider';
-    if (main) main.insertAdjacentElement('afterend', divider);
-  }
-
-  function decorateSectionTitles() {
-    const map = {
-      'روابط التواصل': 'fa-link',
-      'نسخ سريع': 'fa-copy',
-      'مشروعي': 'fa-sparkles',
-    };
-    sectionTitles.forEach((el) => {
-      if (el.dataset.enhanced === '1') return;
-      const label = el.textContent.trim();
-      const icon = map[label] || 'fa-circle';
-      el.innerHTML = `<i class="fa-solid ${icon} section-icon"></i><span>${escapeHtml(label)}</span>`;
-      el.classList.add('enhanced');
-      el.dataset.enhanced = '1';
-    });
-  }
-
-  function ensureToolbar() {
-    if (!musicSheet || document.getElementById('musicToolbar')) return;
-    const toolbar = document.createElement('div');
-    toolbar.id = 'musicToolbar';
-    toolbar.className = 'music-toolbar';
-    toolbar.innerHTML = `
-      <input id="songSearch" class="music-search" type="search" placeholder="ابحث داخل الأغاني..." value="${escapeHtml(searchTerm)}">
-      <div class="toolbar-actions">
-        <button id="shuffleBtn" class="tool-btn" type="button">Shuffle</button>
-        <button id="repeatBtn" class="tool-btn" type="button">Repeat Off</button>
-        <button id="ayahHideBtn" class="tool-btn" type="button">${ayahVisible ? 'إخفاء الآية' : 'إظهار الآية'}</button>
-      </div>
-    `;
-    musicSheet.insertBefore(toolbar, playlistBox || musicControls || null);
-
-    const searchInput = document.getElementById('songSearch');
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    const repeatBtn = document.getElementById('repeatBtn');
-    const ayahHideBtn = document.getElementById('ayahHideBtn');
-
-    searchInput?.addEventListener('input', () => {
-      searchTerm = searchInput.value.trim().toLowerCase();
-      setStored(STORAGE.search, searchTerm);
-      buildPlaylist();
-    });
-    shuffleBtn?.addEventListener('click', () => { toggleShuffle(); refreshToolbarState(); });
-    repeatBtn?.addEventListener('click', () => { cycleRepeatMode(); refreshToolbarState(); });
-    ayahHideBtn?.addEventListener('click', () => toggleAyahVisibility());
-  }
-
-  function ensureNowPlayingCard() {
-    if (!musicSheet || document.getElementById('nowPlayingCard')) return;
-    const card = document.createElement('div');
-    card.id = 'nowPlayingCard';
-    card.className = 'now-playing-card';
-    card.innerHTML = `
-      <div class="now-playing-head">
-        <span><i class="fa-solid fa-circle-play"></i> Now Playing</span>
-        <span id="nowPlayingIndex">0 / ${songs.length}</span>
-      </div>
-      <div class="now-playing-title" id="nowPlayingTitle">اسم الأغنية</div>
-      <div class="now-playing-sub" id="nowPlayingSub">متوقف</div>
-    `;
-    if (musicControls) musicSheet.insertBefore(card, musicControls);
-    else musicSheet.appendChild(card);
-  }
-
-  function openMoreSocials() {
-    document.body.classList.add('drawer-open');
-    moreSocialsDrawer?.classList.add('open');
-    moreSocialsBackdrop?.classList.add('open');
-  }
-
-  function closeMoreSocials() {
-    document.body.classList.remove('drawer-open');
-    moreSocialsDrawer?.classList.remove('open');
-    moreSocialsBackdrop?.classList.remove('open');
-  }
-
-  function pulseWave(el) {
-    if (!el) return;
-    el.classList.remove('pulse-hit');
-    void el.offsetWidth;
-    el.classList.add('pulse-hit');
-    setTimeout(() => el.classList.remove('pulse-hit'), 650);
-  }
-
-  function makeRipple(e, el) {
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const circle = document.createElement('span');
-    const size = Math.max(rect.width, rect.height) * 1.4;
-    const clientX = Number.isFinite(e?.clientX) ? e.clientX : rect.left + rect.width / 2;
-    const clientY = Number.isFinite(e?.clientY) ? e.clientY : rect.top + rect.height / 2;
-    circle.style.position = 'absolute';
-    circle.style.width = `${size}px`;
-    circle.style.height = `${size}px`;
-    circle.style.left = `${clientX - rect.left - size / 2}px`;
-    circle.style.top = `${clientY - rect.top - size / 2}px`;
-    circle.style.borderRadius = '50%';
-    circle.style.pointerEvents = 'none';
-    circle.style.background = 'radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)';
-    circle.style.transform = 'scale(0)';
-    circle.style.opacity = '1';
-    circle.style.animation = 'rippleAnim 620ms ease-out forwards';
-    el.appendChild(circle);
-    setTimeout(() => circle.remove(), 650);
-  }
-
-  function ensureTrackMenu() {
-    if (trackMenu) return;
-    trackMenu = document.createElement('div');
-    trackMenu.id = 'trackMenu';
-    trackMenu.className = 'track-menu';
-    trackMenu.innerHTML = `
-      <button type="button" data-action="play">تشغيل</button>
-      <button type="button" data-action="favorite">مفضلة</button>
-      <button type="button" data-action="copy-title">نسخ الاسم</button>
-      <button type="button" data-action="copy-file">نسخ الملف</button>
-    `;
-    document.body.appendChild(trackMenu);
-
-    trackMenu.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      const song = songs[menuIndex];
-      if (!song) return;
-      if (action === 'play') playSong(menuIndex);
-      else if (action === 'favorite') toggleFavorite(menuIndex);
-      else if (action === 'copy-title') copyText(song.title);
-      else if (action === 'copy-file') copyText(song.fileLabel);
-      closeTrackMenu();
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!trackMenu.classList.contains('open')) return;
-      if (e.target.closest('#trackMenu')) return;
-      closeTrackMenu();
-    });
-  }
-
-  function openTrackMenu(index, x, y) {
-    if (!trackMenu) return;
-    menuIndex = index;
-    const favBtn = trackMenu.querySelector('button[data-action="favorite"]');
-    if (favBtn) favBtn.textContent = favorites.has(index) ? 'إزالة من المفضلة' : 'مفضلة';
-    trackMenu.classList.add('open');
-    const rect = trackMenu.getBoundingClientRect();
-    const left = clamp(x, 8, window.innerWidth - rect.width - 8);
-    const top = clamp(y, 8, window.innerHeight - rect.height - 8);
-    trackMenu.style.left = `${left}px`;
-    trackMenu.style.top = `${top}px`;
-  }
-
-  function closeTrackMenu() {
-    if (!trackMenu) return;
-    trackMenu.classList.remove('open');
-    menuIndex = -1;
-  }
-
-  function attachLongPress(trackEl, index) {
-    let lpTimer = null;
-    let startX = 0;
-    let startY = 0;
-    let fired = false;
-    const clear = () => { if (lpTimer) clearTimeout(lpTimer); lpTimer = null; };
-
-    trackEl.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      startX = e.clientX;
-      startY = e.clientY;
-      fired = false;
-      clear();
-      lpTimer = setTimeout(() => {
-        fired = true;
-        trackEl.dataset.ignoreClick = '1';
-        openTrackMenu(index, e.clientX + 12, e.clientY + 12);
-      }, 550);
-    });
-
-    trackEl.addEventListener('pointermove', (e) => {
-      if (!lpTimer) return;
-      if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) clear();
-    });
-
-    trackEl.addEventListener('pointerup', () => {
-      clear();
-      if (fired) setTimeout(() => { trackEl.dataset.ignoreClick = '0'; }, 120);
-    });
-
-    trackEl.addEventListener('pointercancel', () => {
-      clear();
-      trackEl.dataset.ignoreClick = '0';
-    });
-  }
-
-  function ensureAyahMarkup() {
-    if (!ayahFloat) return;
-    if (ayahFloat.querySelector('#ayahModeBtn')) {
-      ayahNum = document.getElementById('ayahNum');
-      ayahText = document.getElementById('ayahText');
-      ayahRef = document.getElementById('ayahRef');
-      ayahNote = document.getElementById('ayahNote');
-      ayahDetail = document.getElementById('ayahDetail');
-      return;
-    }
-
-    ayahFloat.innerHTML = `
-      <div class="ayah-top">
-        <button class="ayah-mode-btn" id="ayahModeBtn" type="button">عرض الصفحات</button>
-        <span class="ayah-pill" id="ayahModeLabel">مختصر</span>
-        <button class="ayah-mini-btn" id="ayahCompactBtn" type="button">آية</button>
-      </div>
-
-      <div class="ayah-page-info">
-        <span id="ayahPageLabel">الصفحة 1</span>
-        <span id="ayahCountLabel">1 / 1</span>
-      </div>
-
-      <div class="ayah-view active" id="ayahCompactView">
-        <div class="ayah-compact-card" id="ayahCompactCard" tabindex="0" role="button" aria-label="آية مختصرة">
-          <div class="ayah-compact-head">
-            <span id="ayahCompactNum">1</span>
-            <span id="ayahCompactRef">[الزمر: 53]</span>
-          </div>
-          <div class="ayah-compact-text" id="ayahCompactText"></div>
-          <div class="ayah-compact-note" id="ayahCompactNote"></div>
-          <div class="ayah-compact-detail" id="ayahCompactDetail"></div>
-        </div>
-      </div>
-
-      <div class="ayah-view" id="ayahPagesView">
-        <div class="ayah-list" id="ayahList"></div>
-        <div class="ayah-nav">
-          <button id="ayahPrevBtn" type="button">السابق</button>
-          <span id="ayahNavInfo">1 / 1</span>
-          <button id="ayahNextBtn" type="button">التالي</button>
-        </div>
-      </div>
-
-      <div class="ayah-hint">اضغط على آية لعرض التفاصيل، واضغط مرة ثانية للرجوع.</div>
-    `;
-
-    ayahNum = document.getElementById('ayahCompactNum');
-    ayahText = document.getElementById('ayahCompactText');
-    ayahRef = document.getElementById('ayahCompactRef');
-    ayahNote = document.getElementById('ayahCompactNote');
-    ayahDetail = document.getElementById('ayahCompactDetail');
-  }
-
-  function totalAyahPages() {
-    return Math.max(1, Math.ceil(ayahs.length / ayahsPerPage));
-  }
-
-  function shuffleArray(arr) {
-    const copy = arr.slice();
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
-  }
-
-  function buildAyahOrder() {
-    ayahOrder = shuffleArray([...Array(ayahs.length).keys()]);
-  }
-
-  function getAyahsForPage(page) {
-    const start = page * ayahsPerPage;
-    return ayahOrder.slice(start, start + ayahsPerPage).map((idx) => ({ ...ayahs[idx], originalIndex: idx }));
-  }
-
-  function stopAyahTimer() {
-    clearInterval(ayahTimer);
-    ayahTimer = null;
-  }
-
-  function startAyahTimer() {
-    stopAyahTimer();
-    if (!ayahVisible || ayahMode !== 'compact') return;
-    ayahTimer = setInterval(() => {
-      buildAyahOrder();
-      renderAyahCompact(false);
-    }, ayahDelay);
-  }
-
-  function renderAyahCompact(resetExpanded = false) {
-    if (!ayahFloat) return;
-    const compactView = document.getElementById('ayahCompactView');
-    const pagesView = document.getElementById('ayahPagesView');
-    const modeBtn = document.getElementById('ayahModeBtn');
-    const ayahModeLabel = document.getElementById('ayahModeLabel');
-    const pageLabel = document.getElementById('ayahPageLabel');
-    const countLabel = document.getElementById('ayahCountLabel');
-    const navInfo = document.getElementById('ayahNavInfo');
-    const compactCard = document.getElementById('ayahCompactCard');
-
-    if (resetExpanded) ayahExpandedIndex = null;
-
-    const idx = ayahOrder.length ? ayahOrder[0] : 0;
-    const a = ayahs[idx];
-    if (!a) return;
-
-    if (ayahNum) ayahNum.textContent = String(a.num);
-    if (ayahText) ayahText.textContent = a.text;
-    if (ayahRef) ayahRef.textContent = a.ref;
-    if (ayahNote) ayahNote.textContent = a.note;
-    if (ayahDetail) ayahDetail.textContent = a.detail;
-
-    compactCard?.classList.toggle('expanded', ayahExpandedIndex === 0);
-
-    compactView?.classList.add('active');
-    pagesView?.classList.remove('active');
-
-    if (modeBtn) modeBtn.textContent = 'عرض الصفحات';
-    if (ayahModeLabel) ayahModeLabel.textContent = 'مختصر';
-    if (pageLabel) pageLabel.textContent = 'الصفحة 1';
-    if (countLabel) countLabel.textContent = '1 / 1';
-    if (navInfo) navInfo.textContent = '1 / 1';
-  }
-
-  function renderAyahPages() {
-    if (!ayahFloat) return;
-    const compactView = document.getElementById('ayahCompactView');
-    const pagesView = document.getElementById('ayahPagesView');
-    const modeBtn = document.getElementById('ayahModeBtn');
-    const ayahModeLabel = document.getElementById('ayahModeLabel');
-    const pageLabel = document.getElementById('ayahPageLabel');
-    const countLabel = document.getElementById('ayahCountLabel');
-    const navInfo = document.getElementById('ayahNavInfo');
-    const list = document.getElementById('ayahList');
-    const pages = totalAyahPages();
-
-    ayahPage = clamp(ayahPage, 0, pages - 1);
-    const items = getAyahsForPage(ayahPage);
-
-    if (modeBtn) modeBtn.textContent = 'عرض مختصر';
-    if (ayahModeLabel) ayahModeLabel.textContent = 'صفحات';
-    if (pageLabel) pageLabel.textContent = `الصفحة ${ayahPage + 1}`;
-    if (countLabel) countLabel.textContent = `${ayahPage + 1} / ${pages}`;
-    if (navInfo) navInfo.textContent = `${ayahPage + 1} / ${pages}`;
-
-    compactView?.classList.remove('active');
-    pagesView?.classList.add('active');
-
-    if (!list) return;
-    list.innerHTML = items.map((a, localIndex) => `
-      <button class="ayah-item ${ayahExpandedIndex === localIndex ? 'expanded' : ''}" type="button" data-ayah-index="${localIndex}">
-        <div class="ayah-item-top">
-          <span class="ayah-item-num">${a.num}</span>
-          <span class="ayah-item-ref">${escapeHtml(a.ref)}</span>
-        </div>
-        <div class="ayah-item-text">${escapeHtml(a.text)}</div>
-        <div class="ayah-item-note">${escapeHtml(a.note)}</div>
-        <div class="ayah-item-detail">${escapeHtml(a.detail)}</div>
-      </button>
-    `).join('');
-
-    list.querySelectorAll('.ayah-item').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const idx = Number(btn.dataset.ayahIndex);
-        ayahExpandedIndex = ayahExpandedIndex === idx ? null : idx;
-        renderAyahPages();
-      });
-    });
-  }
-
-  function toggleAyahMode() {
-    ayahMode = ayahMode === 'compact' ? 'pages' : 'compact';
-    setStored(STORAGE.ayahMode, ayahMode);
-    ayahExpandedIndex = null;
-    if (ayahMode === 'compact') {
-      buildAyahOrder();
-      renderAyahCompact(true);
-      startAyahTimer();
-    } else {
-      stopAyahTimer();
-      if (!ayahOrder.length) buildAyahOrder();
-      renderAyahPages();
-    }
-  }
-
-  function nextAyahPage() {
-    const pages = totalAyahPages();
-    ayahPage = (ayahPage + 1) % pages;
-    ayahExpandedIndex = null;
-    setStored(STORAGE.ayahPage, String(ayahPage));
-    renderAyahPages();
-  }
-
-  function prevAyahPage() {
-    const pages = totalAyahPages();
-    ayahPage = (ayahPage - 1 + pages) % pages;
-    ayahExpandedIndex = null;
-    setStored(STORAGE.ayahPage, String(ayahPage));
-    renderAyahPages();
-  }
-
-  function toggleAyahVisibility() {
-    ayahVisible = !ayahVisible;
-    setStored(STORAGE.ayahVisible, String(ayahVisible));
-    if (ayahFloat) ayahFloat.style.display = ayahVisible ? 'block' : 'none';
-    syncAyahControls();
-    if (ayahVisible) {
-      if (ayahMode === 'compact') startAyahTimer();
-      else renderAyahPages();
-    } else {
-      stopAyahTimer();
-    }
-    showToast(ayahVisible ? 'تم إظهار الآية' : 'تم إخفاء الآية');
-  }
-
-  function syncAyahControls() {
-    const btn = document.getElementById('ayahToggleBtn');
-    const textBtn = document.getElementById('ayahHideBtn');
-    const modeBtn = document.getElementById('ayahModeBtn');
-    const compactBtn = document.getElementById('ayahCompactBtn');
-
-    if (btn) btn.innerHTML = ayahVisible ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
-    if (textBtn) textBtn.textContent = ayahVisible ? 'إخفاء الآية' : 'إظهار الآية';
-    if (modeBtn) modeBtn.textContent = ayahMode === 'compact' ? 'عرض الصفحات' : 'عرض مختصر';
-    if (compactBtn) compactBtn.textContent = 'آية';
-  }
-
-  function ensureAyahToggleButton() {
-    if (!ayahFloat || document.getElementById('ayahToggleBtn')) return;
-    const btn = document.createElement('button');
-    btn.id = 'ayahToggleBtn';
-    btn.className = 'ayah-toggle-btn';
-    btn.type = 'button';
-    btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
-    btn.title = 'إظهار / إخفاء الآية';
-    document.body.appendChild(btn);
-    btn.addEventListener('click', toggleAyahVisibility);
-  }
-
-  function ensureAyahControls() {
-    if (!ayahFloat) return;
-    ensureAyahMarkup();
-    ensureAyahToggleButton();
-
-    const modeBtn = document.getElementById('ayahModeBtn');
-    const compactBtn = document.getElementById('ayahCompactBtn');
-    const prevBtn = document.getElementById('ayahPrevBtn');
-    const nextBtn = document.getElementById('ayahNextBtn');
-    const compactCard = document.getElementById('ayahCompactCard');
-
-    modeBtn?.addEventListener('click', toggleAyahMode);
-    compactBtn?.addEventListener('click', toggleAyahMode);
-    prevBtn?.addEventListener('click', prevAyahPage);
-    nextBtn?.addEventListener('click', nextAyahPage);
-
-    compactCard?.addEventListener('click', () => {
-      if (ayahMode !== 'compact') return;
-      ayahExpandedIndex = ayahExpandedIndex === 0 ? null : 0;
-      renderAyahCompact(false);
-    });
-
-    compactCard?.addEventListener('keydown', (e) => {
+    track.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        ayahExpandedIndex = ayahExpandedIndex === 0 ? null : 0;
-        renderAyahCompact(false);
+        playSong(index);
       }
     });
+  });
+
+  playlistEl.querySelectorAll('.track-star').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFavorite(Number(btn.dataset.favIndex));
+    });
+  });
+
+  setActiveTrack();
+}
+
+function toggleFavorite(index) {
+  if (favorites.has(index)) favorites.delete(index);
+  else favorites.add(index);
+  saveFavorites();
+  buildPlaylist();
+  showToast(favorites.has(index) ? 'تمت الإضافة للمفضلة' : 'تمت الإزالة من المفضلة');
+}
+
+function cycleRepeatMode() {
+  repeatMode = repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off';
+  setStored(STORAGE.repeat, repeatMode);
+  updateRepeatButton();
+  showToast(repeatMode === 'off' ? 'Repeat Off' : repeatMode === 'one' ? 'Repeat 1' : 'Repeat All');
+}
+
+function toggleShuffle() {
+  shuffleEnabled = !shuffleEnabled;
+  setStored(STORAGE.shuffle, String(shuffleEnabled));
+  updateShuffleButton();
+  showToast(shuffleEnabled ? 'Shuffle On' : 'Shuffle Off');
+}
+
+function loadSong(index, autoplay = false, options = {}) {
+  if (!songs.length) return;
+  const { pushHistory = true, restoreTime = null } = options;
+
+  if (pushHistory && index !== currentSongIndex) {
+    playbackHistory.push(currentSongIndex);
+    if (playbackHistory.length > 50) playbackHistory.shift();
   }
 
-  function restoreAyahVisibility() {
-    if (!ayahFloat) return;
-    ayahFloat.style.display = ayahVisible ? 'block' : 'none';
-    const savedX = getNumber(STORAGE.ayahX, 12);
-    const savedY = getNumber(STORAGE.ayahY, 54);
-    ayahFloat.style.left = `${savedX}px`;
-    ayahFloat.style.top = `${savedY}px`;
-    syncAyahControls();
+  currentSongIndex = (index + songs.length) % songs.length;
+  const song = currentSong();
+
+  if (!song) return;
+
+  if (audioState) audioState.textContent = 'جاري التحميل...';
+  if (songTitle) songTitle.textContent = song.title;
+  if (songArtist) songArtist.textContent = song.fileLabel;
+
+  if (musicCover) {
+    musicCover.onerror = function () {
+      this.onerror = null;
+      this.src = FALLBACK_COVER;
+    };
+    applyImageFallback(musicCover, getCoverCandidates(song));
   }
+
+  audio.src = song.src;
+  audio.load();
+
+  setActiveTrack();
+  updateNowPlayingCard();
+  savePlaybackSnapshot();
+
+  if (restoreTime !== null) {
+    currentTimeRestore = restoreTime;
+    loadedResumeApplied = false;
+  }
+
+  if (autoplay) {
+    audio.play().catch(() => showToast('المتصفح منع التشغيل التلقائي'));
+  }
+}
+
+function playSong(index) {
+  if (index === currentSongIndex && audio.src) {
+    audio.play().catch(() => showToast('المتصفح منع التشغيل'));
+    return;
+  }
+  loadSong(index, true, { pushHistory: true });
+}
+
+const playbackHistory = [];
+
+function nextSong() {
+  if (repeatMode === 'one') {
+    loadSong(currentSongIndex, true, { pushHistory: false });
+    return;
+  }
+
+  if (shuffleEnabled) {
+    if (songs.length <= 1) {
+      loadSong(currentSongIndex, true, { pushHistory: false });
+      return;
+    }
+    let nextIndex = currentSongIndex;
+    while (nextIndex === currentSongIndex) nextIndex = Math.floor(Math.random() * songs.length);
+    loadSong(nextIndex, true, { pushHistory: true });
+    return;
+  }
+
+  loadSong((currentSongIndex + 1) % songs.length, true, { pushHistory: true });
+}
+
+function prevSong() {
+  if (repeatMode === 'one') {
+    loadSong(currentSongIndex, true, { pushHistory: false });
+    return;
+  }
+
+  if (shuffleEnabled && playbackHistory.length) {
+    const prevIndex = playbackHistory.pop();
+    if (Number.isInteger(prevIndex)) {
+      loadSong(prevIndex, true, { pushHistory: false });
+      return;
+    }
+  }
+
+  loadSong((currentSongIndex - 1 + songs.length) % songs.length, true, { pushHistory: true });
+}
+
+function togglePlay() {
+  if (audio.paused) audio.play().catch(() => showToast('المتصفح منع التشغيل'));
+  else audio.pause();
+}
+
+function ensureExtraStyles() {
+  if (document.getElementById('addonStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'addonStyles';
+  style.textContent = `
+    .section-title.enhanced{display:flex;align-items:center;gap:8px}
+    .section-title .section-icon{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;font-size:11px;background:rgba(255,255,255,.06);color:#d8f9ff;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+    .page-divider{height:1px;width:min(100%,560px);margin:16px auto 10px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
+    .music-toolbar{display:grid;gap:10px;margin:10px 0 12px}
+    .music-search{width:100%;min-height:44px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.04);color:#fff;padding:0 14px;outline:none;font-family:inherit;transition:border-color .18s ease,background .18s ease,transform .18s ease}
+    .music-search:focus{border-color:rgba(0,242,255,.3);background:rgba(255,255,255,.06)}
+    .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+    .tool-btn{min-height:38px;padding:0 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+    .tool-btn.active{background:rgba(0,242,255,.12);border-color:rgba(0,242,255,.24);color:#d8ffff}
+    .tool-btn:active{transform:scale(.98)}
+    .now-playing-card{display:grid;gap:2px;margin:10px 0 8px;padding:10px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.07);box-shadow:0 8px 18px rgba(0,0,0,.10)}
+    .now-playing-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#a7b5c4;font-weight:800}
+    .now-playing-title{font-size:14px;font-weight:900;line-height:1.4}
+    .now-playing-sub{font-size:11px;color:#98a8b8}
+    .track{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .track:hover,.track:focus-visible{transform:translateY(-1px);box-shadow:0 12px 22px rgba(0,0,0,.16);border-color:rgba(255,255,255,.12)}
+    .track.fav{border-color:rgba(255,215,0,.22)}
+    .track-star{width:34px;height:34px;border-radius:10px;border:none;background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);cursor:pointer;transition:transform .18s ease,color .18s ease,background .18s ease}
+    .track-star.active{color:#ffd54a;background:rgba(255,213,74,.10)}
+    .track-star:active{transform:scale(.96)}
+    .track-empty{padding:16px;text-align:center;color:#8f9dad;border:1px dashed rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.03)}
+    .track-menu{position:fixed;z-index:99999;min-width:190px;padding:8px;border-radius:16px;background:rgba(10,14,22,.97);border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.35);display:none;gap:6px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .track-menu.open{display:grid}
+    .track-menu button{text-align:right;padding:10px 12px;border:none;border-radius:12px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:12px;cursor:pointer}
+    .track-menu button:active{transform:scale(.99)}
+    .ayah-toggle-btn{position:fixed;top:12px;left:12px;z-index:996;width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(10,14,22,.86);color:#dffcff;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.2);transition:transform .15s ease,background .15s ease,border-color .15s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .ayah-toggle-btn:hover{background:rgba(10,14,22,.96);border-color:rgba(255,255,255,.12)}
+    .ayah-toggle-btn:active{transform:scale(.96)}
+    .ayah-float{position:fixed;top:12px;left:12px;z-index:995;width:min(320px,calc(100vw - 24px));padding:10px;border-radius:18px;background:linear-gradient(180deg,rgba(14,19,28,.94),rgba(9,13,20,.90));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f3f7fb;user-select:none;touch-action:none;cursor:grab}
+    .ayah-float:active{cursor:grabbing}
+    .ayah-float.swap{opacity:.35}
+    .ayah-top,.ayah-page-info,.ayah-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .ayah-mode-btn,.ayah-mini-btn,.ayah-nav button{border:none;border-radius:12px;min-height:34px;padding:0 12px;background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+    .ayah-mode-btn.active,.ayah-mini-btn.active{background:rgba(0,242,255,.12);border:1px solid rgba(0,242,255,.24);color:#dffcff}
+    .ayah-pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:900;color:#bffcff;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.12)}
+    .ayah-page-info{margin:8px 0;font-size:11px;color:#9fb0c1}
+    .ayah-view{display:none}
+    .ayah-view.active{display:block}
+    .ayah-compact-card{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:16px;padding:10px;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+    .ayah-compact-card:hover{transform:translateY(-1px);background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.12)}
+    .ayah-compact-card.expanded .ayah-compact-detail{display:block}
+    .ayah-compact-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:10px;color:#9fefff}
+    .ayah-compact-text{font-size:13px;line-height:1.7;font-weight:800}
+    .ayah-compact-note{margin-top:4px;font-size:10px;color:#b2bfcc}
+    .ayah-compact-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;line-height:1.7;color:#d4dee8}
+    .ayah-list{display:grid;gap:8px}
+    .ayah-item{width:100%;text-align:right;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04);color:#fff;border-radius:16px;padding:10px;cursor:pointer;transition:transform .16s ease,background .16s ease,border-color .16s ease,opacity .16s ease,box-shadow .16s ease}
+    .ayah-item:hover,.ayah-item:focus-visible{transform:translateY(-1px);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06);outline:none}
+    .ayah-item.collapsed{opacity:.72;transform:scale(.985)}
+    .ayah-item.expanded{border-color:rgba(0,242,255,.22);background:linear-gradient(180deg,rgba(0,242,255,.08),rgba(255,255,255,.04))}
+    .ayah-item-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:10px;color:#9fefff}
+    .ayah-item-text{font-size:13px;line-height:1.7;font-weight:800}
+    .ayah-item-note{margin-top:4px;font-size:10px;color:#b2bfcc}
+    .ayah-item-detail{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;line-height:1.7;color:#d4dee8}
+    .ayah-item.expanded .ayah-item-detail{display:block}
+    .ayah-hint{margin-top:8px;font-size:10px;color:#98a8b8;text-align:center}
+    .track-empty,.copy-row,.work-card,.social-card,.music-sheet,.now-playing-card,.ayah-float{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:9994}
+    .drawer-backdrop.open{opacity:1;pointer-events:auto}
+    .social-drawer{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.94);width:min(92vw,420px);max-height:min(80dvh,720px);overflow:auto;padding:16px;border-radius:24px;background:linear-gradient(180deg,rgba(12,17,26,.98),rgba(10,14,22,.95));border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 60px rgba(0,0,0,.45);opacity:0;visibility:hidden;pointer-events:none;transition:transform .22s cubic-bezier(.2,.9,.2,1),opacity .22s ease,visibility .22s ease;z-index:9995;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .social-drawer.open{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible;pointer-events:auto}
+    .drawer-close{position:absolute;top:12px;left:12px;width:34px;height:34px;border:none;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:20px;cursor:pointer;transition:transform .15s ease,background .15s ease}
+    .drawer-close:active{transform:scale(.96)}
+    .drawer-head{padding:8px 44px 14px 2px}
+    .drawer-head strong{display:block;font-size:16px;font-weight:900;color:#fff}
+    .drawer-head span{display:block;margin-top:4px;font-size:12px;color:#9fb0c1}
+    .drawer-list{display:grid;gap:10px}
+    .drawer-card{min-height:74px;padding:12px 14px 12px 82px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);transition:transform .18s ease,background .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .drawer-card:hover,.drawer-card:focus-visible{transform:translateY(-2px);background:rgba(255,255,255,.08);box-shadow:0 14px 26px rgba(0,0,0,.20)}
+    .threads-card{--brand:#fff;--hover-bg:#0f172a;--hover-fg:#fff;--icon-bg:#111827;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#111827}
+    .github-card{--brand:#fff;--hover-bg:#181717;--hover-fg:#fff;--icon-bg:#181717;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#181717}
+    .chess-card{--brand:#fff;--hover-bg:#69923E;--hover-fg:#fff;--icon-bg:#69923E;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#69923E}
+    .twitch-card{--brand:#fff;--hover-bg:#9146FF;--hover-fg:#fff;--icon-bg:#9146FF;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#9146FF}
+    .pinterest-card{--brand:#fff;--hover-bg:#E60023;--hover-fg:#fff;--icon-bg:#E60023;--icon-fg:#fff;--hover-icon-bg:#fff;--hover-icon-fg:#E60023}
+    .threads-card .social-icon{color:#fff;background:#111827}.github-card .social-icon{color:#fff;background:#181717}.chess-card .social-icon{color:#fff;background:#69923E}.twitch-card .social-icon{color:#fff;background:#9146FF}.pinterest-card .social-icon{color:#fff;background:#E60023}
+    .threads-card:hover .social-icon,.threads-card:focus-visible .social-icon{color:#111827;background:#fff}.github-card:hover .social-icon,.github-card:focus-visible .social-icon{color:#181717;background:#fff}.chess-card:hover .social-icon,.chess-card:focus-visible .social-icon{color:#69923E;background:#fff}.twitch-card:hover .social-icon,.twitch-card:focus-visible .social-icon{color:#9146FF;background:#fff}.pinterest-card:hover .social-icon,.pinterest-card:focus-visible .social-icon{color:#E60023;background:#fff}
+    .more-socials-card{--brand:#7dd3fc;--hover-bg:linear-gradient(135deg,#00f2ff,#818cf8);--hover-fg:#fff;--icon-bg:rgba(125,211,252,.14);--icon-fg:#7dd3fc;--hover-icon-bg:#fff;--hover-icon-fg:#000;--hover-border:rgba(125,211,252,.20);background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(168,85,247,.16));border:1px solid rgba(125,211,252,.20);isolation:isolate;overflow:hidden}
+    .more-socials-card .social-icon{color:#7dd3fc}
+    .more-socials-card.soft-float{animation:softFloat 4s ease-in-out infinite}
+    .more-socials-card.wave-auto::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.24), transparent 58%);opacity:0;transform:scale(.35);pointer-events:none;animation:wavePulse 6s ease-in-out infinite}
+    .more-socials-card.pulse-hit{animation:pressWave 620ms cubic-bezier(.2,.9,.2,1)}
+    .special-badge{background:linear-gradient(135deg,#22c55e,#06b6d4)}
+    .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(18px);opacity:0;pointer-events:none;background:rgba(15,23,42,.94);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:11px 16px;box-shadow:0 16px 40px rgba(0,0,0,.3);transition:all .2s ease;font-weight:800;z-index:99999;text-align:center;max-width:calc(100vw - 24px)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,242,255,.6)}70%{box-shadow:0 0 0 15px rgba(0,242,255,0)}100%{box-shadow:0 0 0 0 rgba(0,242,255,0)}}
+    @keyframes hintFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes wavePulse{0%{opacity:0;transform:scale(.35)}12%{opacity:.42}38%{opacity:0;transform:scale(2.7)}100%{opacity:0;transform:scale(2.7)}}
+    @keyframes pressWave{0%{transform:scale(1)}35%{transform:scale(1.04)}70%{transform:scale(.99)}100%{transform:scale(1)}}
+    @keyframes softFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes rippleAnim{0%{transform:scale(0);opacity:.55}100%{transform:scale(1.9);opacity:0}}
+    @media (max-width:520px){.music-hint{max-width:150px;right:74px}.track{grid-template-columns:46px 1fr auto}.track-cover{width:46px;height:46px}.social-drawer{width:calc(100vw - 18px);border-radius:20px}.drawer-card{padding-left:76px;min-height:70px}.ayah-float{width:min(240px,calc(100vw - 18px));top:10px;left:10px;padding:9px}.ayah-compact-text,.ayah-item-text{font-size:12px}}
+    @media (min-width:700px){body{padding-left:22px;padding-right:22px}.app{max-width:620px}}
+    @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}}
+  `;
+  document.head.appendChild(style);
+}
+
+function ensurePageDivider() {
+  if (document.getElementById('pageDivider')) return;
+  const divider = document.createElement('div');
+  divider.id = 'pageDivider';
+  divider.className = 'page-divider';
+  if (main) main.insertAdjacentElement('afterend', divider);
+}
+
+function decorateSectionTitles() {
+  const map = {
+    'روابط التواصل': 'fa-link',
+    'نسخ سريع': 'fa-copy',
+    'مشروعي': 'fa-sparkles',
+  };
+
+  sectionTitles.forEach((el) => {
+    if (el.dataset.enhanced === '1') return;
+    const label = el.textContent.trim();
+    const icon = map[label] || 'fa-circle';
+    el.innerHTML = `<i class="fa-solid ${icon} section-icon"></i><span>${escapeHtml(label)}</span>`;
+    el.classList.add('enhanced');
+    el.dataset.enhanced = '1';
+  });
+}
+
+function ensureToolbar() {
+  if (!musicSheet || document.getElementById('musicToolbar')) return;
+  const toolbar = document.createElement('div');
+  toolbar.id = 'musicToolbar';
+  toolbar.className = 'music-toolbar';
+  toolbar.innerHTML = `
+    <input id="songSearch" class="music-search" type="search" placeholder="ابحث داخل الأغاني..." value="${escapeHtml(searchTerm)}">
+    <div class="toolbar-actions">
+      <button id="shuffleBtn" class="tool-btn" type="button">Shuffle</button>
+      <button id="repeatBtn" class="tool-btn" type="button">Repeat Off</button>
+      <button id="ayahHideBtn" class="tool-btn" type="button">${ayahVisible ? 'إخفاء الآية' : 'إظهار الآية'}</button>
+    </div>
+  `;
+  musicSheet.insertBefore(toolbar, playlistBox || musicControls || null);
+
+  const searchInput = document.getElementById('songSearch');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const repeatBtn = document.getElementById('repeatBtn');
+  const ayahHideBtn = document.getElementById('ayahHideBtn');
+
+  searchInput?.addEventListener('input', () => {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    setStored(STORAGE.search, searchTerm);
+    buildPlaylist();
+  });
+
+  shuffleBtn?.addEventListener('click', () => {
+    toggleShuffle();
+    refreshToolbarState();
+  });
+
+  repeatBtn?.addEventListener('click', () => {
+    cycleRepeatMode();
+    refreshToolbarState();
+  });
+
+  ayahHideBtn?.addEventListener('click', () => toggleAyahVisibility());
+}
+
+function ensureNowPlayingCard() {
+  if (!musicSheet || document.getElementById('nowPlayingCard')) return;
+  const card = document.createElement('div');
+  card.id = 'nowPlayingCard';
+  card.className = 'now-playing-card';
+  card.innerHTML = `
+    <div class="now-playing-head">
+      <span><i class="fa-solid fa-circle-play"></i> Now Playing</span>
+      <span id="nowPlayingIndex">0 / ${songs.length}</span>
+    </div>
+    <div class="now-playing-title" id="nowPlayingTitle">اسم الأغنية</div>
+    <div class="now-playing-sub" id="nowPlayingSub">متوقف</div>
+  `;
+  if (musicControls) musicSheet.insertBefore(card, musicControls);
+  else musicSheet.appendChild(card);
+}
+
+function openMoreSocials() {
+  document.body.classList.add('drawer-open');
+  moreSocialsDrawer?.classList.add('open');
+  moreSocialsBackdrop?.classList.add('open');
+}
+
+function closeMoreSocials() {
+  document.body.classList.remove('drawer-open');
+  moreSocialsDrawer?.classList.remove('open');
+  moreSocialsBackdrop?.classList.remove('open');
+}
+
+function pulseWave(el) {
+  if (!el) return;
+  el.classList.remove('pulse-hit');
+  void el.offsetWidth;
+  el.classList.add('pulse-hit');
+  setTimeout(() => el.classList.remove('pulse-hit'), 650);
+}
+
+function makeRipple(e, el) {
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const circle = document.createElement('span');
+  const size = Math.max(rect.width, rect.height) * 1.4;
+  const clientX = Number.isFinite(e?.clientX) ? e.clientX : rect.left + rect.width / 2;
+  const clientY = Number.isFinite(e?.clientY) ? e.clientY : rect.top + rect.height / 2;
+
+  circle.style.position = 'absolute';
+  circle.style.width = `${size}px`;
+  circle.style.height = `${size}px`;
+  circle.style.left = `${clientX - rect.left - size / 2}px`;
+  circle.style.top = `${clientY - rect.top - size / 2}px`;
+  circle.style.borderRadius = '50%';
+  circle.style.pointerEvents = 'none';
+  circle.style.background = 'radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)';
+  circle.style.transform = 'scale(0)';
+  circle.style.opacity = '1';
+  circle.style.animation = 'rippleAnim 620ms ease-out forwards';
+
+  el.appendChild(circle);
+  setTimeout(() => circle.remove(), 650);
+}
+
+function ensureTrackMenu() {
+  if (trackMenu) return;
+  trackMenu = document.createElement('div');
+  trackMenu.id = 'trackMenu';
+  trackMenu.className = 'track-menu';
+  trackMenu.innerHTML = `
+    <button type="button" data-action="play">تشغيل</button>
+    <button type="button" data-action="favorite">مفضلة</button>
+    <button type="button" data-action="copy-title">نسخ الاسم</button>
+    <button type="button" data-action="copy-file">نسخ الملف</button>
+  `;
+  document.body.appendChild(trackMenu);
+
+  trackMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const song = songs[menuIndex];
+    if (!song) return;
+
+    if (action === 'play') playSong(menuIndex);
+    else if (action === 'favorite') toggleFavorite(menuIndex);
+    else if (action === 'copy-title') copyText(song.title);
+    else if (action === 'copy-file') copyText(song.fileLabel);
+
+    closeTrackMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!trackMenu.classList.contains('open')) return;
+    if (e.target.closest('#trackMenu')) return;
+    closeTrackMenu();
+  });
+}
+
+function openTrackMenu(index, x, y) {
+  if (!trackMenu) return;
+  menuIndex = index;
+
+  const favBtn = trackMenu.querySelector('button[data-action="favorite"]');
+  if (favBtn) favBtn.textContent = favorites.has(index) ? 'إزالة من المفضلة' : 'مفضلة';
+
+  trackMenu.classList.add('open');
+  const rect = trackMenu.getBoundingClientRect();
+  const left = clamp(x, 8, window.innerWidth - rect.width - 8);
+  const top = clamp(y, 8, window.innerHeight - rect.height - 8);
+  trackMenu.style.left = `${left}px`;
+  trackMenu.style.top = `${top}px`;
+}
+
+function closeTrackMenu() {
+  if (!trackMenu) return;
+  trackMenu.classList.remove('open');
+  menuIndex = -1;
+}
+
+function attachLongPress(trackEl, index) {
+  let lpTimer = null;
+  let startX = 0;
+  let startY = 0;
+  let fired = false;
+
+  const clear = () => {
+    if (lpTimer) clearTimeout(lpTimer);
+    lpTimer = null;
+  };
+
+  trackEl.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    startX = e.clientX;
+    startY = e.clientY;
+    fired = false;
+    clear();
+    lpTimer = setTimeout(() => {
+      fired = true;
+      trackEl.dataset.ignoreClick = '1';
+      openTrackMenu(index, e.clientX + 12, e.clientY + 12);
+    }, 550);
+  });
+
+  trackEl.addEventListener('pointermove', (e) => {
+    if (!lpTimer) return;
+    if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) clear();
+  });
+
+  trackEl.addEventListener('pointerup', () => {
+    clear();
+    if (fired) setTimeout(() => { trackEl.dataset.ignoreClick = '0'; }, 120);
+  });
+
+  trackEl.addEventListener('pointercancel', () => {
+    clear();
+    trackEl.dataset.ignoreClick = '0';
+  });
+}
+
+/* =========================
+   AYAH SYSTEM
+   ========================= */
+
+
+function shuffleArray(arr) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildAyahOrder() {
+  ayahOrder = shuffleArray([...Array(ayahs.length).keys()]);
+  ayahCursor = 0;
+}
+
+function totalAyahPages() {
+  return Math.max(1, Math.ceil(ayahs.length / ayahsPerPage));
+}
+
+function getAyahsForPage(page) {
+  const safePage = clamp(page, 0, totalAyahPages() - 1);
+  const start = safePage * ayahsPerPage;
+  return ayahOrder.slice(start, start + ayahsPerPage).map((idx) => ({
+    ...ayahs[idx],
+    originalIndex: idx,
+  }));
+}
+
+function getCurrentCompactAyah() {
+  if (!ayahOrder.length) buildAyahOrder();
+  const index = ayahOrder[ayahCursor] ?? 0;
+  return {
+    ...ayahs[index],
+    originalIndex: index,
+  };
+}
+
+function getAyahEls() {
+  return {
+    modeBtn: document.getElementById('ayahPagesBtn'),
+    compactBtn: document.getElementById('ayahCompactBtn'),
+    modeLabel: document.getElementById('ayahModeLabel'),
+    pageLabel: document.getElementById('ayahPageLabel'),
+    countLabel: document.getElementById('ayahCountLabel'),
+    navInfo: document.getElementById('ayahNavInfo'),
+    compactView: document.getElementById('ayahCompactView'),
+    pagesView: document.getElementById('ayahPagesView'),
+    compactCard: document.getElementById('ayahCompactCard'),
+    compactNum: document.getElementById('ayahCompactNum'),
+    compactText: document.getElementById('ayahCompactText'),
+    compactRef: document.getElementById('ayahCompactRef'),
+    compactNote: document.getElementById('ayahCompactNote'),
+    compactDetail: document.getElementById('ayahCompactDetail'),
+    list: document.getElementById('ayahList'),
+    prevBtn: document.getElementById('ayahPrevBtn'),
+    nextBtn: document.getElementById('ayahNextBtn'),
+  };
+}
+
+function updateAyahModeButtons() {
+  const { modeBtn, compactBtn, modeLabel } = getAyahEls();
+
+  if (modeBtn) modeBtn.textContent = ayahMode === 'compact' ? 'عرض الصفحات' : 'عرض مختصر';
+  if (compactBtn) compactBtn.textContent = 'آية';
+  if (modeLabel) modeLabel.textContent = ayahMode === 'compact' ? 'مختصر' : 'صفحات';
+
+  modeBtn?.classList.toggle('active', ayahMode === 'pages');
+  compactBtn?.classList.toggle('active', ayahMode === 'compact');
+}
+
+function updateAyahVisibility() {
+  const { compactView, pagesView } = getAyahEls();
+  compactView?.classList.toggle('active', ayahMode === 'compact');
+  pagesView?.classList.toggle('active', ayahMode === 'pages');
+}
+
+function renderAyahCompact() {
+  const {
+    pageLabel,
+    countLabel,
+    navInfo,
+    compactCard,
+    compactNum,
+    compactText,
+    compactRef,
+    compactNote,
+    compactDetail,
+  } = getAyahEls();
+
+  const a = getCurrentCompactAyah();
+  if (!a) return;
+
+  if (pageLabel) pageLabel.textContent = 'عرض عشوائي';
+  if (countLabel) countLabel.textContent = '1 / 1';
+  if (navInfo) navInfo.textContent = '1 / 1';
+
+  if (compactNum) compactNum.textContent = String(a.num);
+  if (compactText) compactText.textContent = a.text;
+  if (compactRef) compactRef.textContent = a.ref;
+  if (compactNote) compactNote.textContent = a.note;
+  if (compactDetail) compactDetail.textContent = a.detail;
+
+  compactCard?.classList.toggle('expanded', ayahExpandedIndex === 0);
+}
+
+function renderAyahPages() {
+  const { pageLabel, countLabel, navInfo, list } = getAyahEls();
+  const pages = totalAyahPages();
+  ayahPage = clamp(ayahPage, 0, pages - 1);
+
+  const items = getAyahsForPage(ayahPage);
+
+  if (pageLabel) pageLabel.textContent = `الصفحة ${ayahPage + 1}`;
+  if (countLabel) countLabel.textContent = `${ayahPage + 1} / ${pages}`;
+  if (navInfo) navInfo.textContent = `${ayahPage + 1} / ${pages}`;
+
+  if (!list) return;
+
+  list.innerHTML = items.map((a, localIndex) => `
+    <button class="ayah-item ${ayahExpandedIndex === localIndex ? 'expanded' : ''} ${ayahExpandedIndex !== null && ayahExpandedIndex !== localIndex ? 'collapsed' : ''}" type="button" data-ayah-index="${localIndex}">
+      <div class="ayah-item-top">
+        <span class="ayah-item-num">${a.num}</span>
+        <span class="ayah-item-ref">${escapeHtml(a.ref)}</span>
+      </div>
+      <div class="ayah-item-text">${escapeHtml(a.text)}</div>
+      <div class="ayah-item-note">${escapeHtml(a.note)}</div>
+      <div class="ayah-item-detail">${escapeHtml(a.detail)}</div>
+    </button>
+  `).join('');
+
+  list.querySelectorAll('.ayah-item').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.ayahIndex);
+      ayahExpandedIndex = ayahExpandedIndex === idx ? null : idx;
+      ayahDelay = ayahExpandedIndex === null ? 9000 : 14000;
+      renderAyahPages();
+      restartAyahRotation();
+    });
+  });
+}
+
+function renderAyahUI() {
+  updateAyahModeButtons();
+  updateAyahVisibility();
+  if (ayahMode === 'compact') renderAyahCompact();
+  else renderAyahPages();
+}
+
+function setAyahMode(mode) {
+  ayahMode = mode === 'pages' ? 'pages' : 'compact';
+  ayahExpandedIndex = null;
+  setStored(STORAGE.ayahMode, ayahMode);
+
+  if (ayahMode === 'compact') {
+    buildAyahOrder();
+    renderAyahUI();
+    restartAyahRotation();
+  } else {
+    stopAyahRotation();
+    if (!ayahOrder.length) buildAyahOrder();
+    ayahPage = clamp(ayahPage, 0, totalAyahPages() - 1);
+    renderAyahUI();
+  }
+}
+
+function nextAyahPage() {
+  if (ayahMode !== 'pages') {
+    ayahCursor = (ayahCursor + 1) % ayahOrder.length;
+    ayahExpandedIndex = null;
+    renderAyahUI();
+    restartAyahRotation();
+    return;
+  }
+
+  ayahPage = (ayahPage + 1) % totalAyahPages();
+  ayahExpandedIndex = null;
+  setStored(STORAGE.ayahPage, String(ayahPage));
+  renderAyahUI();
+}
+
+function prevAyahPage() {
+  if (ayahMode !== 'pages') {
+    ayahCursor = (ayahCursor - 1 + ayahOrder.length) % ayahOrder.length;
+    ayahExpandedIndex = null;
+    renderAyahUI();
+    restartAyahRotation();
+    return;
+  }
+
+  ayahPage = (ayahPage - 1 + totalAyahPages()) % totalAyahPages();
+  ayahExpandedIndex = null;
+  setStored(STORAGE.ayahPage, String(ayahPage));
+  renderAyahUI();
+}
+
+function stopAyahRotation() {
+  if (ayahTimer) clearInterval(ayahTimer);
+  ayahTimer = null;
+}
+
+function restartAyahRotation() {
+  stopAyahRotation();
+  if (!ayahVisible) return;
+  if (ayahMode !== 'compact') return;
+  if (ayahOrder.length < 2) return;
+
+  ayahTimer = setInterval(() => {
+    ayahExpandedIndex = null;
+    ayahCursor = (ayahCursor + 1) % ayahOrder.length;
+    renderAyahUI();
+  }, ayahDelay);
+}
+
+function toggleAyahVisibility() {
+  ayahVisible = !ayahVisible;
+  setStored(STORAGE.ayahVisible, String(ayahVisible));
+
+  if (ayahFloat) ayahFloat.style.display = ayahVisible ? 'block' : 'none';
+  syncAyahControls();
+
+  if (ayahVisible) {
+    if (ayahMode === 'compact') restartAyahRotation();
+    else renderAyahUI();
+  } else {
+    stopAyahRotation();
+  }
+
+  showToast(ayahVisible ? 'تم إظهار الآية' : 'تم إخفاء الآية');
+}
+
+function syncAyahControls() {
+  const { modeBtn, compactBtn } = getAyahEls();
+  const toggleBtn = document.getElementById('ayahToggleBtn');
+  const textBtn = document.getElementById('ayahHideBtn');
+
+  if (toggleBtn) {
+    toggleBtn.innerHTML = ayahVisible
+      ? '<i class="fa-solid fa-eye"></i>'
+      : '<i class="fa-solid fa-eye-slash"></i>';
+  }
+
+  if (textBtn) textBtn.textContent = ayahVisible ? 'إخفاء الآية' : 'إظهار الآية';
+  if (modeBtn) modeBtn.textContent = ayahMode === 'compact' ? 'عرض الصفحات' : 'عرض مختصر';
+  if (compactBtn) compactBtn.textContent = 'آية';
+}
+
+function restoreAyahVisibility() {
+  if (!ayahFloat) return;
+  ayahFloat.style.display = ayahVisible ? 'block' : 'none';
+  const savedX = getNumber(STORAGE.ayahX, 12);
+  const savedY = getNumber(STORAGE.ayahY, 54);
+  ayahFloat.style.left = `${savedX}px`;
+  ayahFloat.style.top = `${savedY}px`;
+  syncAyahControls();
+}
+
+function moveAyahTo(x, y) {
+  if (!ayahFloat) return;
+  const rect = ayahFloat.getBoundingClientRect();
+  const maxX = window.innerWidth - rect.width - 8;
+  const maxY = window.innerHeight - rect.height - 8;
+
+  ayahFloat.style.left = `${clamp(x, 8, maxX)}px`;
+  ayahFloat.style.top = `${clamp(y, 8, maxY)}px`;
+}
+
+function bindAyahDragging() {
+  if (!ayahFloat) return;
+
+  ayahFloat.addEventListener('pointerdown', (e) => {
+    ayahFloat.setPointerCapture(e.pointerId);
+    const rect = ayahFloat.getBoundingClientRect();
+
+    ayahDragState.active = true;
+    ayahDragState.started = false;
+    ayahDragState.offsetX = e.clientX - rect.left;
+    ayahDragState.offsetY = e.clientY - rect.top;
+    ayahDragState.startX = e.clientX;
+    ayahDragState.startY = e.clientY;
+  });
+
+  ayahFloat.addEventListener('pointermove', (e) => {
+    if (!ayahDragState.active) return;
+    const dx = Math.abs(e.clientX - ayahDragState.startX);
+    const dy = Math.abs(e.clientY - ayahDragState.startY);
+
+    if (dx > 5 || dy > 5) {
+      ayahDragState.started = true;
+      moveAyahTo(e.clientX - ayahDragState.offsetX, e.clientY - ayahDragState.offsetY);
+    }
+  });
+
+  ayahFloat.addEventListener('pointerup', () => {
+    ayahDragState.active = false;
+    ayahDragState.started = false;
+  });
+
+  ayahFloat.addEventListener('pointercancel', () => {
+    ayahDragState.active = false;
+    ayahDragState.started = false;
+  });
+}
+
+function bindAyahEvents() {
+  const { modeBtn, compactBtn, prevBtn, nextBtn, compactCard, list } = getAyahEls();
+
+  modeBtn?.addEventListener('click', () => setAyahMode('pages'));
+  compactBtn?.addEventListener('click', () => setAyahMode('compact'));
+  prevBtn?.addEventListener('click', prevAyahPage);
+  nextBtn?.addEventListener('click', nextAyahPage);
+
+  compactCard?.addEventListener('click', () => {
+    if (ayahMode !== 'compact') return;
+    ayahExpandedIndex = ayahExpandedIndex === 0 ? null : 0;
+    renderAyahUI();
+  });
+
+  compactCard?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (ayahMode !== 'compact') return;
+      ayahExpandedIndex = ayahExpandedIndex === 0 ? null : 0;
+      renderAyahUI();
+    }
+  });
+
+  list?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.ayah-item');
+    if (!btn) return;
+    const idx = Number(btn.dataset.ayahIndex);
+    ayahExpandedIndex = ayahExpandedIndex === idx ? null : idx;
+    ayahDelay = ayahExpandedIndex === null ? 9000 : 14000;
+    renderAyahPages();
+    restartAyahRotation();
+  });
+}
+
+function initAyahSystem() {
+  ayahMode = getString(STORAGE.ayahMode, 'compact') === 'pages' ? 'pages' : 'compact';
+  ayahPage = clamp(getNumber(STORAGE.ayahPage, 0), 0, totalAyahPages() - 1);
+  ayahVisible = getBoolean(STORAGE.ayahVisible, true);
+
+  if (!ayahOrder.length) buildAyahOrder();
+  ensureAyahToggleButton();
+  bindAyahEvents();
+  bindAyahDragging();
+  restoreAyahVisibility();
+  renderAyahUI();
+
+  if (ayahVisible && ayahMode === 'compact') restartAyahRotation();
+}
 
   function moveAyahTo(x, y) {
     if (!ayahFloat) return;
