@@ -314,8 +314,8 @@ a {
   transform: translateY(-2px);
 }
 .vip {
-  background: linear-gradient(135deg, #000000, #1f1f1f);
-  color: #000000;
+  background: linear-gradient(135deg, #151515, #000000);
+  color: #ffffff;
   border: 1px solid rgba(255,255,255,0.2);
 }
 /* بطاقات الروابط الأساسية */
