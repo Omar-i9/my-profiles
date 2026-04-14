@@ -26,12 +26,6 @@
 </head>
 <body>
 
-  <button class="music-fab" id="musicFab" type="button" aria-label="فتح مشغل الموسيقى">
-    <i class="fa-solid fa-music"></i>
-  </button>
-
-  <div class="music-hint">اضغط لفتح الموسيقى</div>
-
   <div class="ayah-float" id="ayahFloat" aria-label="آيات قرآنية"></div>
 
   <main class="app">
@@ -156,67 +150,6 @@
 
     <footer class="footer">الفولو <em>ما بكهربك</em></footer>
   </main>
-
-  <div class="overlay" id="overlay"></div>
-
-  <section class="music-sheet" id="musicSheet" aria-label="قائمة الموسيقى">
-    <button class="sheet-close" id="closeMusicBtn" type="button" aria-label="إغلاق">×</button>
-
-    <div class="music-top">
-      <img src="" id="musicCover" alt="غلاف الأغنية" class="music-cover">
-      <div class="music-info">
-        <span class="label">Now Playing</span>
-        <strong id="songTitle">اسم الأغنية</strong>
-        <span id="songArtist">main / mp3</span>
-      </div>
-    </div>
-
-    <div class="music-controls">
-      <button class="control-btn" id="prevSongBtn" type="button" aria-label="الأغنية السابقة">
-        <i class="fa-solid fa-backward-step"></i>
-      </button>
-      <button class="play-btn" id="playBtn" type="button" aria-label="تشغيل أو إيقاف">
-        <i class="fa-solid fa-play" id="playIcon"></i>
-      </button>
-      <button class="control-btn" id="nextSongBtn" type="button" aria-label="الأغنية التالية">
-        <i class="fa-solid fa-forward-step"></i>
-      </button>
-    </div>
-
-    <div class="time-row">
-      <span id="currentTime">0:00</span>
-      <span id="totalTime">0:00</span>
-    </div>
-
-    <div class="seek-wrap" id="seekWrap">
-      <div class="progress">
-        <span id="progressBar"></span>
-      </div>
-      <input id="seekBar" class="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="شريط الوقت">
-      <div class="seek-tooltip" id="seekTooltip">0:00</div>
-    </div>
-
-    <div class="volume-row">
-      <button class="volume-icon" id="volumeIconBtn" type="button" aria-label="الصوت">
-        <i class="fa-solid fa-volume-high" id="volumeIcon"></i>
-      </button>
-      <input id="volumeBar" class="volume" type="range" min="0" max="100" value="90" step="1" aria-label="شريط الصوت">
-      <div class="volume-value" id="volumeValue">90%</div>
-    </div>
-
-    <div class="music-toolbar" id="musicToolbarHolder"></div>
-
-    <div class="playlist-box">
-      <div class="playlist-head">
-        <strong>قائمة الأغاني</strong>
-        <span id="playlistCount">11 أغنية</span>
-      </div>
-      <div class="playlist" id="playlist"></div>
-      <div class="audio-state" id="audioState">اضغط على أي أغنية للتشغيل</div>
-    </div>
-
-    <audio id="audio" preload="metadata" src=""></audio>
-  </section>
 
   <div class="toast" id="toast">تم النسخ</div>
 
