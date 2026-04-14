@@ -1619,6 +1619,95 @@ a {
   line-height: 1.5;
 }
 
+.ayah-float {
+  width: min(336px, calc(100vw - 24px));
+  padding: 14px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, rgba(67, 190, 214, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(10, 16, 26, 0.94), rgba(8, 12, 20, 0.9));
+  border: 1px solid rgba(166, 206, 255, 0.14);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.28);
+}
+
+.ayah-top {
+  margin-bottom: 10px;
+}
+
+.ayah-status {
+  margin: 0 0 10px;
+}
+
+.ayah-mode-btn,
+.ayah-nav button {
+  min-height: 36px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.ayah-nav button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ayah-view.active {
+  display: grid;
+  gap: 10px;
+}
+
+.ayah-compact-card {
+  gap: 6px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+.ayah-compact-card.expanded {
+  border-color: rgba(111, 235, 255, 0.28);
+  background: linear-gradient(180deg, rgba(61, 201, 228, 0.12), rgba(255,255,255,.035));
+}
+
+.ayah-compact-card.is-swapping {
+  opacity: 0.16;
+  transform: translateY(6px) scale(0.985);
+}
+
+.ayah-compact-note,
+.ayah-item-note {
+  line-height: 1.65;
+}
+
+.ayah-list {
+  gap: 10px;
+}
+
+.ayah-item {
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.028));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+.ayah-item.collapsed {
+  opacity: 0.56;
+  transform: scale(0.975);
+  filter: saturate(0.72);
+}
+
+.ayah-item.expanded {
+  border-color: rgba(111, 235, 255, 0.24);
+  background: linear-gradient(180deg, rgba(61, 201, 228, 0.11), rgba(255,255,255,.04));
+  box-shadow: 0 14px 28px rgba(0,0,0,.16);
+}
+
+.ayah-item-detail,
+.ayah-compact-detail {
+  opacity: 0.94;
+}
+
 .ayah-pagination,
 .ayah-nav {
   display: flex;
@@ -1776,10 +1865,10 @@ body.drawer-open .social-drawer {
   }
 
   .ayah-float {
-    width: min(290px, calc(100vw - 18px));
+    width: min(292px, calc(100vw - 18px));
     top: 10px;
     left: 10px;
-    padding: 10px;
+    padding: 12px;
   }
 
   .ayah-compact-text,
