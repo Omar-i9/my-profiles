@@ -19,6 +19,10 @@
   --radius-lg: 22px;
   --radius-md: 18px;
   --radius-sm: 14px;
+  --royal-bg: linear-gradient(135deg, #140a24, #2d1b4e);
+  --royal-gold: linear-gradient(135deg, #FFD700, #C9A227, #FFF3B0);
+  --royal-purple: #7c3aed;
+
 }
 
 * {
@@ -207,7 +211,7 @@ a {
 
 .social-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
   min-height: 78px;
   padding: 14px 14px 14px 82px;
@@ -291,30 +295,34 @@ a {
 
 .badge {
   position: absolute;
-  top: -10px;
-  left: 12px;
-  padding: 4px 9px;
+  top: -12px;   /* يطلع لفوق */
+  left: -6px;   /* يطلع لبرا */
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 900;
   color: #fff;
   background: linear-gradient(135deg, #ff4d7d, #e1306c);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  z-index: 5;
+  transform: rotate(-8deg);
+
 }
 
 .vip {
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  background: linear-gradient(135deg, #FFD700, #C9A227);
+  color: #2d1b4e;
+  border: 1px solid rgba(255,255,255,0.2);
 }
-
 /* بطاقات الروابط الأساسية */
-.fb-card { --brand: #1877F2; --icon-bg: rgba(24,119,242,.12); --icon-fg: #1877F2; --hover-icon-bg: #1877F2; --hover-icon-fg: #fff; }
-.wa-card { --brand: #25D366; --icon-bg: rgba(37,211,102,.12); --icon-fg: #25D366; --hover-icon-bg: #25D366; --hover-icon-fg: #fff; }
-.ig-card { --brand: #E1306C; --icon-bg: rgba(225,48,108,.12); --icon-fg: #E1306C; --hover-icon-bg: #E1306C; --hover-icon-fg: #fff; }
-.tk-card { --brand: #000000; --icon-bg: rgba(255,255,255,.10); --icon-fg: #000000; --hover-icon-bg: #000000; --hover-icon-fg: #fff; }
-.ds-card { --brand: #5865F2; --icon-bg: rgba(88,101,242,.12); --icon-fg: #5865F2; --hover-icon-bg: #5865F2; --hover-icon-fg: #fff; }
-.sc-card { --brand: #FFFC00; --icon-bg: #FFFC00; --icon-fg: #000; --hover-icon-bg: #000; --hover-icon-fg: #FFFC00; --hover-border: rgba(255,252,0,.28); }
-.st-card { --brand: #1b2838; --icon-bg: rgba(27,40,56,.12); --icon-fg: #1b2838; --hover-icon-bg: #1b2838; --hover-icon-fg: #fff; }
+.fb-card { --brand: #1877F2; --icon-bg: rgb(255, 255, 255); --icon-fg: #1877F2; --hover-icon-bg: #1877F2; --hover-icon-fg: #fff; }
+.wa-card { --brand: #25D366; --icon-bg: rgb(255, 255, 255); --icon-fg: #25D366; --hover-icon-bg: #25D366; --hover-icon-fg: #fff; }
+.ig-card { --brand: #E1306C; --icon-bg: rgb(255, 255, 255); --icon-fg: #E1306C; --hover-icon-bg: #E1306C; --hover-icon-fg: #fff; }
+.tk-card { --brand: #000000; --icon-bg: rgb(255, 255, 255); --icon-fg: #000000; --hover-icon-bg: #000000; --hover-icon-fg: #fff; }
+.ds-card { --brand: #5865F2; --icon-bg: rgb(255, 255, 255); --icon-fg: #5865F2; --hover-icon-bg: #5865F2; --hover-icon-fg: #fff; }
+.sc-card { --brand: #FFFC00; --icon-bg: #FFFC00; --icon-fg: #ffffff; --hover-icon-bg: #ffffff; --hover-icon-fg: #FFFC00; --hover-border: rgb(255, 255, 255);
+.st-card { --brand: #1b2838; --icon-bg: rgb(255, 255, 255); --icon-fg: #1b2838; --hover-icon-bg: #1b2838; --hover-icon-fg: #fff; }
 /* سناب يحتاج قلب خاص */
 .sc-card:hover .social-icon,
 .sc-card:focus-visible .social-icon,
@@ -322,6 +330,17 @@ a {
   background: #000;
   color: #FFFC00;
   border-color: rgba(0,0,0,.24);
+}
+
+.vip-card {
+  background: var(--royal-bg);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+}
+.vip-card:hover .social-icon,
+.vip-card:focus-visible .social-icon {
+  background: var(--royal-gold);
+  color: #1a1a1a;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
 }
 
 .sc-card:hover .social-text strong,
@@ -1577,5 +1596,5 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
-  }
+  } 
 }
