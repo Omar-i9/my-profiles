@@ -319,28 +319,83 @@ a {
   border: 1px solid rgba(255,255,255,0.2);
 }
 /* بطاقات الروابط الأساسية */
-.fb-card { --brand: #1877F2; --icon-bg: rgb(255, 255, 255); --icon-fg: #1877F2; --hover-icon-bg: #1877F2; --hover-icon-fg: #fff; }
-.wa-card { --brand: #25D366; --icon-bg: rgb(255, 255, 255); --icon-fg: #25D366; --hover-icon-bg: #25D366; --hover-icon-fg: #fff; }
-.ig-card { --brand: #E1306C; --icon-bg: rgb(255, 255, 255); --icon-fg: #E1306C; --hover-icon-bg: #E1306C; --hover-icon-fg: #fff; }
-.tk-card { --brand: #000000; --icon-bg: rgb(255, 255, 255); --icon-fg: #000000; --hover-icon-bg: #000000; --hover-icon-fg: #fff; }
-.ds-card { --brand: #5865F2; --icon-bg: rgb(255, 255, 255); --icon-fg: #5865F2; --hover-icon-bg: #5865F2; --hover-icon-fg: #fff; }
+.fb-card {
+  --brand: #1877F2;
+  --icon-bg: rgba(24, 119, 242, 0.12);
+  --icon-fg: #1877F2;
+  --hover-icon-bg: #1877F2;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(24, 119, 242, 0.24);
+}
+
+.wa-card {
+  --brand: #25D366;
+  --icon-bg: rgba(37, 211, 102, 0.12);
+  --icon-fg: #25D366;
+  --hover-icon-bg: #25D366;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(37, 211, 102, 0.24);
+}
+
+.ig-card {
+  --brand: #E1306C;
+  --icon-bg: rgba(225, 48, 108, 0.12);
+  --icon-fg: #E1306C;
+  --hover-icon-bg: #E1306C;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(225, 48, 108, 0.24);
+}
+
+.tk-card {
+  --brand: #111111;
+  --icon-bg: rgba(17, 17, 17, 0.10);
+  --icon-fg: #111111;
+  --hover-icon-bg: #111111;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(17, 17, 17, 0.18);
+}
+
+.ds-card {
+  --brand: #5865F2;
+  --icon-bg: rgba(88, 101, 242, 0.12);
+  --icon-fg: #5865F2;
+  --hover-icon-bg: #5865F2;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(88, 101, 242, 0.24);
+}
+
 .sc-card {
   --brand: #FFFC00;
   --icon-bg: #FFFC00;
   --icon-fg: #111827;
   --hover-icon-bg: #111827;
   --hover-icon-fg: #FFFC00;
-  --hover-border: rgba(255,252,0,.28);
+  --hover-border: rgba(255, 252, 0, 0.28);
 }
-.st-card { --brand: #1b2838; --icon-bg: rgb(255, 255, 255); --icon-fg: #1b2838; --hover-icon-bg: #1b2838; --hover-icon-fg: #fff; }
+
+.st-card {
+  --brand: #1b2838;
+  --icon-bg: rgba(27, 40, 56, 0.12);
+  --icon-fg: #1b2838;
+  --hover-icon-bg: #1b2838;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(27, 40, 56, 0.20);
+}
+
 /* سناب يحتاج قلب خاص */
 .sc-card:hover .social-icon,
 .sc-card:focus-visible .social-icon,
 .sc-card:active .social-icon {
-  background: #000;
+  background: #111827;
   color: #FFFC00;
-  border-color: rgba(0,0,0,.24);
+  border-color: rgba(17, 24, 39, 0.24);
 }
+
+.social-card:hover,
+.social-card:focus-visible { background: var(--brand); color: #fff; }
+
+.social-card:hover .social-icon,
+.social-card:focus-visible .social-icon { background: #fff; color: var(--brand); }
 
 .vip-card {
   background: var(--royal-bg);
