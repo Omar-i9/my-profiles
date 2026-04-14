@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const AUDIO_BASE = "./audio/";
   const IMAGE_BASE = "./images/";
-  const FALLBACK_COVER = "./profile.jpeg";
+  const FALLBACK_COVER = "./photo/profile.jpeg";
 
   const toast = document.getElementById("toast");
 
@@ -61,8 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.querySelector(".app");
   const playlistBox = document.querySelector(".playlist-box");
   const musicControls = document.querySelector(".music-controls");
-  const musicTop = document.querySelector(".music-top");
   const sectionTitles = Array.from(document.querySelectorAll(".section-title"));
+
+  const moreSocialsBtn = document.getElementById("moreSocialsBtn");
+  const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
+  const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
+  const moreSocialsClose = document.getElementById("moreSocialsClose");
 
   const songs = [
     { base: "wildflower", title: "wildflower", coverCandidates: ["png", "jpeg", "jpg"] },
@@ -197,151 +201,151 @@ document.addEventListener("DOMContentLoaded", () => {
       detail: "هذه الآية تأتي كرفع مباشر للروح، وتمنح القلب دفعة من الثبات بعد الضعف."
     },
     {
-  num: 17,
-  text: "﴿وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ﴾",
-  ref: "[النحل: 127]",
-  note: "الصبر ليس وحدك.",
-  detail: "هذه الآية تربط الصبر بالله مباشرة، وكأنها تقول إن الثبات الحقيقي لا يأتي من قوة الإنسان وحدها، بل من معونة الله. فيها معنى هادئ وعميق جدًا لمن يمر بضيق ويحتاج سندًا داخليًا."
-},
-{
-  num: 18,
-  text: "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾",
-  ref: "[البقرة: 153]",
-  note: "معية ترفع القلب.",
-  detail: "هذه من أقوى الآيات في معنى التحمل؛ لأنها لا تعد بالصبر فقط، بل تبشر بمعية الله للصابر. والمعنى أن الألم لا يكون فارغًا إذا صاحبه إيمان واحتساب."
-},
-{
-  num: 19,
-  text: "﴿وَبَشِّرِ الصَّابِرِينَ﴾",
-  ref: "[البقرة: 155]",
-  note: "بشارة وسط الامتحان.",
-  detail: "الآية قصيرة لكن أثرها كبير، لأنها تجعل الصبر نفسه طريقًا للبشارة. وفيها إشارة أن الابتلاء ليس مجرد وجع، بل قد يكون بابًا لخير كبير لا يُرى في لحظته."
-},
-{
-  num: 20,
-  text: "﴿رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا﴾",
-  ref: "[البقرة: 250]",
-  note: "طلب الصبر من الله.",
-  detail: "فيها دعاء نادر وقوي جدًا؛ لأنهم لم يطلبوا مجرد صبر عادي، بل صبًا يغمر القلب بالكامل. وهذا يجعلها مناسبة جدًا وقت الضعف أو الخوف أو الضغط."
-},
-{
-  num: 21,
-  text: "﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾",
-  ref: "[الشرح: 5]",
-  note: "بعد الضيق انفراج.",
-  detail: "هذه من أشهر آيات الرجاء، ومعناها أن الشدة لا تبقى مغلقة إلى الأبد. فيها وعد واضح بأن مع ثقل اللحظة يوجد باب آخر للفرج، حتى لو تأخر ظهوره."
-},
-{
-  num: 22,
-  text: "﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾",
-  ref: "[الرعد: 28]",
-  note: "طمأنينة القلب.",
-  detail: "هذه الآية تمسك بجذر الراحة الداخلية: ليس كل ما يهدئ الإنسان يأتي من الخارج. أحيانًا القلب لا يهدأ إلا حين يعود لذكر الله."
-},
-{
-  num: 23,
-  text: "﴿رَبَّنَا لَا تُزِغْ قُلُوبَنَا﴾",
-  ref: "[آل عمران: 8]",
-  note: "ثبات القلب.",
-  detail: "فيها خوف جميل من الانحراف، وفيها أدب الدعاء أيضًا؛ كأن الإنسان يعترف أنه ضعيف ويطلب الثبات. وهي مناسبة جدًا لمن يخاف تقلب قلبه."
-},
-{
-  num: 24,
-  text: "﴿رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ﴾",
-  ref: "[الفرقان: 74]",
-  note: "دعاء الجمال الأسري.",
-  detail: "هذه الآية تحمل معنى لطيفًا جدًا؛ لأن قرة العين ليست مجرد وجود الناس حولك، بل أن يكونوا سببًا للراحة والسكينة والخير في القلب."
-},
-{
-  num: 25,
-  text: "﴿رَبِّ اشْرَحْ لِي صَدْرِي﴾",
-  ref: "[طه: 25]",
-  note: "سعة صدر.",
-  detail: "دعاء عظيم لمن يضيق صدره أو يثقل عليه الأمر. فيه طلب واضح أن يفتح الله القلب للفهم والتحمل والهدوء، ولذلك يلامس كثيرًا من الناس."
-},
-{
-  num: 26,
-  text: "﴿وَيَشْفِ صُدُورَ قَوْمٍ مُّؤْمِنِينَ﴾",
-  ref: "[التوبة: 14]",
-  note: "شفاء الداخل.",
-  detail: "الآية لا تتكلم عن الألم الظاهر فقط، بل عن الصدر نفسه. وهذا يجعلها مناسبة جدًا لمن يشعر بثقل داخلي لا يراه الناس."
-},
-{
-  num: 27,
-  text: "﴿إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ﴾",
-  ref: "[الشعراء: 62]",
-  note: "ثقة وسط الخوف.",
-  detail: "هذه جملة من القوة والثبات، وفيها يقين بأن الحيرة لا تعني الضياع. معناها أن وجود الله مع العبد يجعل الطريق موجودًا ولو لم يره بعد."
-},
-{
-  num: 28,
-  text: "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾",
-  ref: "[التوبة: 40]",
-  note: "سند وقت الخوف.",
-  detail: "من أقوى الآيات في التطمين؛ لأنها تجمع بين نهي الحزن وذكر المعية. فيها رسالة مباشرة أن الموقف مهما اشتد، فالله ليس غائبًا."
-},
-{
-  num: 29,
-  text: "﴿إِنِّي لَذَاهِبٌ إِلَىٰ رَبِّي سَيَهْدِينِ﴾",
-  ref: "[الصافات: 99]",
-  note: "اتجاه القلب.",
-  detail: "فيها معنى جميل جدًا عن التوجه إلى الله، وكأن الرجوع إليه هو بداية الهداية لا نهايتها. مناسبة جدًا لمعنى العودة والبحث عن الطريق."
-},
-{
-  num: 30,
-  text: "﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾",
-  ref: "[طه: 114]",
-  note: "دعاء الزيادة.",
-  detail: "هذه آية رقيقة لكنها عظيمة؛ لأنها تعلم الإنسان ألا يكتفي. وهي مناسبة جدًا لمن يحب التعلم أو يشعر أنه ما زال يحتاج فهمًا أوسع."
-},
-{
-  num: 31,
-  text: "﴿وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ﴾",
-  ref: "[الحديد: 2]",
-  note: "قدرة لا يعجزها شيء.",
-  detail: "تعطي القلب اتساعًا كبيرًا؛ لأن كل ما يبدو مستحيلًا عند الإنسان ليس مستحيلًا عند الله. هذه الآية تفتح باب الرجاء في أصعب الحالات."
-},
-{
-  num: 32,
-  text: "﴿إِنَّ رَبِّي سَمِيعُ الدُّعَاءِ﴾",
-  ref: "[إبراهيم: 39]",
-  note: "الدعاء لا يضيع.",
-  detail: "فيها طمأنينة مباشرة بأن الصوت الذي يخرج من القلب يُسمع، حتى لو لم يسمعه أحد من الناس. مناسبة جدًا لمن يدعو كثيرًا ويحتاج يقينًا."
-},
-{
-  num: 33,
-  text: "﴿فَإِنِّي قَرِيبٌ﴾",
-  ref: "[البقرة: 186]",
-  note: "قرب يختصر المسافة.",
-  detail: "آية قصيرة جدًا لكنها من أعمق آيات الطمأنينة. فيها قرب مباشر من الله للعبد حين يدعو، وهذا يجعلها من أجمل الآيات للنوافذ الهادئة."
-},
-{
-  num: 34,
-  text: "﴿إِنَّ رَبِّي لَطِيفٌ لِّمَا يَشَاءُ﴾",
-  ref: "[يوسف: 100]",
-  note: "اللطف في التدبير.",
-  detail: "هذه الآية تشرح أن ما يبدو معقدًا قد يكون فيه لطف خفي من الله. معناها جميل جدًا لمن ينظر إلى ما وراء الأحداث ولا يحكم بسرعة."
-},
-{
-  num: 35,
-  text: "﴿رَبِّ لَا تَذَرْنِي فَرْدًا﴾",
-  ref: "[الأنبياء: 89]",
-  note: "دعاء الوحدة.",
-  detail: "فيها احتياج إنساني واضح وصادق. ليست مجرد طلب ولد، بل طلب ألا يبقى الإنسان وحيدًا بلا سند أو امتداد أو أنس."
-},
-{
-  num: 36,
-  text: "﴿وَفَوَّضْتُ أَمْرِي إِلَى اللَّهِ﴾",
-  ref: "[غافر: 44]",
-  note: "تفويض وراحة.",
-  detail: "هذه من أهدأ آيات التسليم؛ لأنها تعني أن الإنسان توقف عن حمل ما لا يقدر عليه وحده، وأسلم أمره لمن يدبر أفضل منه."
-}
+      num: 17,
+      text: "﴿وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ﴾",
+      ref: "[النحل: 127]",
+      note: "الصبر ليس وحدك.",
+      detail: "هذه الآية تربط الصبر بالله مباشرة، وكأنها تقول إن الثبات الحقيقي لا يأتي من قوة الإنسان وحدها، بل من معونة الله. فيها معنى هادئ وعميق جدًا لمن يمر بضيق ويحتاج سندًا داخليًا."
+    },
+    {
+      num: 18,
+      text: "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾",
+      ref: "[البقرة: 153]",
+      note: "معية ترفع القلب.",
+      detail: "هذه من أقوى الآيات في معنى التحمل؛ لأنها لا تعد بالصبر فقط، بل تبشر بمعية الله للصابر. والمعنى أن الألم لا يكون فارغًا إذا صاحبه إيمان واحتساب."
+    },
+    {
+      num: 19,
+      text: "﴿وَبَشِّرِ الصَّابِرِينَ﴾",
+      ref: "[البقرة: 155]",
+      note: "بشارة وسط الامتحان.",
+      detail: "الآية قصيرة لكن أثرها كبير، لأنها تجعل الصبر نفسه طريقًا للبشارة. وفيها إشارة أن الابتلاء ليس مجرد وجع، بل قد يكون بابًا لخير كبير لا يُرى في لحظته."
+    },
+    {
+      num: 20,
+      text: "﴿رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا﴾",
+      ref: "[البقرة: 250]",
+      note: "طلب الصبر من الله.",
+      detail: "فيها دعاء نادر وقوي جدًا؛ لأنهم لم يطلبوا مجرد صبر عادي، بل صبًا يغمر القلب بالكامل. وهذا يجعلها مناسبة جدًا وقت الضعف أو الخوف أو الضغط."
+    },
+    {
+      num: 21,
+      text: "﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾",
+      ref: "[الشرح: 5]",
+      note: "بعد الضيق انفراج.",
+      detail: "هذه من أشهر آيات الرجاء، ومعناها أن الشدة لا تبقى مغلقة إلى الأبد. فيها وعد واضح بأن مع ثقل اللحظة يوجد باب آخر للفرج، حتى لو تأخر ظهوره."
+    },
+    {
+      num: 22,
+      text: "﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾",
+      ref: "[الرعد: 28]",
+      note: "طمأنينة القلب.",
+      detail: "هذه الآية تمسك بجذر الراحة الداخلية: ليس كل ما يهدئ الإنسان يأتي من الخارج. أحيانًا القلب لا يهدأ إلا حين يعود لذكر الله."
+    },
+    {
+      num: 23,
+      text: "﴿رَبَّنَا لَا تُزِغْ قُلُوبَنَا﴾",
+      ref: "[آل عمران: 8]",
+      note: "ثبات القلب.",
+      detail: "فيها خوف جميل من الانحراف، وفيها أدب الدعاء أيضًا؛ كأن الإنسان يعترف أنه ضعيف ويطلب الثبات. وهي مناسبة جدًا لمن يخاف تقلب قلبه."
+    },
+    {
+      num: 24,
+      text: "﴿رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ﴾",
+      ref: "[الفرقان: 74]",
+      note: "دعاء الجمال الأسري.",
+      detail: "هذه الآية تحمل معنى لطيفًا جدًا؛ لأن قرة العين ليست مجرد وجود الناس حولك، بل أن يكونوا سببًا للراحة والسكينة والخير في القلب."
+    },
+    {
+      num: 25,
+      text: "﴿رَبِّ اشْرَحْ لِي صَدْرِي﴾",
+      ref: "[طه: 25]",
+      note: "سعة صدر.",
+      detail: "دعاء عظيم لمن يضيق صدره أو يثقل عليه الأمر. فيه طلب واضح أن يفتح الله القلب للفهم والتحمل والهدوء، ولذلك يلامس كثيرًا من الناس."
+    },
+    {
+      num: 26,
+      text: "﴿وَيَشْفِ صُدُورَ قَوْمٍ مُّؤْمِنِينَ﴾",
+      ref: "[التوبة: 14]",
+      note: "شفاء الداخل.",
+      detail: "الآية لا تتكلم عن الألم الظاهر فقط، بل عن الصدر نفسه. وهذا يجعلها مناسبة جدًا لمن يشعر بثقل داخلي لا يراه الناس."
+    },
+    {
+      num: 27,
+      text: "﴿إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ﴾",
+      ref: "[الشعراء: 62]",
+      note: "ثقة وسط الخوف.",
+      detail: "هذه جملة من القوة والثبات، وفيها يقين بأن الحيرة لا تعني الضياع. معناها أن وجود الله مع العبد يجعل الطريق موجودًا ولو لم يره بعد."
+    },
+    {
+      num: 28,
+      text: "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾",
+      ref: "[التوبة: 40]",
+      note: "سند وقت الخوف.",
+      detail: "من أقوى الآيات في التطمين؛ لأنها تجمع بين نهي الحزن وذكر المعية. فيها رسالة مباشرة أن الموقف مهما اشتد، فالله ليس غائبًا."
+    },
+    {
+      num: 29,
+      text: "﴿إِنِّي لَذَاهِبٌ إِلَىٰ رَبِّي سَيَهْدِينِ﴾",
+      ref: "[الصافات: 99]",
+      note: "اتجاه القلب.",
+      detail: "فيها معنى جميل جدًا عن التوجه إلى الله، وكأن الرجوع إليه هو بداية الهداية لا نهايتها. مناسبة جدًا لمعنى العودة والبحث عن الطريق."
+    },
+    {
+      num: 30,
+      text: "﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾",
+      ref: "[طه: 114]",
+      note: "دعاء الزيادة.",
+      detail: "هذه آية رقيقة لكنها عظيمة؛ لأنها تعلم الإنسان ألا يكتفي. وهي مناسبة جدًا لمن يحب التعلم أو يشعر أنه ما زال يحتاج فهمًا أوسع."
+    },
+    {
+      num: 31,
+      text: "﴿وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ﴾",
+      ref: "[الحديد: 2]",
+      note: "قدرة لا يعجزها شيء.",
+      detail: "تعطي القلب اتساعًا كبيرًا؛ لأن كل ما يبدو مستحيلًا عند الإنسان ليس مستحيلًا عند الله. هذه الآية تفتح باب الرجاء في أصعب الحالات."
+    },
+    {
+      num: 32,
+      text: "﴿إِنَّ رَبِّي سَمِيعُ الدُّعَاءِ﴾",
+      ref: "[إبراهيم: 39]",
+      note: "الدعاء لا يضيع.",
+      detail: "فيها طمأنينة مباشرة بأن الصوت الذي يخرج من القلب يُسمع، حتى لو لم يسمعه أحد من الناس. مناسبة جدًا لمن يدعو كثيرًا ويحتاج يقينًا."
+    },
+    {
+      num: 33,
+      text: "﴿فَإِنِّي قَرِيبٌ﴾",
+      ref: "[البقرة: 186]",
+      note: "قرب يختصر المسافة.",
+      detail: "آية قصيرة جدًا لكنها من أعمق آيات الطمأنينة. فيها قرب مباشر من الله للعبد حين يدعو، وهذا يجعلها من أجمل الآيات للنوافذ الهادئة."
+    },
+    {
+      num: 34,
+      text: "﴿إِنَّ رَبِّي لَطِيفٌ لِّمَا يَشَاءُ﴾",
+      ref: "[يوسف: 100]",
+      note: "اللطف في التدبير.",
+      detail: "هذه الآية تشرح أن ما يبدو معقدًا قد يكون فيه لطف خفي من الله. معناها جميل جدًا لمن ينظر إلى ما وراء الأحداث ولا يحكم بسرعة."
+    },
+    {
+      num: 35,
+      text: "﴿رَبِّ لَا تَذَرْنِي فَرْدًا﴾",
+      ref: "[الأنبياء: 89]",
+      note: "دعاء الوحدة.",
+      detail: "فيها احتياج إنساني واضح وصادق. ليست مجرد طلب ولد، بل طلب ألا يبقى الإنسان وحيدًا بلا سند أو امتداد أو أنس."
+    },
+    {
+      num: 36,
+      text: "﴿وَفَوَّضْتُ أَمْرِي إِلَى اللَّهِ﴾",
+      ref: "[غافر: 44]",
+      note: "تفويض وراحة.",
+      detail: "هذه من أهدأ آيات التسليم؛ لأنها تعني أن الإنسان توقف عن حمل ما لا يقدر عليه وحده، وأسلم أمره لمن يدبر أفضل منه."
+    }
   ];
 
   let currentSongIndex = clamp(getNumber(STORAGE.lastIndex, 0), 0, songs.length - 1);
   let currentTimeRestore = Math.max(0, getNumber(STORAGE.lastTime, 0));
-  let saveResumeTime = currentTimeRestore;
   let wasPlayingRestore = getBoolean(STORAGE.wasPlaying, false);
+
   let pendingResume = false;
   let shuffleEnabled = getBoolean(STORAGE.shuffle, false);
   let repeatMode = getString(STORAGE.repeat, "off"); // off | one | all
@@ -356,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let toastTimer = null;
 
   let ayahTimer = null;
-  let ayahDelay = 7000;
+  let ayahDelay = 5000;
   let ayahExpanded = false;
   let ayahOrder = [];
   let ayahCursor = 0;
@@ -372,6 +376,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let trackMenu = null;
   let menuIndex = -1;
+
+  const playbackHistory = [];
 
   ensureExtraStyles();
   decorateSectionTitles();
@@ -785,8 +791,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSong(index, true, { pushHistory: true });
   }
 
-  const playbackHistory = [];
-
   function nextSong() {
     if (repeatMode === "one") {
       loadSong(currentSongIndex, true, { pushHistory: false });
@@ -1027,6 +1031,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .music-sheet .now-playing-card {
         backdrop-filter: blur(10px);
       }
+      @keyframes rippleAnim {
+        0%   { transform: scale(0); opacity: .55; }
+        100% { transform: scale(1.9); opacity: 0; }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -1067,11 +1075,11 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="toolbar-actions">
         <button id="shuffleBtn" class="tool-btn" type="button">Shuffle</button>
         <button id="repeatBtn" class="tool-btn" type="button">Repeat Off</button>
-        <button id="ayahHideBtn" class="tool-btn" type="button">إخفاء الآية</button>
+        <button id="ayahHideBtn" class="tool-btn" type="button">${ayahVisible ? "إخفاء الآية" : "إظهار الآية"}</button>
       </div>
     `;
 
-    musicSheet.insertBefore(toolbar, playlistBox || musicControls);
+    musicSheet.insertBefore(toolbar, playlistBox || musicControls || null);
 
     const searchInput = document.getElementById("songSearch");
     const shuffleBtn = document.getElementById("shuffleBtn");
@@ -1128,6 +1136,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function syncAyahControls() {
+    const btn = document.getElementById("ayahToggleBtn");
+    const textBtn = document.getElementById("ayahHideBtn");
+
+    if (btn) {
+      btn.innerHTML = ayahVisible
+        ? '<i class="fa-solid fa-eye"></i>'
+        : '<i class="fa-solid fa-eye-slash"></i>';
+    }
+
+    if (textBtn) {
+      textBtn.textContent = ayahVisible ? "إخفاء الآية" : "إظهار الآية";
+    }
+  }
+
   function ensureAyahToggleButton() {
     if (!ayahFloat || document.getElementById("ayahToggleBtn")) return;
     const btn = document.createElement("button");
@@ -1147,16 +1170,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ayahVisible = !ayahVisible;
     setStored(STORAGE.ayahVisible, String(ayahVisible));
     if (ayahFloat) ayahFloat.style.display = ayahVisible ? "block" : "none";
-    const btn = document.getElementById("ayahToggleBtn");
-    if (btn) btn.innerHTML = ayahVisible ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+    syncAyahControls();
     showToast(ayahVisible ? "تم إظهار الآية" : "تم إخفاء الآية");
   }
 
   function restoreAyahVisibility() {
     if (!ayahFloat) return;
     ayahFloat.style.display = ayahVisible ? "block" : "none";
-    const btn = document.getElementById("ayahToggleBtn");
-    if (btn) btn.innerHTML = ayahVisible ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+    syncAyahControls();
 
     const savedX = getNumber(STORAGE.ayahX, 12);
     const savedY = getNumber(STORAGE.ayahY, 54);
@@ -1201,10 +1222,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!trackMenu.classList.contains("open")) return;
       if (e.target.closest("#trackMenu")) return;
       closeTrackMenu();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeTrackMenu();
     });
   }
 
@@ -1282,7 +1299,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function toggleAyahExpanded(nextState) {
     ayahExpanded = nextState;
     if (ayahFloat) ayahFloat.classList.toggle("expanded", ayahExpanded);
-    ayahDelay = ayahExpanded ? 13000 : 4500;
+    ayahDelay = ayahExpanded ? 10000 : 5000;
     restartAyahRotation();
   }
 
@@ -1429,6 +1446,7 @@ document.addEventListener("DOMContentLoaded", () => {
       musicSheet.classList.remove("open");
       overlay.classList.remove("open");
       closeTrackMenu();
+      closeMoreSocials();
     });
 
     if (playBtn) playBtn.addEventListener("click", togglePlay);
@@ -1465,9 +1483,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setPlayIcon(true);
       updatePulse(true);
       if (audioState) audioState.textContent = `يشتغل الآن: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "يعمل الآن";
-      }
+      const nowPlayingSub = document.getElementById("nowPlayingSub");
+      if (nowPlayingSub) nowPlayingSub.textContent = "يعمل الآن";
       savePlaybackSnapshot();
     });
 
@@ -1475,9 +1492,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setPlayIcon(false);
       updatePulse(false);
       if (audioState) audioState.textContent = `متوقف: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "متوقف";
-      }
+      const nowPlayingSub = document.getElementById("nowPlayingSub");
+      if (nowPlayingSub) nowPlayingSub.textContent = "متوقف";
       savePlaybackSnapshot();
     });
 
@@ -1493,9 +1509,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
       if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
       if (audioState) audioState.textContent = `جاهزة: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "جاهزة";
-      }
+      const nowPlayingSub = document.getElementById("nowPlayingSub");
+      if (nowPlayingSub) nowPlayingSub.textContent = "جاهزة";
       restorePlaybackTime();
       updateProgress();
     });
@@ -1560,10 +1575,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("pointerdown", maybeResumePlaybackOnGesture, { passive: true });
     document.addEventListener("touchstart", maybeResumePlaybackOnGesture, { passive: true });
+
     document.addEventListener("keydown", (e) => {
       maybeResumePlaybackOnGesture();
+
       if (e.key === "Escape") {
         closeTrackMenu();
+        closeMoreSocials();
         musicSheet.classList.remove("open");
         overlay.classList.remove("open");
       }
@@ -1583,6 +1601,19 @@ document.addEventListener("DOMContentLoaded", () => {
     copyButtons.forEach((btn) => {
       btn.addEventListener("click", () => copyText(btn.dataset.copy));
     });
+
+    if (moreSocialsBtn) {
+      moreSocialsBtn.classList.add("soft-float", "wave-auto");
+      moreSocialsBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        pulseWave(moreSocialsBtn);
+        makeRipple(e, moreSocialsBtn);
+        openMoreSocials();
+      });
+    }
+
+    moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
+    moreSocialsClose?.addEventListener("click", closeMoreSocials);
   }
 
   function escapeHtml(value) {
@@ -1594,11 +1625,61 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#39;");
   }
 
+  function openMoreSocials() {
+    document.body.classList.add("drawer-open");
+    moreSocialsDrawer?.classList.add("open");
+    moreSocialsBackdrop?.classList.add("open");
+  }
+
+  function closeMoreSocials() {
+    document.body.classList.remove("drawer-open");
+    moreSocialsDrawer?.classList.remove("open");
+    moreSocialsBackdrop?.classList.remove("open");
+  }
+
+  function pulseWave(el) {
+    if (!el) return;
+    el.classList.remove("pulse-hit");
+    void el.offsetWidth;
+    el.classList.add("pulse-hit");
+    setTimeout(() => el.classList.remove("pulse-hit"), 650);
+  }
+
+  function makeRipple(e, el) {
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const circle = document.createElement("span");
+    const size = Math.max(rect.width, rect.height) * 1.4;
+    const clientX = Number.isFinite(e?.clientX) ? e.clientX : rect.left + rect.width / 2;
+    const clientY = Number.isFinite(e?.clientY) ? e.clientY : rect.top + rect.height / 2;
+
+    circle.style.position = "absolute";
+    circle.style.width = `${size}px`;
+    circle.style.height = `${size}px`;
+    circle.style.left = `${clientX - rect.left - size / 2}px`;
+    circle.style.top = `${clientY - rect.top - size / 2}px`;
+    circle.style.borderRadius = "50%";
+    circle.style.pointerEvents = "none";
+    circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
+    circle.style.transform = "scale(0)";
+    circle.style.opacity = "1";
+    circle.style.animation = "rippleAnim 620ms ease-out forwards";
+
+    el.appendChild(circle);
+    setTimeout(() => circle.remove(), 650);
+  }
+
+  function syncDrawerCardEffects() {
+    if (!moreSocialsBtn) return;
+    moreSocialsBtn.classList.add("soft-float", "wave-auto");
+  }
+
   refreshToolbarState();
   initVolume();
   buildPlaylist();
   initPlayback();
   bindEvents();
+  syncDrawerCardEffects();
 
   if (ayahFloat) {
     if (!ayahVisible) ayahFloat.style.display = "none";
@@ -1614,88 +1695,12 @@ document.addEventListener("DOMContentLoaded", () => {
     restartAyahRotation();
   }
 
-  const toggleBtn = document.getElementById("ayahToggleBtn");
-  if (toggleBtn) {
-    toggleBtn.innerHTML = ayahVisible
-      ? '<i class="fa-solid fa-eye"></i>'
-      : '<i class="fa-solid fa-eye-slash"></i>';
-  }
-
   if (shuffleEnabled) updateShuffleButton();
   updateRepeatButton();
   updateNowPlayingCard();
   savePlaybackSnapshot();
-});
 
-const moreSocialsBtn = document.getElementById("moreSocialsBtn");
-const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
-const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
-const moreSocialsClose = document.getElementById("moreSocialsClose");
-
-function openMoreSocials() {
-  document.body.classList.add("drawer-open");
-  moreSocialsDrawer?.classList.add("open");
-  moreSocialsBackdrop?.classList.add("open");
-}
-
-function closeMoreSocials() {
-  document.body.classList.remove("drawer-open");
-  moreSocialsDrawer?.classList.remove("open");
-  moreSocialsBackdrop?.classList.remove("open");
-}
-
-function pulseWave(el) {
-  if (!el) return;
-  el.classList.remove("pulse-hit");
-  void el.offsetWidth;
-  el.classList.add("pulse-hit");
-  setTimeout(() => el.classList.remove("pulse-hit"), 650);
-}
-
-function makeRipple(e, el) {
-  const rect = el.getBoundingClientRect();
-  const circle = document.createElement("span");
-  const size = Math.max(rect.width, rect.height) * 1.4;
-
-  circle.style.position = "absolute";
-  circle.style.width = `${size}px`;
-  circle.style.height = `${size}px`;
-  circle.style.left = `${e.clientX - rect.left - size / 2}px`;
-  circle.style.top = `${e.clientY - rect.top - size / 2}px`;
-  circle.style.borderRadius = "50%";
-  circle.style.pointerEvents = "none";
-  circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
-  circle.style.transform = "scale(0)";
-  circle.style.opacity = "1";
-  circle.style.animation = "rippleAnim 620ms ease-out forwards";
-
-  el.appendChild(circle);
-  setTimeout(() => circle.remove(), 650);
-}
-
-if (!document.getElementById("rippleAnimStyle")) {
-  const style = document.createElement("style");
-  style.id = "rippleAnimStyle";
-  style.textContent = `
-    @keyframes rippleAnim {
-      0%   { transform: scale(0); opacity: .55; }
-      100% { transform: scale(1.9); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-moreSocialsBtn?.classList.add("soft-float", "wave-auto");
-
-moreSocialsBtn?.addEventListener("click", (e) => {
-  e.preventDefault();
-  pulseWave(moreSocialsBtn);
-  makeRipple(e, moreSocialsBtn);
-  openMoreSocials();
-});
-moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
-moreSocialsClose?.addEventListener("click", closeMoreSocials);
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeMoreSocials();
+  if (wasPlayingRestore) {
+    pendingResume = false;
+  }
 });
