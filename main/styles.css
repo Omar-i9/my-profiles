@@ -220,43 +220,25 @@ a {
     transform .18s ease,
     box-shadow .18s ease,
     background .18s ease,
-    color .18s ease,
     border-color .18s ease,
     filter .18s ease;
   --brand: #fff;
-  --hover-bg: var(--brand);
-  --hover-fg: #fff;
   --icon-bg: rgba(255,255,255,.08);
   --icon-fg: #fff;
-  --hover-icon-bg: #fff;
-  --hover-icon-fg: #000;
+  --hover-icon-bg: var(--brand);
+  --hover-icon-fg: #fff;
   --hover-border: rgba(255,255,255,.14);
-}
-
-.social-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 32%);
-  opacity: 0;
-  transition: opacity .18s ease;
-  pointer-events: none;
-}
-
-.social-card:hover::before,
-.social-card:focus-visible::before {
-  opacity: 1;
 }
 
 .social-card:hover,
 .social-card:focus-visible,
 .social-card:active {
-  background: var(--hover-bg);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
   border-color: var(--hover-border);
   transform: translateY(-2px);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
   outline: none;
-  filter: saturate(1.06);
+  filter: saturate(1.03);
 }
 
 .social-icon {
@@ -284,12 +266,6 @@ a {
   z-index: 1;
 }
 
-.social-icon i {
-  font-size: 1em;
-  line-height: 1;
-  display: block;
-}
-
 .social-card:hover .social-icon,
 .social-card:focus-visible .social-icon,
 .social-card:active .social-icon {
@@ -299,27 +275,8 @@ a {
   transform: translateY(-50%) scale(1.08);
 }
 
-.social-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: right;
-  min-width: 0;
-  margin-inline-start: 56px;
-  position: relative;
-  z-index: 1;
-}
-
-.social-text strong {
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.2;
-  transition: color .18s ease;
-}
-
+.social-text strong,
 .social-text span {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.72);
   transition: color .18s ease;
 }
 
@@ -329,7 +286,7 @@ a {
 .social-card:focus-visible .social-text span,
 .social-card:active .social-text strong,
 .social-card:active .social-text span {
-  color: var(--hover-fg);
+  color: #fff;
 }
 
 .badge {
@@ -351,14 +308,13 @@ a {
 }
 
 /* بطاقات الروابط الأساسية */
-.fb-card { --brand: #1877F2; --hover-bg: #1877F2; --hover-fg: #fff; --icon-bg: rgba(24,119,242,.12); --icon-fg: #1877F2; --hover-icon-bg: #fff; --hover-icon-fg: #1877F2; --hover-border: rgba(255,255,255,.10); }
-.wa-card { --brand: #25D366; --hover-bg: #25D366; --hover-fg: #fff; --icon-bg: rgba(37,211,102,.12); --icon-fg: #25D366; --hover-icon-bg: #fff; --hover-icon-fg: #25D366; --hover-border: rgba(255,255,255,.10); }
-.ig-card { --brand: #E1306C; --hover-bg: #E1306C; --hover-fg: #fff; --icon-bg: rgba(225,48,108,.12); --icon-fg: #E1306C; --hover-icon-bg: #fff; --hover-icon-fg: #E1306C; --hover-border: rgba(255,255,255,.10); }
-.tk-card { --brand: #000000; --hover-bg: #000000; --hover-fg: #fff; --icon-bg: rgba(255,255,255,.10); --icon-fg: #000000; --hover-icon-bg: #fff; --hover-icon-fg: #000000; --hover-border: rgba(255,255,255,.10); }
-.ds-card { --brand: #5865F2; --hover-bg: #5865F2; --hover-fg: #fff; --icon-bg: rgba(88,101,242,.12); --icon-fg: #5865F2; --hover-icon-bg: #fff; --hover-icon-fg: #5865F2; --hover-border: rgba(255,255,255,.10); }
-.sc-card { --brand: #FFFC00; --hover-bg: #FFFC00; --hover-fg: #000; --icon-bg: #FFFC00; --icon-fg: #000; --hover-icon-bg: #000; --hover-icon-fg: #FFFC00; --hover-border: rgba(255,252,0,.28); }
-.st-card { --brand: #1b2838; --hover-bg: #1b2838; --hover-fg: #fff; --icon-bg: rgba(27,40,56,.12); --icon-fg: #1b2838; --hover-icon-bg: #fff; --hover-icon-fg: #1b2838; --hover-border: rgba(255,255,255,.10); }
-
+.fb-card { --brand: #1877F2; --icon-bg: rgba(24,119,242,.12); --icon-fg: #1877F2; --hover-icon-bg: #1877F2; --hover-icon-fg: #fff; }
+.wa-card { --brand: #25D366; --icon-bg: rgba(37,211,102,.12); --icon-fg: #25D366; --hover-icon-bg: #25D366; --hover-icon-fg: #fff; }
+.ig-card { --brand: #E1306C; --icon-bg: rgba(225,48,108,.12); --icon-fg: #E1306C; --hover-icon-bg: #E1306C; --hover-icon-fg: #fff; }
+.tk-card { --brand: #000000; --icon-bg: rgba(255,255,255,.10); --icon-fg: #000000; --hover-icon-bg: #000000; --hover-icon-fg: #fff; }
+.ds-card { --brand: #5865F2; --icon-bg: rgba(88,101,242,.12); --icon-fg: #5865F2; --hover-icon-bg: #5865F2; --hover-icon-fg: #fff; }
+.sc-card { --brand: #FFFC00; --icon-bg: #FFFC00; --icon-fg: #000; --hover-icon-bg: #000; --hover-icon-fg: #FFFC00; --hover-border: rgba(255,252,0,.28); }
+.st-card { --brand: #1b2838; --icon-bg: rgba(27,40,56,.12); --icon-fg: #1b2838; --hover-icon-bg: #1b2838; --hover-icon-fg: #fff; }
 /* سناب يحتاج قلب خاص */
 .sc-card:hover .social-icon,
 .sc-card:focus-visible .social-icon,
@@ -1462,12 +1418,10 @@ a {
 
 .more-socials-card {
   --brand: #7dd3fc;
-  --hover-bg: linear-gradient(135deg, #00f2ff, #818cf8);
-  --hover-fg: #fff;
   --icon-bg: rgba(125, 211, 252, 0.14);
   --icon-fg: #7dd3fc;
-  --hover-icon-bg: #fff;
-  --hover-icon-fg: #000;
+  --hover-icon-bg: linear-gradient(135deg, #00f2ff, #818cf8);
+  --hover-icon-fg: #fff;
   --hover-border: rgba(125, 211, 252, 0.20);
   background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
   border: 1px solid rgba(125, 211, 252, 0.20);
@@ -1478,36 +1432,13 @@ a {
   color: #7dd3fc;
 }
 
-.more-socials-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.24), transparent 58%);
-  opacity: 0;
-  transform: scale(.35);
-  pointer-events: none;
-}
-
-.more-socials-card.wave-auto::before {
-  animation: wavePulse 6s ease-in-out infinite;
-}
-
-.more-socials-card.soft-float {
-  animation: softFloat 4s ease-in-out infinite;
-}
-
-.more-socials-card.pulse-hit {
-  animation: pressWave 620ms cubic-bezier(.2,.9,.2,1);
-}
-
 .more-socials-card:hover {
-  background: linear-gradient(135deg, #00f2ff, #818cf8);
+  background: linear-gradient(135deg, rgba(59,130,246,.18), rgba(168,85,247,.16));
 }
 
 .more-socials-card:hover .social-icon {
-  background: #fff;
-  color: #000;
+  background: linear-gradient(135deg, #00f2ff, #818cf8);
+  color: #fff;
   box-shadow: 0 10px 20px rgba(0,0,0,.22);
 }
 
@@ -1515,7 +1446,6 @@ a {
 .more-socials-card:hover .social-text span {
   color: #fff;
 }
-
 .special-badge {
   background: linear-gradient(135deg, #22c55e, #06b6d4);
 }
