@@ -309,14 +309,14 @@ a {
 
 /* عند التعيين */
 .social-card:hover .badge {
-  background: #ffffff;
-  color: #000000;
+  background: #000000;
+  color: #ffffff;
   transform: translateY(-2px);
 }
 .vip {
-  background: linear-gradient(135deg, #151515, #000000);
-  color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, #d7d7d7, #ffffff);
+  color: #000000;
+  border: 1px solid rgba(120, 120, 120, 0.2);
 }
 /* بطاقات الروابط الأساسية */
 .fb-card {
