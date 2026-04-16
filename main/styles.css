@@ -1662,3 +1662,10 @@ a {
     scroll-behavior: auto !important;
   } 
 }
+
+        footer {
+            padding: 50px;
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
