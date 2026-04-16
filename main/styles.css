@@ -1663,19 +1663,32 @@ a {
   } 
 }
 
-footer {
+.sigma-footer-unique {
     width: 100%;
-    padding: 40px 20px;
-    background-color: #0f0f0f; /* لون خلفية غامق عشان السيجما */
-    color: #b0b0b0; /* لون رمادي واضح */
-    text-align: center;
-    font-size: 0.9rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05); /* خط خفيف فوق الفوتر */
-    margin-top: 50px;
+    padding: 80px 0;
+    background: #000;
+    overflow: hidden;
+    perspective: 1000px; /* عشان حركات الـ 3D */
 }
 
-footer p {
-    margin: 0;
-    font-weight: bold;
-    letter-spacing: 1px;
+.hieba-text {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #444;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
+}
+
+/* كل حرف رح يصير له span عشان نحركه */
+.char {
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.char:hover {
+    color: #fff;
+    text-shadow: 0 0 15px #fff;
 }
