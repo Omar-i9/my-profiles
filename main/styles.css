@@ -1663,9 +1663,19 @@ a {
   } 
 }
 
-        footer {
-            padding: 50px;
-            color: var(--text-gray);
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
+footer {
+    width: 100%;
+    padding: 40px 20px;
+    background-color: #0f0f0f; /* لون خلفية غامق عشان السيجما */
+    color: #b0b0b0; /* لون رمادي واضح */
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* خط خفيف فوق الفوتر */
+    margin-top: 50px;
+}
+
+footer p {
+    margin: 0;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
