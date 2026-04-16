@@ -1699,3 +1699,81 @@ moreSocialsClose?.addEventListener("click", closeMoreSocials);
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMoreSocials();
 });
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+document.addEventListener('DOMContentLoaded', () => {
+    const textElement = document.getElementById('animated-text');
+    const content = textElement.innerText;
+    textElement.innerHTML = "";
+
+    // تفكيك النص لأحرف
+    [...content].forEach(char => {
+        const span = document.createElement('span');
+        span.innerText = char === " " ? "\u00A0" : char; // التعامل مع المسافات
+        span.className = 'char';
+        textElement.appendChild(span);
+    });
+
+    const chars = document.querySelectorAll('.char');
+
+    // 1. أنيميشن الدخول (أول ما تفتح الصفحة)
+    gsap.from(chars, {
+        duration: 1,
+        y: 100,
+        opacity: 0,
+        stagger: 0.03, // كل حرف ورا التاني بفرق بسيط
+        ease: "back.out(1.7)",
+    });
+
+    // 2. أنيميشن عند مرور الماوس (الحركة التفاعلية القوية)
+    textElement.addEventListener('mouseenter', () => {
+        gsap.to(chars, {
+            duration: 0.5,
+            y: -10,
+            stagger: {
+                amount: 0.5,
+                from: "center", // الحركة بتبلش من نص الجملة
+            },
+            color: "#ffffff",
+            ease: "power2.out"
+        });
+    });
+
+    textElement.addEventListener('mouseleave', () => {
+        gsap.to(chars, {
+            duration: 0.5,
+            y: 0,
+            stagger: {
+                amount: 0.3,
+                from: "edges",
+            },
+            color: "#444444",
+            ease: "power2.in"
+        });
+    });
+
+    // 3. "قنبلة" عند الضغط (Explosion Effect)
+    textElement.addEventListener('click', () => {
+        gsap.to(chars, {
+            duration: 0.4,
+            x: () => Math.random() * 400 - 200,
+            y: () => Math.random() * 400 - 200,
+            rotation: () => Math.random() * 360,
+            opacity: 0,
+            ease: "power3.out",
+            onComplete: () => {
+                // ترجيع النص بعد "الانفجار"
+                gsap.to(chars, {
+                    duration: 1,
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    opacity: 1,
+                    delay: 0.5,
+                    ease: "elastic.out(1, 0.3)",
+                    stagger: 0.02
+                });
+            }
+        });
+    });
+});
