@@ -1627,14 +1627,6 @@ document.addEventListener("DOMContentLoaded", () => {
   savePlaybackSnapshot();
 });
 
-const badge = document.querySelector(".vip-badge");
-
-badge.addEventListener("click", () => {
-  const card = badge.closest(".vip-card");
-  card.classList.toggle("is-open");
-  badge.setAttribute("aria-pressed", card.classList.contains("is-open"));
-});
-
 const moreSocialsBtn = document.getElementById("moreSocialsBtn");
 const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
 const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
