@@ -468,63 +468,60 @@ a {
     box-shadow 0.2s ease;
 }
 
+/* --- الإعدادات الأساسية للبادج (2D) --- */
+.badge {
+  position: absolute;
+  top: -10px; /* مكانها فوق البطاقة */
+  left: 10px;
+  background-color: #000; /* البداية سوداء 2D */
+  color: #fff; /* النص أبيض */
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* أنيميشن مرن */
+  cursor: pointer;
+  border: 2px solid transparent;
+  overflow: hidden; /* عشان لون التدرج ما يطلع برا البادج */
+}
+
+/* طبقة التدرج اللي رح "تسبح" داخل البادج */
+.badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%; /* مخفية برا على اليسار */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffdd55, #ffb300); /* تدرج ذهبي */
+  transition: left 0.4s ease; /* حركة السحب */
+  z-index: -1; /* تحت النص */
+}
+
 /* --- التأثيرات عند الضغط (Active) --- */
 
-/* 1. تأثير البادج عند الضغط */
 .vip-btn:active .badge {
-  width: 105px; /* يتمدد باتجاه اليمين */
-  background-color: var(--gold2); /* الداخل يتحول لأصفر */
-  color: #000; /* النص يتحول لأسود */
-  border-color: #000; /* الإطار يبقى أسود */
-  transform: translate(-3px, -3px); /* يتحرك للأمام (باتجاه المستخدم) */
-  box-shadow: 4px 4px 0 #000; /* ظل 3D قوي بستايل البكسل */
+  transform: scale(1.1); /* تمدد خفيف للخارج باتجاه الشاشة */
+  width: 110px; /* تمدد العرض */
+  color: #000; /* النص بصير أسود */
+  /* السواد يتمدد للخارج كأنه ظل قوي 2D */
+  box-shadow: 
+    0 0 0 4px #000, 
+    0 10px 20px rgba(0, 0, 0, 0.4); 
 }
 
-/* 2. تأثير الزر بالكامل عند الضغط والتحويم (أكوادك الأصلية مع تعديلات طفيفة) */
-.vip-btn:hover,
-.vip-btn:focus-visible {
-  transform: translateY(-2px);
-  background: linear-gradient(180deg, #2a2a2a, #101010);
-  box-shadow:
-    0 6px 0 #000,
-    0 12px 0 #1a1a1a,
-    0 18px 24px rgba(0, 0, 0, 0.45);
-  outline: none;
+/* الحركة اللي بتخلي اللون "يسبح" للداخل */
+.vip-btn:active .badge::before {
+  left: 0; /* اللون الذهبي يدخل ويملأ المكان */
 }
 
-.vip-btn:active {
-  transform: translateY(4px);
-  box-shadow:
-    0 1px 0 #000,
-    0 3px 0 #1a1a1a,
-    0 6px 12px rgba(0, 0, 0, 0.25);
-}
-
-/* اللمسات الجمالية (أكوادك الأصلية) */
-.vip-btn::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255, 221, 85, 0.15); /* خففت الشفافية قليلاً لتناسب التصميم العريض */
-  pointer-events: none;
-  border-radius: 8px;
-}
-
-.vip-btn::after {
-  content: "";
-  position: absolute;
-  bottom: 8px; /* تم نقل النقاط للأسفل لتجنب تداخلها مع الأيقونة */
-  right: 8px;
-  width: 6px;
-  height: 6px;
-  background: var(--gold);
-  box-shadow:
-    -10px 0 0 var(--gold2),
-    -20px 0 0 #8a6d00,
-    0 -10px 0 #8a6d00;
-  opacity: 0.9;
-}
-.sc-card:hover .social-text strong,
+/* تحسينات إضافية للزر نفسه عشان ما يضايق البادج */
+.vip-btn {
+  position: relative; /* ضروري عشان البادج يتمركز صح */
+  /* باقي أكوادك الأصلية */
+}.sc-card:hover .social-text strong,
 .sc-card:hover .social-text span,
 .sc-card:focus-visible .social-text strong,
 .sc-card:focus-visible .social-text span,
