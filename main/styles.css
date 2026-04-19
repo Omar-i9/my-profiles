@@ -307,131 +307,6 @@ a {
   transition: all .18s ease;
 }
 
-
-.vip-card {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  display: grid;
-  place-items: center;
-  background: #0f1116;
-  border-radius: 18px;
-  overflow: visible;
-}
-
-.vip-icon {
-  width: 66px;
-  height: 66px;
-  display: grid;
-  place-items: center;
-  background: #ffffff;
-  border: 2px solid #000;
-  box-shadow:
-    0 4px 0 #000,
-    0 10px 18px rgba(0, 0, 0, 0.35);
-}
-
-.vip-icon img {
-  width: 34px;
-  height: 34px;
-  image-rendering: pixelated;
-}
-
-.vip-badge {
-  position: absolute;
-  top: -14px;
-  left: 8px;
-  z-index: 5;
-
-  width: 72px;
-  height: 22px;
-  padding: 0 10px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 2px solid #000;
-  background: #000;
-  color: #fff;
-  font: 800 10px/1 monospace;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  cursor: pointer;
-
-  box-shadow:
-    0 4px 0 #111,
-    0 8px 16px rgba(0, 0, 0, 0.35);
-
-  image-rendering: pixelated;
-  transition:
-    width 0.35s ease,
-    height 0.35s ease,
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    color 0.35s ease;
-  overflow: hidden;
-  transform-origin: left center;
-}
-
-.vip-badge::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  background: #f2d400;
-  opacity: 0;
-  transform: scaleX(0.2);
-  transform-origin: left center;
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-  z-index: 0;
-}
-
-.vip-badge::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 2px solid #000;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.vip-badge__text {
-  position: relative;
-  z-index: 1;
-  transition: color 0.35s ease;
-}
-
-.vip-card:hover .vip-badge,
-.vip-card.is-open .vip-badge,
-.vip-badge:hover,
-.vip-badge:focus-visible {
-  width: min(360px, calc(100vw - 24px));
-  height: 44px;
-  transform: translateY(-1px);
-  box-shadow:
-    0 5px 0 #111,
-    0 12px 22px rgba(0, 0, 0, 0.45);
-  color: #111;
-}
-
-.vip-card:hover .vip-badge::before,
-.vip-card.is-open .vip-badge::before,
-.vip-badge:hover::before,
-.vip-badge:focus-visible::before {
-  opacity: 1;
-  transform: scaleX(1);
-}
-
-.vip-card:hover .vip-badge__text,
-.vip-card.is-open .vip-badge__text,
-.vip-badge:hover .vip-badge__text,
-.vip-badge:focus-visible .vip-badge__text {
-  color: #111;
-}
-
-
 /* عند التعيين */
 .social-card:hover .badge {
   background: #000000;
@@ -517,6 +392,138 @@ a {
 .social-card:hover .social-icon,
 .social-card:focus-visible .social-icon { background: #fff; color: var(--brand); }
 
+/* إعدادات البطاقة الرئيسية بناءً على كودك والصورة */
+.vip-btn {
+  /* احتفظت بألوانك الأصلية، ولكن يمكنك تغيير --bg إلى #5865F2 إذا أردت لون ديسكورد */
+  --bg: #111111; 
+  --bg-top: #1b1b1b;
+  --gold: #f5c400;
+  --gold2: #ffdd55;
+  --shadow: #000000;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* لفصل الأيقونة عن النص */
+  width: 100%;
+  max-width: 400px; /* لتكون عريضة مثل البطاقة */
+  padding: 10px 26px 10px 10px;
+  margin-top: 30px; /* ضروري لترك مساحة للبادج كي لا يُقص */
+  border: 2px solid #000;
+  background: linear-gradient(180deg, var(--bg-top), var(--bg));
+  color: #fff;
+  font: 700 16px/1 monospace;
+  cursor: pointer;
+  border-radius: 12px; /* انحناء خفيف ليطابق ستايل الصورة */
+  box-shadow:
+    0 4px 0 #000,
+    0 8px 0 #1a1a1a,
+    0 12px 18px rgba(0, 0, 0, 0.35);
+  image-rendering: pixelated;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  overflow: visible; /* هام جداً للسماح بظهور البادج خارج البطاقة */
+}
+
+/* تنسيق الأيقونة البيضاء (كما في الصورة) */
+.icon-box {
+  width: 45px;
+  height: 45px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* --- كود البادج الجديد (PRIVATE) --- */
+.badge {
+  position: absolute;
+  top: -14px; /* خارج الإطار للأعلى */
+  left: 20px; /* محاذاة لليسار */
+  background: #000; /* أسود بالبداية */
+  color: #fff; /* النص أبيض بالبداية ليكون مقروءاً */
+  border: 2px solid #000; /* الإطار أسود */
+  border-radius: 16px; /* شكل بيضاوي (Pill) */
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  z-index: 10;
+  
+  /* إعدادات التمدد */
+  width: 75px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  
+  /* الحركات (Transitions) */
+  transition: 
+    width 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), /* حركة تمدد مرنة وجميلة */
+    background-color 0.2s ease,
+    color 0.5s ease-in-out, /* تحول النص لأسود تدريجياً */
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* --- التأثيرات عند الضغط (Active) --- */
+
+/* 1. تأثير البادج عند الضغط */
+.vip-btn:active .badge {
+  width: 105px; /* يتمدد باتجاه اليمين */
+  background-color: var(--gold2); /* الداخل يتحول لأصفر */
+  color: #000; /* النص يتحول لأسود */
+  border-color: #000; /* الإطار يبقى أسود */
+  transform: translate(-3px, -3px); /* يتحرك للأمام (باتجاه المستخدم) */
+  box-shadow: 4px 4px 0 #000; /* ظل 3D قوي بستايل البكسل */
+}
+
+/* 2. تأثير الزر بالكامل عند الضغط والتحويم (أكوادك الأصلية مع تعديلات طفيفة) */
+.vip-btn:hover,
+.vip-btn:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #2a2a2a, #101010);
+  box-shadow:
+    0 6px 0 #000,
+    0 12px 0 #1a1a1a,
+    0 18px 24px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+
+.vip-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 1px 0 #000,
+    0 3px 0 #1a1a1a,
+    0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* اللمسات الجمالية (أكوادك الأصلية) */
+.vip-btn::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255, 221, 85, 0.15); /* خففت الشفافية قليلاً لتناسب التصميم العريض */
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.vip-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 8px; /* تم نقل النقاط للأسفل لتجنب تداخلها مع الأيقونة */
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  box-shadow:
+    -10px 0 0 var(--gold2),
+    -20px 0 0 #8a6d00,
+    0 -10px 0 #8a6d00;
+  opacity: 0.9;
+}
 .sc-card:hover .social-text strong,
 .sc-card:hover .social-text span,
 .sc-card:focus-visible .social-text strong,
