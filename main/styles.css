@@ -1876,3 +1876,80 @@ footer p {
     line-height: 1.8;
     color: var(--accent);
 }
+/* خلفية النافذة المنبثقة */
+.share-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px); /* تغبيش فخم */
+  display: none; /* مخفي في البداية */
+  align-items: center;
+  justify-content: center;
+  z-index: 10000; /* لازم يكون أعلى رقم في ملفك */
+  animation: fadeIn 0.3s ease;
+}
+
+/* المربع الزجاجي */
+.share-modal {
+  width: 90%;
+  max-width: 360px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
+
+/* حركة الـ QR وصورتك */
+.qr-wrapper {
+  position: relative;
+  display: inline-block;
+  background: white;
+  padding: 10px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+.main-qr { width: 180px; height: 180px; display: block; }
+
+.qr-logo {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45px; height: 45px;
+  border-radius: 10px;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* أزرار المشاركة */
+.share-links-grid {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+.share-item {
+  width: 50px; height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  transition: 0.3s;
+}
+.wa { background: #25d366; }
+.fb { background: #1877f2; }
+.copy-link { background: var(--accent); color: var(--bg); border: none; cursor: pointer; }
+
+/* زر الإغلاق */
+.close-share {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: none; border: none;
+  color: white; font-size: 28px;
+  cursor: pointer;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
