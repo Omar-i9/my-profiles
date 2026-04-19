@@ -168,12 +168,15 @@
 
     <footer class="footer">الفولو <em>ما بكهربك</em></footer>
 
-    <footer> <p>جميع الحقوق غير محفوظة © 2026 | يرجى عدم الزرف ✋</p> </footer>
-
   </main>
-
   <section class="music-sheet" id="musicSheet" aria-label="قائمة الموسيقى">
     <button class="sheet-close" id="closeMusicBtn" type="button" aria-label="إغلاق">×</button>
+    <div class="visualizer">
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+  <div class="bar"></div>
+</div>
 
     <div class="music-top">
       <img src="" id="musicCover" alt="غلاف الأغنية" class="music-cover">
@@ -298,5 +301,16 @@
 <footer>
     <p>جميع الحقوق غير محفوظة © 2026 | يرجى عدم الزرف ✋</p>
 </footer>
+<button id="shareBtn" class="music-fab" style="bottom: 100px;">
+    <i class="fa-solid fa-qrcode"></i>
+</button>
+
+<div id="qrModal" class="modal-overlay">
+    <div class="qr-container glass-card">
+        <h3>شارك بروفايلي</h3>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://omar-i9.github.io/my-profiles/" alt="QR Code">
+        <button id="closeQr">إغلاق</button>
+    </div>
+</div>
 </body>
 </html>
