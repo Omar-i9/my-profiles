@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const STORAGE = {
     lastIndex: "omarp_last_song_index",
     lastTime: "omarp_last_song_time",
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ayahY: "omarp_ayah_y",
   };
 
+  
   const AUDIO_BASE = "./audio/";
   const IMAGE_BASE = "./images/";
   const FALLBACK_COVER = "./profile.jpeg";
@@ -1128,6 +1130,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const cards = document.querySelectorAll('.social-card');
+cards.forEach((card, index) => {
+  setTimeout(() => {
+    card.classList.add('appear');
+  }, index * 100); // كل كرت بيتأخر 100ms عن اللي قبله عشان يعطي تأثير "وحدة وحدة"
+});
+
   function ensureAyahToggleButton() {
     if (!ayahFloat || document.getElementById("ayahToggleBtn")) return;
     const btn = document.createElement("button");
@@ -1625,7 +1634,8 @@ document.addEventListener("DOMContentLoaded", () => {
   updateRepeatButton();
   updateNowPlayingCard();
   savePlaybackSnapshot();
-});
+
+  
 
 const moreSocialsBtn = document.getElementById("moreSocialsBtn");
 const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
@@ -1667,8 +1677,8 @@ function makeRipple(e, el) {
   circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
   circle.style.transform = "scale(0)";
   circle.style.opacity = "1";
-  circle.style.animation = "rippleAnim 620ms ease-out forwards";
-
+// غير الـ animation في الكود الموجود عندك ليكون أبطأ شوي وأكبر
+circle.style.animation = "rippleAnim 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards";
   el.appendChild(circle);
   setTimeout(() => circle.remove(), 650);
 }
@@ -1699,3 +1709,125 @@ moreSocialsClose?.addEventListener("click", closeMoreSocials);
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMoreSocials();
 });
+
+document.addEventListener('mousemove', (e) => {
+  const moveX = (e.clientX * 0.05) / 8;
+  const moveY = (e.clientY * 0.05) / 8;
+  document.body.style.backgroundPosition = `${moveX}px ${moveY}px`;
+});
+
+const shareBtn = document.getElementById('shareBtn');
+const qrModal = document.getElementById('qrModal');
+const closeQr = document.getElementById('closeQr');
+
+shareBtn.onclick = () => qrModal.style.display = 'flex';
+closeQr.onclick = () => qrModal.style.display = 'none';
+window.onclick = (e) => { if(e.target == qrModal) qrModal.style.display = 'none'; }
+
+document.querySelectorAll('.social-card').forEach(card => {
+    card.addEventListener('contextmenu', (e) => {
+        e.preventDefault(); // منع القائمة الافتراضية عند الضغط المطول
+        const textToCopy = card.querySelector('.social-text span').innerText;
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // استخدام الـ Toast اللي عندك في الموقع
+            showToast(`تم نسخ: ${textToCopy}`);
+            
+            // حركة اهتزاز خفيفة للكرت للتأكيد
+            card.style.animation = 'none';
+            card.offsetHeight; // trigger reflow
+            card.style.animation = 'softFloat 0.3s ease';
+        });
+    });
+});
+
+const showStats = () => {
+    const stats = `
+        Browser: ${navigator.userAgent.split(' ')[0]}
+        Screen: ${window.screen.width}x${window.screen.height}
+        Language: ${navigator.language}
+    `;
+    showToast(stats); // استخدم الـ Toast اللي عندك لعرضها
+}
+document.querySelector('photo/profile.jpeg').onclick = showStats;
+
+function pulse() {
+    if (!audio.paused) {
+        analyzer.getByteFrequencyData(dataArray);
+        const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
+        
+        // النبض بصير للأفاتار نفسه
+        const scale = 1 + (avg / 600); 
+        const avatar = document.querySelector('.avatar');
+        if(avatar) avatar.style.transform = `translateX(-50%) scale(${scale})`;
+    }
+    requestAnimationFrame(pulse);
+}
+const ayahBox = document.querySelector('.ayah-float');
+let clickTimer = null;
+
+// --- 1. ميزة النسخ بالزر اليمين (Context Menu) ---
+    document.querySelectorAll('.social-card').forEach(card => {
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const span = card.querySelector('.social-text span');
+            if (span) {
+                const textToCopy = span.innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    if (typeof showToast === 'function') showToast(`تم نسخ: ${textToCopy}`);
+                    card.style.animation = 'none';
+                    card.offsetHeight; 
+                    card.style.animation = 'softFloat 0.3s ease';
+                });
+            }
+        });
+    });
+
+    // --- 2. ميزة إحصائيات المتصفح عند الضغط على الصورة ---
+    // عدلت لك المسار ليصير دقيق حسب عناصر موقعك
+    const profileImg = document.querySelector('.avatar-img') || document.querySelector('.avatar');
+    if (profileImg) {
+        profileImg.onclick = () => {
+            const stats = `Browser: ${navigator.userAgent.split(' ')[0]} | Screen: ${window.screen.width}x${window.screen.height}`;
+            showToast(stats);
+        };
+    }
+
+    // --- 3. بوابة المشاركة (Share Portal) ---
+    const sBtn = document.getElementById('sharePortalBtn');
+    const sOverlay = document.getElementById('shareOverlay');
+    const sClose = document.getElementById('closeShare');
+
+    if (sBtn && sOverlay) {
+        sBtn.onclick = (e) => {
+            e.preventDefault();
+            sOverlay.style.display = 'flex';
+        };
+        if (sClose) sClose.onclick = () => sOverlay.style.display = 'none';
+        sOverlay.onclick = (e) => {
+            if (e.target === sOverlay) sOverlay.style.display = 'none';
+        };
+    }
+
+    // --- 4. تشغيل النبض (Pulse) ---
+    function pulse() {
+        if (typeof audio !== 'undefined' && !audio.paused && typeof dataArray !== 'undefined') {
+            analyzer.getByteFrequencyData(dataArray);
+            const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
+            const scale = 1 + (avg / 600); 
+            const avatar = document.querySelector('.avatar');
+            if(avatar) avatar.style.transform = `translateX(-50%) scale(${scale})`;
+        }
+        requestAnimationFrame(pulse);
+    }
+    pulse(); // تشغيل الدالة
+
+}); // <--- هاد القوس هو الأهم، هاد بيسكر الـ DOMContentLoaded اللي بأول الملف
+
+// دالة النسخ (برا القوس عشان الـ HTML يشوفها)
+window.copySiteLink = function() {
+    const url = "https://omar-i9.github.io/my-profiles/";
+    navigator.clipboard.writeText(url).then(() => {
+        if (typeof showToast === 'function') showToast("تم نسخ الرابط يا فنان 🔗");
+    });
+};
