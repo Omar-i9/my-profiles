@@ -22,11 +22,7 @@
   --royal-bg: linear-gradient(135deg, #140a24, #2d1b4e);
   --royal-gold: linear-gradient(135deg, #FFD700, #C9A227, #FFF3B0);
   --royal-purple: #7c3aed;
-            --bg-color: #0d1117;
-            --pixel-black: #000000;
-            --pixel-yellow-top: #ffeb3b;   /* أصفر فاتح للوجه العلوي */
-            --pixel-yellow-side: #c6a700;  /* أصفر أغمق للجانب (مثل الطين بالصورة) */
-            --pixel-white: #ffffff;
+
 }
 
 * {
@@ -317,6 +313,11 @@ a {
   color: #ffffff;
   transform: translateY(-2px);
 }
+.vip {
+  background: linear-gradient(135deg, #d7d7d7, #ffffff);
+  color: #000000;
+  border: 1px solid rgba(120, 120, 120, 0.2);
+}
 /* بطاقات الروابط الأساسية */
 .fb-card {
   --brand: #1877F2;
@@ -396,182 +397,18 @@ a {
 .social-card:hover .social-icon,
 .social-card:focus-visible .social-icon { background: #fff; color: var(--brand); }
 
-
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        /* الحالة الطبيعية: 2D ومسطحة تماماً */
-        .pixel-badge {
-            display: inline-block;
-            position: relative;
-            padding: 12px 24px;
-            background-color: var(--pixel-black);
-            color: var(--pixel-white);
-            font-weight: 900;
-            font-size: 18px;
-            text-transform: uppercase;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            user-select: none;
-            
-            /* حواف بكسل مدرجة (مربعين) */
-            clip-path: polygon(
-                0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0,
-                calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
-                100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
-                8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px)
-            );
-
-            transition: all 0.15s steps(4);
-            transform: translate(0, 0);
-        }
-
-        .pixel-badge span {
-            position: relative;
-            z-index: 2;
-            transition: color 0.1s;
-        }
-
-        /* --- حالة التعيين (Hover): التحول إلى بلوكة 3D --- */
-        .pixel-badge:hover {
-            background-color: var(--pixel-yellow-top); /* الوجه الأساسي بصير أصفر */
-            transform: translate(-8px, -8px); /* نطة مائلة قوية */
-            
-            /* صنع تأثير البلوكة (3D Block Effect) */
-            /* الطبقات بتعمل الوجه الجانبي والوجه السفلي والحدود السوداء */
-            box-shadow: 
-                /* الوجه الجانبي (الأصفر الغامق/البني التشبيهي) */
-                1px 1px 0px var(--pixel-yellow-side),
-                2px 2px 0px var(--pixel-yellow-side),
-                3px 3px 0px var(--pixel-yellow-side),
-                4px 4px 0px var(--pixel-yellow-side),
-                /* الحدود السوداء للبلوكة (مثل إطار مكعب ماينكرافت) */
-                5px 5px 0px var(--pixel-black),
-                6px 6px 0px var(--pixel-black),
-                7px 7px 0px var(--pixel-black),
-                8px 8px 0px var(--pixel-black);
-        }
-
-        .pixel-badge:hover span {
-            color: var(--pixel-black);
-        }
-
-        /* حالة الضغط: كأنك كسرت البلوكة */
-        .pixel-badge:active {
-            transform: translate(-2px, -2px);
-            box-shadow: 2px 2px 0px var(--pixel-black);
-        }
-
-/* تنسيق الأيقونة البيضاء (كما في الصورة) */
-.icon-box {
-  width: 45px;
-  height: 45px;
-  background: #fff;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
+.vip-card {
+  background: var(--royal-bg);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+}
+.vip-card:hover .social-icon,
+.vip-card:focus-visible .social-icon {
+  background: var(--royal-gold);
+  color: #1a1a1a;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
 }
 
-/* --- كود البادج الجديد (PRIVATE) --- */
-.badge {
-  position: absolute;
-  top: -14px; /* خارج الإطار للأعلى */
-  left: 20px; /* محاذاة لليسار */
-  background: #000; /* أسود بالبداية */
-  color: #fff; /* النص أبيض بالبداية ليكون مقروءاً */
-  border: 2px solid #000; /* الإطار أسود */
-  border-radius: 16px; /* شكل بيضاوي (Pill) */
-  padding: 4px 12px;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  z-index: 10;
-  
-  /* إعدادات التمدد */
-  width: 75px; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
-  
-  /* الحركات (Transitions) */
-  transition: 
-    width 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), /* حركة تمدد مرنة وجميلة */
-    background-color 0.2s ease,
-    color 0.5s ease-in-out, /* تحول النص لأسود تدريجياً */
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.pixel-badge {
-  display: inline-block;
-  position: relative;
-  padding: 10px 20px;
-  background-color: #000; /* البداية سوداء 2D */
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace; /* خط بكسل */
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  
-  /* سحر الماينكرافت: رسم الحواف كأنها درج */
-  clip-path: polygon(
-    0 4px, 4px 4px, 4px 0, 
-    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 
-    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 
-    4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-  );
-
-  transition: all 0.2s steps(4); /* Steps بتخلي الحركة "مقطعة" زي الألعاب القديمة */
-}
-
-/* طبقة اللون التدرج اللي "بتسبح" */
-.pixel-badge::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%; /* مخفية برا */
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, #f0f, #0ff); /* تدرج فاقع (تقدر تغيره) */
-  transition: left 0.3s steps(5);
-  z-index: 1;
-}
-
-/* النص لازم يضل فوق */
-.pixel-badge span {
-  position: relative;
-  z-index: 2;
-  transition: color 0.2s;
-}
-
-/* --- الأكشن عند الضغط (بدون سكربت) --- */
-
-.pixel-badge:active {
-  /* تمدد السواد للخارج كأنه ظل بكسل */
-  box-shadow: 0 0 0 6px #000;
-  transform: scale(1.05); /* تكبير خفيف */
-}
-
-.pixel-badge:active::before {
-  left: 0; /* اللون بيسحب لجوا */
-}
-
-.pixel-badge:active span {
-  color: #000; /* النص بقلب أسود */
-}.sc-card:hover .social-text strong,
+.sc-card:hover .social-text strong,
 .sc-card:hover .social-text span,
 .sc-card:focus-visible .social-text strong,
 .sc-card:focus-visible .social-text span,
