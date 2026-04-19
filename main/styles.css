@@ -307,40 +307,136 @@ a {
   transition: all .18s ease;
 }
 
+
+.vip-card {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  background: #0f1116;
+  border-radius: 18px;
+  overflow: visible;
+}
+
+.vip-icon {
+  width: 66px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border: 2px solid #000;
+  box-shadow:
+    0 4px 0 #000,
+    0 10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.vip-icon img {
+  width: 34px;
+  height: 34px;
+  image-rendering: pixelated;
+}
+
+.vip-badge {
+  position: absolute;
+  top: -14px;
+  left: 8px;
+  z-index: 5;
+
+  width: 72px;
+  height: 22px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  font: 800 10px/1 monospace;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 0 #111,
+    0 8px 16px rgba(0, 0, 0, 0.35);
+
+  image-rendering: pixelated;
+  transition:
+    width 0.35s ease,
+    height 0.35s ease,
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    color 0.35s ease;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+.vip-badge::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #f2d400;
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: left center;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  z-index: 0;
+}
+
+.vip-badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #000;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.vip-badge__text {
+  position: relative;
+  z-index: 1;
+  transition: color 0.35s ease;
+}
+
+.vip-card:hover .vip-badge,
+.vip-card.is-open .vip-badge,
+.vip-badge:hover,
+.vip-badge:focus-visible {
+  width: min(360px, calc(100vw - 24px));
+  height: 44px;
+  transform: translateY(-1px);
+  box-shadow:
+    0 5px 0 #111,
+    0 12px 22px rgba(0, 0, 0, 0.45);
+  color: #111;
+}
+
+.vip-card:hover .vip-badge::before,
+.vip-card.is-open .vip-badge::before,
+.vip-badge:hover::before,
+.vip-badge:focus-visible::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.vip-card:hover .vip-badge__text,
+.vip-card.is-open .vip-badge__text,
+.vip-badge:hover .vip-badge__text,
+.vip-badge:focus-visible .vip-badge__text {
+  color: #111;
+}
+
+
 /* عند التعيين */
 .social-card:hover .badge {
   background: #000000;
   color: #ffffff;
   transform: translateY(-2px);
-}
-.vip-btn {
-  --bg: #111111;
-  --bg-top: #1b1b1b;
-  --gold: #f5c400;
-  --gold2: #ffdd55;
-  --shadow: #000000;
-
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 26px;
-  border: 2px solid #000;
-  background: linear-gradient(180deg, var(--bg-top), var(--bg));
-  color: var(--gold2);
-  font: 700 16px/1 monospace;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  border-radius: 0;
-  box-shadow:
-    0 4px 0 #000,
-    0 8px 0 #1a1a1a,
-    0 12px 18px rgba(0, 0, 0, 0.35);
-  image-rendering: pixelated;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  text-shadow: 1px 1px 0 #000;
-  overflow: hidden;
 }
 /* بطاقات الروابط الأساسية */
 .fb-card {
@@ -421,49 +517,6 @@ a {
 .social-card:hover .social-icon,
 .social-card:focus-visible .social-icon { background: #fff; color: var(--brand); }
 
-.vip-btn::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255, 221, 85, 0.35);
-  pointer-events: none;
-}
-
-.vip-btn::after {
-  content: "";
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 10px;
-  height: 10px;
-  background: var(--gold);
-  box-shadow:
-    14px 0 0 var(--gold2),
-    28px 0 0 #8a6d00,
-    0 14px 0 #8a6d00,
-    14px 14px 0 var(--gold2),
-    28px 14px 0 var(--gold);
-  opacity: 0.9;
-}
-
-.vip-btn:hover,
-.vip-btn:focus-visible {
-  transform: translateY(-2px);
-  background: linear-gradient(180deg, #2a2a2a, #101010);
-  box-shadow:
-    0 6px 0 #000,
-    0 12px 0 #1a1a1a,
-    0 18px 24px rgba(0, 0, 0, 0.45);
-  outline: none;
-}
-
-.vip-btn:active {
-  transform: translateY(4px);
-  box-shadow:
-    0 1px 0 #000,
-    0 3px 0 #1a1a1a,
-    0 6px 12px rgba(0, 0, 0, 0.25);
-}
 .sc-card:hover .social-text strong,
 .sc-card:hover .social-text span,
 .sc-card:focus-visible .social-text strong,
