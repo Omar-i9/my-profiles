@@ -216,8 +216,8 @@ a {
   min-height: 78px;
   padding: 14px 14px 14px 82px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+  border: 1px solid rgba(255, 255, 255, 0.1); /* حد زجاجي رفيع */
+  background: rgba(255, 255, 255, 0.03) !important; /* شفافية خفيفة */
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   transition:
@@ -232,6 +232,13 @@ a {
   --hover-icon-bg: var(--brand);
   --hover-icon-fg: #fff;
   --hover-border: rgba(255,255,255,.14);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.3s ease, 
+                border-color 0.3s ease;
+  backdrop-filter: blur(12px) saturate(180%); /* تمويه الخلفية */
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .social-card:hover,
@@ -243,6 +250,7 @@ a {
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.30);
   outline: none;
   filter: saturate(1.03);
+  animation: glitch 0.1s ease;
 }
 
 .social-icon {
@@ -1282,18 +1290,19 @@ a {
   width: min(270px, calc(100vw - 24px));
   padding: 10px 11px 9px;
   border-radius: 16px;
-  background: linear-gradient(180deg, rgba(14, 19, 28, 0.92), rgba(9, 13, 20, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #f3f7fb;
-  cursor: grab;
-  user-select: none;
   touch-action: none;
   pointer-events: auto;
   opacity: 0.98;
-  transition: opacity 0.25s ease, width 0.25s ease, transform 0.25s ease, left 0.15s linear, top 0.15s linear;
+  transition: all 0.5s ease, width 0.25s ease,
+  transform 0.25s ease, left 0.15s linear, top 0.15s linear;
+  background: rgba(255, 255, 255, 0.03) ;
+  backdrop-filter: blur(12px) ;
+  border: 1px solid rgba(var(--accent-rgb), 0.3) ;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    user-select: none;
 }
 
 .ayah-float:active {
@@ -1598,6 +1607,11 @@ a {
   50% { transform: translateY(-3px); }
 }
 
+@keyframes rippleAnim {
+  0% { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; } /* كبّرنا الـ scale */
+}
+
 @media (min-width: 700px) {
   body {
     padding-left: 22px;
@@ -1678,4 +1692,187 @@ footer p {
     margin: 0;
     font-weight: bold;
     letter-spacing: 1px;
+}
+
+/* الحالة الابتدائية للعناصر: مخفية وصغيرة وتحت مكانها بشوي */
+.social-card {
+  opacity: 0;
+  transform: translateY(30px) scale(0.9);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* سر الـ Bounce هو الـ cubic-bezier */
+}
+
+/* الحالة لما يشتغل الانيميشن */
+.social-card.appear {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.social-card:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px) scale(1.02);  box-shadow: 0 10px 25px rgba(0, 242, 255, 0.2); /* استخدم اللون الـ accent تبعك */
+    border-color: var(--accent);
+}
+
+/* --- تأثيرات الإضاءة الملونة عند التحويم (Hover) --- */
+
+/* انستغرام - اللون الوردي/المحمر */
+.ig-card:hover { 
+    box-shadow: 0 10px 25px rgba(225, 48, 108, 0.4) !important;
+    border-color: #e1306c !important;
+}
+
+/* فيسبوك - اللون الأزرق */
+.fb-card:hover { 
+    box-shadow: 0 10px 25px rgba(24, 119, 242, 0.4) !important;
+    border-color: #1877f2 !important;
+}
+
+/* واتساب - اللون الأخضر */
+.wa-card:hover { 
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4) !important;
+    border-color: #25d366 !important;
+}
+
+/* تيك توك - اللون السماوي/النيون */
+.tt-card:hover { 
+    box-shadow: 0 10px 25px rgba(37, 244, 238, 0.4) !important;
+    border-color: #25f4ee !important;
+}
+
+/* تويتش - اللون البنفسجي */
+.twitch-card:hover { 
+    box-shadow: 0 10px 25px rgba(145, 70, 255, 0.4) !important;
+    border-color: #9146ff !important;
+}
+
+/* شطرنج Chess.com - اللون الأخضر العشبي */
+.chess-card:hover { 
+    box-shadow: 0 10px 25px rgba(129, 182, 76, 0.4) !important;
+    border-color: #81b64c !important;
+}
+
+/* بنترست - اللون الأحمر */
+.pinterest-card:hover { 
+    box-shadow: 0 10px 25px rgba(230, 0, 35, 0.4) !important;
+    border-color: #e60023 !important;
+}
+
+/* البطاقات الخاصة (VIP/Private) - لون ذهبي أو فخم */
+.vip-card:hover {
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3) !important;
+    border-color: #ffd700 !important;
+}
+.visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 20px;
+}
+.bar {
+  width: 4px;
+  height: 100%;
+  background: var(--accent);
+  animation: equalize 0.8s steps(5) infinite;
+  display: none; /* مخفي بالبداية */
+}
+/* شغل الانيميشن بس لما تكون الموسيقى شغالة */
+.playing .bar { display: block; }
+
+@keyframes equalize {
+  0% { height: 20%; }
+  50% { height: 100%; }
+  100% { height: 20%; }
+}
+/* تأخير لكل عمود عشان الحركة تطلع عشوائية */
+.bar:nth-child(2) { animation-delay: -0.4s; }
+.bar:nth-child(3) { animation-delay: -0.2s; }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.qr-container {
+    padding: 25px; border-radius: 20px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line);
+    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.qr-container img { border-radius: 10px; margin: 15px 0; border: 5px solid white; }
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.now-playing-bar {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--accent);
+    padding: 5px 0;
+    font-size: 0.85rem;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+}
+.ticker {
+    display: inline-block;
+    animation: marquee 15s linear infinite;
+}
+@keyframes marquee {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100%); }
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(-3px, -3px); }
+    60% { transform: translate(3px, 3px); }
+    80% { transform: translate(3px, -3px); }
+    100% { transform: translate(0); }
+}
+
+/* الحلقات حول الأفاتار */
+.avatar::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    animation: ringPulse 2s linear infinite;
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.avatar:hover::before { opacity: 1; }
+
+/* نقطة الحالة (Status Dot) */
+.status-dot {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    background: #22c55e;
+    border: 3px solid #0b0f16;
+    border-radius: 50%;
+    z-index: 11;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.ayah-float.meditation-mode {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1.2) !important;
+    width: 90% !important;
+    max-width: 400px;
+    background: rgba(11, 15, 22, 0.8) !important;
+    border: 1px solid var(--accent) !important;
+    box-shadow: 0 0 50px rgba(var(--accent-rgb), 0.2);
+    z-index: 9999;
+    padding: 30px !important;
+    text-align: center;
+}
+
+.ayah-float.meditation-mode .ayah-text {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: var(--accent);
 }
