@@ -169,6 +169,7 @@
     <footer class="footer">الفولو <em>ما بكهربك</em></footer>
 
   </main>
+
   <section class="music-sheet" id="musicSheet" aria-label="قائمة الموسيقى">
     <button class="sheet-close" id="closeMusicBtn" type="button" aria-label="إغلاق">×</button>
     <div class="visualizer">
@@ -301,16 +302,30 @@
 <footer>
     <p>جميع الحقوق غير محفوظة © 2026 | يرجى عدم الزرف ✋</p>
 </footer>
-<button id="shareBtn" class="music-fab" style="bottom: 100px;">
-    <i class="fa-solid fa-qrcode"></i>
+<button class="share-fab" id="sharePortalBtn" type="button">
+  <i class="fa-solid fa-share-nodes"></i>
 </button>
 
-<div id="qrModal" class="modal-overlay">
-    <div class="qr-container glass-card">
-        <h3>شارك بروفايلي</h3>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://omar-i9.github.io/my-profiles/" alt="QR Code">
-        <button id="closeQr">إغلاق</button>
+<div id="shareOverlay" class="share-overlay">
+  <div class="share-modal glass-card">
+    <button id="closeShare" class="close-share">&times;</button>
+    
+    <div class="share-header">
+      <div class="qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://omar-i9.github.io/my-profiles/&bgcolor=ffffff" alt="QR" class="main-qr">
+        <img src="profile.jpeg" alt="Logo" class="qr-logo">
+      </div>
+      <h3>بوابة المشاركة</h3>
+      <p>امسح الكود أو شارك الرابط</p>
     </div>
+
+    <div class="share-links-grid">
+      <a href="https://wa.me/?text=https://omar-i9.github.io/my-profiles/" target="_blank" class="share-item wa"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://omar-i9.github.io/my-profiles/" target="_blank" class="share-item fb"><i class="fa-brands fa-facebook"></i></a>
+      <button class="share-item copy-link" onclick="copySiteLink()"><i class="fa-solid fa-link"></i></button>
+    </div>
+  </div>
+</div>
 </div>
 </body>
 </html>
