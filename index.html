@@ -125,19 +125,19 @@
       </a>
 
 <a class="social-card ds-card"
-   href="main/Discord.html" 
-   target="_blank"
-   rel="noopener noreferrer"
+   href="javascript:void(0)"
+   id="openDiscordBtn"
    data-longcopy
    data-copy-text="gdmi_3">
    <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
    <div class="social-text">
      <strong>ديسكورد</strong>
      <span>Discord</span>
-     <p><sub>غالباً مش راح يفتح (الاسم : gdmi_3)</sub></p>
+     <p><sub>اضغط لفتح البطاقة داخل الموقع</sub></p>
    </div>
 </a>
-      <a class="social-card sc-card"
+
+<a class="social-card sc-card"
          href="https://www.snapchat.com/add/omar-gdmi"
          target="_blank"
          rel="noopener noreferrer"
@@ -402,5 +402,56 @@
         </button>
       </div>
   </div>
+
+  <div class="page-overlay" id="pageOverlay" aria-hidden="true">
+  <div class="page-overlay-panel">
+    <button class="page-close" id="closePageBtn" type="button" aria-label="إغلاق">×</button>
+    <iframe
+      id="pageFrame"
+      class="page-frame"
+      src=""
+      title="Discord Profile"
+      loading="lazy"
+    ></iframe>
+  </div>
+</div>
+
+<script>
+  const openDiscordBtn = document.getElementById('openDiscordBtn');
+  const pageOverlay = document.getElementById('pageOverlay');
+  const closePageBtn = document.getElementById('closePageBtn');
+  const pageFrame = document.getElementById('pageFrame');
+
+  function openDiscordPage() {
+    pageFrame.src = 'main/Discord.html';
+    pageOverlay.classList.add('show');
+    pageOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDiscordPage() {
+    pageOverlay.classList.remove('show');
+    pageOverlay.setAttribute('aria-hidden', 'true');
+    pageFrame.src = '';
+    document.body.style.overflow = '';
+  }
+
+  openDiscordBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    openDiscordPage();
+  });
+
+  closePageBtn.addEventListener('click', closeDiscordPage);
+
+  pageOverlay.addEventListener('click', (e) => {
+    if (e.target === pageOverlay) closeDiscordPage();
+  });
+
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'close-discord') {
+      closeDiscordPage();
+    }
+  });
+</script>
 </body>
 </html>
