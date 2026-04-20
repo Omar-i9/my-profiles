@@ -1993,4 +1993,149 @@ let clickTimer = null;
     }
   };
 });
+// --- Long press copy for any button you choose ---
+function attachLongPressCopy(selector = '[data-longcopy]', holdMs = 700) {
+  const items = document.querySelectorAll(selector);
+
+  items.forEach((el) => {
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+    let copied = false;
+
+    const clearHold = () => {
+      if (timer) clearTimeout(timer);
+      timer = null;
+    };
+
+    const getCopyText = () => {
+      return (
+        el.dataset.copyText ||
+        el.getAttribute('data-copy-text') ||
+        el.textContent.trim()
+      );
+    };
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+      copied = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      clearHold();
+
+      timer = setTimeout(async () => {
+        const textToCopy = getCopyText();
+        if (!textToCopy) return;
+
+        copied = true;
+
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          if (typeof showToast === 'function') {
+            showToast(`تم نسخ: ${textToCopy}`);
+          }
+          el.classList.add('copied');
+          setTimeout(() => el.classList.remove('copied'), 500);
+        } catch {
+          if (typeof showToast === 'function') {
+            showToast('تعذر النسخ');
+          }
+        }
+      }, holdMs);
+    });
+
+    el.addEventListener('pointermove', (e) => {
+      if (!timer) return;
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
+      if (dx > 10 || dy > 10) clearHold();
+    });
+
+    el.addEventListener('pointerup', () => {
+      clearHold();
+      if (copied) {
+        el.dataset.ignoreClick = '1';
+        setTimeout(() => {
+          el.dataset.ignoreClick = '0';
+        }, 120);
+      }
+    });
+
+    el.addEventListener('pointercancel', clearHold);
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  });
+}
+
+// فعّلها على أي زر/عنصر تضيف له هذا الـ attribute:
+// data-longcopy
+attachLongPressCopy('[data-longcopy]');
+
+function attachLongPressCopy(selector = '[data-longcopy]', holdMs = 700) {
+  const items = document.querySelectorAll(selector);
+
+  items.forEach((el) => {
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+
+    const clearHold = () => {
+      if (timer) clearTimeout(timer);
+      timer = null;
+    };
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+      startX = e.clientX;
+      startY = e.clientY;
+      clearHold();
+
+      timer = setTimeout(async () => {
+        const textToCopy = el.dataset.copyText || el.href || el.textContent.trim();
+        if (!textToCopy) return;
+
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          if (typeof showToast === 'function') {
+            showToast(`تم نسخ: ${textToCopy}`);
+          }
+          el.classList.add('copied');
+          setTimeout(() => el.classList.remove('copied'), 450);
+          el.dataset.ignoreClick = '1';
+          setTimeout(() => {
+            el.dataset.ignoreClick = '0';
+          }, 120);
+        } catch {
+          if (typeof showToast === 'function') {
+            showToast('تعذر النسخ');
+          }
+        }
+      }, holdMs);
+    });
+
+    el.addEventListener('pointermove', (e) => {
+      if (!timer) return;
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
+      if (dx > 10 || dy > 10) clearHold();
+    });
+
+    el.addEventListener('pointerup', clearHold);
+    el.addEventListener('pointercancel', clearHold);
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    el.addEventListener('click', (e) => {
+      if (el.dataset.ignoreClick === '1') {
+        e.preventDefault();
+        e.stopPropagation();
+        el.dataset.ignoreClick = '0';
+      }
+    });
+  });
+}
+
+attachLongPressCopy('[data-longcopy]');
 }); // <--- هاد القوس هو الأهم، هاد بيسكر الـ DOMContentLoaded اللي بأول الملف
