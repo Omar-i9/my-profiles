@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+  // ==========================================
+  // 1. المتغيرات وإعدادات التخزين (Storage)
+  // ==========================================
   const STORAGE = {
     lastIndex: "omarp_last_song_index",
     lastTime: "omarp_last_song_time",
@@ -12,14 +14,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ayahVisible: "omarp_ayah_visible",
     ayahX: "omarp_ayah_x",
     ayahY: "omarp_ayah_y",
+    device: "omarp_device_mode",
   };
 
   const AUDIO_BASE = "./audio/";
   const IMAGE_BASE = "./images/";
-  const FALLBACK_COVER = "./profile.jpeg";
+  const FALLBACK_COVER = "./photo/profile.jpeg";
+  const SHARE_URL = "https://omar-i9.github.io/my-profiles/";
+  const SHARE_TEXT = "هذا موقعي، تفضل الرابط:";
 
+  // ==========================================
+  // 2. ربط عناصر الـ DOM
+  // ==========================================
   const toast = document.getElementById("toast");
-
   const musicFab = document.getElementById("musicFab");
   const musicSheet = document.getElementById("musicSheet");
   const overlay = document.getElementById("overlay");
@@ -62,9 +69,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.querySelector(".app");
   const playlistBox = document.querySelector(".playlist-box");
   const musicControls = document.querySelector(".music-controls");
-  const musicTop = document.querySelector(".music-top");
   const sectionTitles = Array.from(document.querySelectorAll(".section-title"));
 
+  // عناصر المشاركة والتواصل
+  const moreSocialsBtn = document.getElementById("moreSocialsBtn");
+  const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
+  const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
+  const moreSocialsClose = document.getElementById("moreSocialsClose");
+
+  const sharePortalBtn = document.getElementById("sharePortalBtn");
+  const shareOverlay = document.getElementById("shareOverlay");
+  const closeShareBtn = document.getElementById("closeShare");
+  const shareQrImg = document.getElementById("shareQrImg");
+  const shareUrlInput = document.getElementById("shareUrlInput");
+  const copyShareBtn = document.getElementById("copyShareBtn");
+  const nativeShareBtn = document.getElementById("nativeShareBtn");
+  const desktopSheetBtn = document.getElementById("desktopSheetBtn");
+  const openLinkBtn = document.getElementById("openLinkBtn");
+  const fakeShareSheet = document.getElementById("fakeShareSheet");
+  const sheetBackdrop = fakeShareSheet?.querySelector(".sheet-backdrop");
+  const closeSheetBtn = document.getElementById("closeSheetBtn");
+  const waShare = document.getElementById("waShare");
+  const fbShare = document.getElementById("fbShare");
+  const tgShare = document.getElementById("tgShare");
+
+  // ==========================================
+  // 3. قواعد البيانات (الأغاني والآيات)
+  // ==========================================
   const songs = [
     { base: "wildflower", title: "wildflower", coverCandidates: ["png", "jpeg", "jpg"] },
     { base: "arctic-505", title: "Arctic Monkeys 505", coverCandidates: ["jpg", "jpeg", "png"] },
@@ -76,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { base: "no-one-noticed", title: "The Marías - No One Noticed - Minimal Sounds", coverCandidates: ["jpg", "jpeg", "png"] },
     { base: "tv-girl", title: "TV Girl - Cigarettes out the Window", coverCandidates: ["jpg", "jpeg", "png"] },
     { base: "درب المهالك", title: "درب المهالك", coverCandidates: ["jpg", "jpeg", "png"] },
-    { base: "كلاش - نصيحة مشفق", title: "كلاش - نصيحة مشفق", coverCandidates: ["jpg", "jpeg", "png"] }
+    { base: "كلاش - نصيحة مشفق", title: "كلاش - نصيحة مشفق", coverCandidates: ["jpg", "jpeg", "png"] },
   ].map((song, index) => ({
     ...song,
     index,
@@ -85,273 +116,55 @@ document.addEventListener("DOMContentLoaded", () => {
   }));
 
   const ayahs = [
-    {
-      num: 1,
-      text: "﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾",
-      ref: "[الزمر: 53]",
-      note: "عن عدم اليأس.",
-      detail: "هذه الآية تفتح باب الرجاء مهما كان الذنب أو الثقل أو الضعف. معناها أن رحمة الله أوسع من الحالة التي يمر بها الإنسان، وأن الانكسار ليس نهاية الطريق."
-    },
-    {
-      num: 2,
-      text: "﴿قُلْ إِن كُنتُمْ تُحِبُّونَ اللَّهَ فَاتَّبِعُونِي يُحْبِبْكُمُ اللَّهُ﴾",
-      ref: "[آل عمران: 31]",
-      note: "المحبة لها أثر وسلوك.",
-      detail: "المعنى هنا أن الحب الصادق لا يبقى مجرد كلام، بل يظهر في الاتباع والعمل. الآية تربط بين الشعور الداخلي والسلوك الظاهر، وتبين أن المحبة الحقيقية لها علامة واضحة."
-    },
-    {
-      num: 3,
-      text: "﴿إِنَّمَا أَشْكُو بَثِّي وَحُزْنِي إِلَى اللَّهِ﴾",
-      ref: "[يوسف: 86]",
-      note: "للشكوى الصامتة.",
-      detail: "هذه من أقرب الآيات لمن يحمل همًا داخليًا لا يشرحه للناس. فيها صدق وهدوء، وتصور أن القلب حين يضيق يجد مخرجًا في البوح إلى الله وحده."
-    },
-    {
-      num: 4,
-      text: "﴿وَهُوَ الَّذِي يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِ﴾",
-      ref: "[الشورى: 25]",
-      note: "الأمل بعد الخطأ.",
-      detail: "الآية تؤكد أن الرجوع ليس خسارة، بل بداية. الباب مفتوح، والرحمة سابقة، والإنسان لا يُغلق عليه الماضي إذا صدق في الرجوع."
-    },
-    {
-      num: 5,
-      text: "﴿وَيَعْلَمُ مَا فِي الصُّدُورِ﴾",
-      ref: "[آل عمران: 119]",
-      note: "ما في القلب معلوم.",
-      detail: "هذا المعنى يخفف ثقل الكتمان؛ لأن ما لا يُقال لا يضيع، وما في الصدر معلوم عند الله قبل أن يُنطق به."
-    },
-    {
-      num: 6,
-      text: "﴿يَعْلَمُ خَائِنَةَ الْأَعْيُنِ وَمَا تُخْفِي الصُّدُورُ﴾",
-      ref: "[غافر: 19]",
-      note: "حتى الخاطر الصغير.",
-      detail: "الآية دقيقة جدًا في تصوير علم الله. حتى النظرة العابرة، وحتى ما يُخفى في الداخل، ليس خارجًا عن العلم والإحاطة."
-    },
-    {
-      num: 7,
-      text: "﴿وَابْيَضَّتْ عَيْنَاهُ مِنَ الْحُزْنِ﴾",
-      ref: "[يوسف: 84]",
-      note: "شوق وافتقاد.",
-      detail: "فيها وصف مؤلم لكن عميق للحزن الطويل. ليست مجرد دمعة عابرة، بل صورة لوجع ممتد يترك أثره في الجسد والروح."
-    },
-    {
-      num: 8,
-      text: "﴿إِنِّي لَأَجِدُ رِيحَ يُوسُفَ﴾",
-      ref: "[يوسف: 94]",
-      note: "إحساس قريب من الحنين.",
-      detail: "الآية تلمّح إلى شوقٍ شديد يسبق الرؤية. كأن القلب يلتقط الأثر قبل العين، وهذا من أجمل صور الحنين في القرآن."
-    },
-    {
-      num: 9,
-      text: "﴿وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ﴾",
-      ref: "[ق: 16]",
-      note: "قرب وأمان.",
-      detail: "المعنى هنا عظيم: القرب الإلهي ليس معنويًا فقط، بل إحاطة وعلم ورحمة، وهذا يبعث الطمأنينة في أضعف اللحظات."
-    },
-    {
-      num: 10,
-      text: "﴿إِنَّ رَبِّي قَرِيبٌ مُّجِيبٌ﴾",
-      ref: "[هود: 61]",
-      note: "قرب يطمئن.",
-      detail: "هذه الجملة القصيرة تحمل معنى واسعًا جدًا: لا بعد مع الدعاء، ولا ضياع مع النداء، ولا خيبة مع صدق الطلب."
-    },
-    {
-      num: 11,
-      text: "﴿رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي﴾",
-      ref: "[القصص: 16]",
-      note: "ندم وتوبة.",
-      detail: "فيها اعتراف صادق، ومن الاعتراف يبدأ التطهر. الآية قصيرة لكن فيها معنى التواضع والرجوع الكامل."
-    },
-    {
-      num: 12,
-      text: "﴿ثُمَّ تَابَ عَلَيْهِمْ لِيَتُوبُوا﴾",
-      ref: "[التوبة: 118]",
-      note: "التوفيق قبل القرار.",
-      detail: "من أعمق المعاني: أن التوبة نفسها توفيق من الله. أي أن الرجوع ليس مجرد قوة شخصية، بل رحمة وإعانة قبل كل شيء."
-    },
-    {
-      num: 13,
-      text: "﴿سَيَجْعَلُ لَهُمُ الرَّحْمَٰنُ وُدًّا﴾",
-      ref: "[مريم: 96]",
-      note: "مودة من الله.",
-      detail: "المعنى أن المحبة قد تُوضع في القلوب بلا سبب ظاهر، وأن القبول الحقيقي من الله، لا من المظاهر."
-    },
-    {
-      num: 14,
-      text: "﴿وَأَلْقَيْتُ عَلَيْكَ مَحَبَّةً مِّنِّي﴾",
-      ref: "[طه: 39]",
-      note: "حب يزرعه الله.",
-      detail: "هذه الآية لطيفة جدًا في معناها؛ لأن المحبة هنا ليست مكتسبة بالظاهر، بل موهوبة ومُلقاة من عند الله."
-    },
-    {
-      num: 15,
-      text: "﴿فَصَبْرٌ جَمِيلٌ﴾",
-      ref: "[يوسف: 18]",
-      note: "صبر هادئ.",
-      detail: "الصبر الجميل هو الصبر الذي لا ينهار صاحبه فيه ولا يجزع، بل يحتمل الألم دون شكوى للناس."
-    },
-    {
-      num: 16,
-      text: "﴿وَلَا تَهِنُوا وَلَا تَحْزَنُوا﴾",
-      ref: "[آل عمران: 139]",
-      note: "رفع للهمّة.",
-      detail: "هذه الآية تأتي كرفع مباشر للروح، وتمنح القلب دفعة من الثبات بعد الضعف."
-    },
-    {
-      num: 17,
-      text: "﴿وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ﴾",
-      ref: "[النحل: 127]",
-      note: "الصبر ليس وحدك.",
-      detail: "هذه الآية تربط الصبر بالله مباشرة، وكأنها تقول إن الثبات الحقيقي لا يأتي من قوة الإنسان وحدها، بل من معونة الله. فيها معنى هادئ وعميق جدًا لمن يمر بضيق ويحتاج سندًا داخليًا."
-    },
-    {
-      num: 18,
-      text: "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾",
-      ref: "[البقرة: 153]",
-      note: "معية ترفع القلب.",
-      detail: "هذه من أقوى الآيات في معنى التحمل؛ لأنها لا تعد بالصبر فقط، بل تبشر بمعية الله للصابر. والمعنى أن الألم لا يكون فارغًا إذا صاحبه إيمان واحتساب."
-    },
-    {
-      num: 19,
-      text: "﴿وَبَشِّرِ الصَّابِرِينَ﴾",
-      ref: "[البقرة: 155]",
-      note: "بشارة وسط الامتحان.",
-      detail: "الآية قصيرة لكن أثرها كبير، لأنها تجعل الصبر نفسه طريقًا للبشارة. وفيها إشارة أن الابتلاء ليس مجرد وجع، بل قد يكون بابًا لخير كبير لا يُرى في لحظته."
-    },
-    {
-      num: 20,
-      text: "﴿رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا﴾",
-      ref: "[البقرة: 250]",
-      note: "طلب الصبر من الله.",
-      detail: "فيها دعاء نادر وقوي جدًا؛ لأنهم لم يطلبوا مجرد صبر عادي، بل صبًا يغمر القلب بالكامل. وهذا يجعلها مناسبة جدًا وقت الضعف أو الخوف أو الضغط."
-    },
-    {
-      num: 21,
-      text: "﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾",
-      ref: "[الشرح: 5]",
-      note: "بعد الضيق انفراج.",
-      detail: "هذه من أشهر آيات الرجاء، ومعناها أن الشدة لا تبقى مغلقة إلى الأبد. فيها وعد واضح بأن مع ثقل اللحظة يوجد باب آخر للفرج، حتى لو تأخر ظهوره."
-    },
-    {
-      num: 22,
-      text: "﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾",
-      ref: "[الرعد: 28]",
-      note: "طمأنينة القلب.",
-      detail: "هذه الآية تمسك بجذر الراحة الداخلية: ليس كل ما يهدئ الإنسان يأتي من الخارج. أحيانًا القلب لا يهدأ إلا حين يعود لذكر الله."
-    },
-    {
-      num: 23,
-      text: "﴿رَبَّنَا لَا تُزِغْ قُلُوبَنَا﴾",
-      ref: "[آل عمران: 8]",
-      note: "ثبات القلب.",
-      detail: "فيها خوف جميل من الانحراف، وفيها أدب الدعاء أيضًا؛ كأن الإنسان يعترف أنه ضعيف ويطلب الثبات. وهي مناسبة جدًا لمن يخاف تقلب قلبه."
-    },
-    {
-      num: 24,
-      text: "﴿رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ﴾",
-      ref: "[الفرقان: 74]",
-      note: "دعاء الجمال الأسري.",
-      detail: "هذه الآية تحمل معنى لطيفًا جدًا؛ لأن قرة العين ليست مجرد وجود الناس حولك، بل أن يكونوا سببًا للراحة والسكينة والخير في القلب."
-    },
-    {
-      num: 25,
-      text: "﴿رَبِّ اشْرَحْ لِي صَدْرِي﴾",
-      ref: "[طه: 25]",
-      note: "سعة صدر.",
-      detail: "دعاء عظيم لمن يضيق صدره أو يثقل عليه الأمر. فيه طلب واضح أن يفتح الله القلب للفهم والتحمل والهدوء، ولذلك يلامس كثيرًا من الناس."
-    },
-    {
-      num: 26,
-      text: "﴿وَيَشْفِ صُدُورَ قَوْمٍ مُّؤْمِنِينَ﴾",
-      ref: "[التوبة: 14]",
-      note: "شفاء الداخل.",
-      detail: "الآية لا تتكلم عن الألم الظاهر فقط، بل عن الصدر نفسه. وهذا يجعلها مناسبة جدًا لمن يشعر بثقل داخلي لا يراه الناس."
-    },
-    {
-      num: 27,
-      text: "﴿إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ﴾",
-      ref: "[الشعراء: 62]",
-      note: "ثقة وسط الخوف.",
-      detail: "هذه جملة من القوة والثبات، وفيها يقين بأن الحيرة لا تعني الضياع. معناها أن وجود الله مع العبد يجعل الطريق موجودًا ولو لم يره بعد."
-    },
-    {
-      num: 28,
-      text: "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾",
-      ref: "[التوبة: 40]",
-      note: "سند وقت الخوف.",
-      detail: "من أقوى الآيات في التطمين؛ لأنها تجمع بين نهي الحزن وذكر المعية. فيها رسالة مباشرة أن الموقف مهما اشتد، فالله ليس غائبًا."
-    },
-    {
-      num: 29,
-      text: "﴿إِنِّي لَذَاهِبٌ إِلَىٰ رَبِّي سَيَهْدِينِ﴾",
-      ref: "[الصافات: 99]",
-      note: "اتجاه القلب.",
-      detail: "فيها معنى جميل جدًا عن التوجه إلى الله، وكأن الرجوع إليه هو بداية الهداية لا نهايتها. مناسبة جدًا لمعنى العودة والبحث عن الطريق."
-    },
-    {
-      num: 30,
-      text: "﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾",
-      ref: "[طه: 114]",
-      note: "دعاء الزيادة.",
-      detail: "هذه آية رقيقة لكنها عظيمة؛ لأنها تعلم الإنسان ألا يكتفي. وهي مناسبة جدًا لمن يحب التعلم أو يشعر أنه ما زال يحتاج فهمًا أوسع."
-    },
-    {
-      num: 31,
-      text: "﴿وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ﴾",
-      ref: "[الحديد: 2]",
-      note: "قدرة لا يعجزها شيء.",
-      detail: "تعطي القلب اتساعًا كبيرًا؛ لأن كل ما يبدو مستحيلًا عند الإنسان ليس مستحيلًا عند الله. هذه الآية تفتح باب الرجاء في أصعب الحالات."
-    },
-    {
-      num: 32,
-      text: "﴿إِنَّ رَبِّي سَمِيعُ الدُّعَاءِ﴾",
-      ref: "[إبراهيم: 39]",
-      note: "الدعاء لا يضيع.",
-      detail: "فيها طمأنينة مباشرة بأن الصوت الذي يخرج من القلب يُسمع، حتى لو لم يسمعه أحد من الناس. مناسبة جدًا لمن يدعو كثيرًا ويحتاج يقينًا."
-    },
-    {
-      num: 33,
-      text: "﴿فَإِنِّي قَرِيبٌ﴾",
-      ref: "[البقرة: 186]",
-      note: "قرب يختصر المسافة.",
-      detail: "آية قصيرة جدًا لكنها من أعمق آيات الطمأنينة. فيها قرب مباشر من الله للعبد حين يدعو، وهذا يجعلها من أجمل الآيات للنوافذ الهادئة."
-    },
-    {
-      num: 34,
-      text: "﴿إِنَّ رَبِّي لَطِيفٌ لِّمَا يَشَاءُ﴾",
-      ref: "[يوسف: 100]",
-      note: "اللطف في التدبير.",
-      detail: "هذه الآية تشرح أن ما يبدو معقدًا قد يكون فيه لطف خفي من الله. معناها جميل جدًا لمن ينظر إلى ما وراء الأحداث ولا يحكم بسرعة."
-    },
-    {
-      num: 35,
-      text: "﴿رَبِّ لَا تَذَرْنِي فَرْدًا﴾",
-      ref: "[الأنبياء: 89]",
-      note: "دعاء الوحدة.",
-      detail: "فيها احتياج إنساني واضح وصادق. ليست مجرد طلب ولد، بل طلب ألا يبقى الإنسان وحيدًا بلا سند أو امتداد أو أنس."
-    },
-    {
-      num: 36,
-      text: "﴿وَفَوَّضْتُ أَمْرِي إِلَى اللَّهِ﴾",
-      ref: "[غافر: 44]",
-      note: "تفويض وراحة.",
-      detail: "هذه من أهدأ آيات التسليم؛ لأنها تعني أن الإنسان توقف عن حمل ما لا يقدر عليه وحده، وأسلم أمره لمن يدبر أفضل منه."
-    }
+    { num: 1, text: "﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾", ref: "[الزمر: 53]", note: "عن عدم اليأس.", detail: "هذه الآية تفتح باب الرجاء مهما كان الذنب أو الثقل أو الضعف. معناها أن رحمة الله أوسع من الحالة التي يمر بها الإنسان، وأن الانكسار ليس نهاية الطريق." },
+    { num: 2, text: "﴿قُلْ إِن كُنتُمْ تُحِبُّونَ اللَّهَ فَاتَّبِعُونِي يُحْبِبْكُمُ اللَّهُ﴾", ref: "[آل عمران: 31]", note: "المحبة لها أثر وسلوك.", detail: "المعنى هنا أن الحب الصادق لا يبقى مجرد كلام، بل يظهر في الاتباع والعمل. الآية تربط بين الشعور الداخلي والسلوك الظاهر، وتبين أن المحبة الحقيقية لها علامة واضحة." },
+    { num: 3, text: "﴿إِنَّمَا أَشْكُو بَثِّي وَحُزْنِي إِلَى اللَّهِ﴾", ref: "[يوسف: 86]", note: "للشكوى الصامتة.", detail: "هذه من أقرب الآيات لمن يحمل همًا داخليًا لا يشرحه للناس. فيها صدق وهدوء، وتصور أن القلب حين يضيق يجد مخرجًا في البوح إلى الله وحده." },
+    { num: 4, text: "﴿وَهُوَ الَّذِي يَقْبَلُ التَّوْبَةَ عَنْ عِبَادِهِ﴾", ref: "[الشورى: 25]", note: "الأمل بعد الخطأ.", detail: "الآية تؤكد أن الرجوع ليس خسارة، بل بداية. الباب مفتوح، والرحمة سابقة، والإنسان لا يُغلق عليه الماضي إذا صدق في الرجوع." },
+    { num: 5, text: "﴿وَيَعْلَمُ مَا فِي الصُّدُورِ﴾", ref: "[آل عمران: 119]", note: "ما في القلب معلوم.", detail: "هذا المعنى يخفف ثقل الكتمان؛ لأن ما لا يُقال لا يضيع، وما في الصدر معلوم عند الله قبل أن يُنطق به." },
+    { num: 6, text: "﴿يَعْلَمُ خَائِنَةَ الْأَعْيُنِ وَمَا تُخْفِي الصُّدُورُ﴾", ref: "[غافر: 19]", note: "حتى الخاطر الصغير.", detail: "الآية دقيقة جدًا في تصوير علم الله. حتى النظرة العابرة، وحتى ما يُخفى في الداخل، ليس خارجًا عن العلم والإحاطة." },
+    { num: 7, text: "﴿وَابْيَضَّتْ عَيْنَاهُ مِنَ الْحُزْنِ﴾", ref: "[يوسف: 84]", note: "شوق وافتقاد.", detail: "فيها وصف مؤلم لكن عميق للحزن الطويل. ليست مجرد دمعة عابرة، بل صورة لوجع ممتد يترك أثره في الجسد والروح." },
+    { num: 8, text: "﴿إِنِّي لَأَجِدُ رِيحَ يُوسُفَ﴾", ref: "[يوسف: 94]", note: "إحساس قريب من الحنين.", detail: "الآية تلمّح إلى شوقٍ شديد يسبق الرؤية. كأن القلب يلتقط الأثر قبل العين، وهذا من أجمل صور الحنين في القرآن." },
+    { num: 9, text: "﴿وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ﴾", ref: "[ق: 16]", note: "قرب وأمان.", detail: "المعنى هنا عظيم: القرب الإلهي ليس معنويًا فقط، بل إحاطة وعلم ورحمة، وهذا يبعث الطمأنينة في أضعف اللحظات." },
+    { num: 10, text: "﴿إِنَّ رَبِّي قَرِيبٌ مُّجِيبٌ﴾", ref: "[هود: 61]", note: "قرب يطمئن.", detail: "هذه الجملة القصيرة تحمل معنى واسعًا جدًا: لا بعد مع الدعاء، ولا ضياع مع النداء، ولا خيبة مع صدق الطلب." },
+    { num: 11, text: "﴿رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي﴾", ref: "[القصص: 16]", note: "ندم وتوبة.", detail: "فيها اعتراف صادق، ومن الاعتراف يبدأ التطهر. الآية قصيرة لكن فيها معنى التواضع والرجوع الكامل." },
+    { num: 12, text: "﴿ثُمَّ تَابَ عَلَيْهِمْ لِيَتُوبُوا﴾", ref: "[التوبة: 118]", note: "التوفيق قبل القرار.", detail: "من أعمق المعاني: أن التوبة نفسها توفيق من الله. أي أن الرجوع ليس مجرد قوة شخصية، بل رحمة وإعانة قبل كل شيء." },
+    { num: 13, text: "﴿سَيَجْعَلُ لَهُمُ الرَّحْمَٰنُ وُدًّا﴾", ref: "[مريم: 96]", note: "مودة من الله.", detail: "المعنى أن المحبة قد تُوضع في القلوب بلا سبب ظاهر، وأن القبول الحقيقي من الله، لا من المظاهر." },
+    { num: 14, text: "﴿وَأَلْقَيْتُ عَلَيْكَ مَحَبَّةً مِّنِّي﴾", ref: "[طه: 39]", note: "حب يزرعه الله.", detail: "هذه الآية لطيفة جدًا في معناها؛ لأن المحبة هنا ليست مكتسبة بالظاهر، بل موهوبة ومُلقاة من عند الله." },
+    { num: 15, text: "﴿فَصَبْرٌ جَمِيلٌ﴾", ref: "[يوسف: 18]", note: "صبر هادئ.", detail: "الصبر الجميل هو الصبر الذي لا ينهار صاحبه فيه ولا يجزع، بل يحتمل الألم دون شكوى للناس." },
+    { num: 16, text: "﴿وَلَا تَهِنُوا وَلَا تَحْزَنُوا﴾", ref: "[آل عمران: 139]", note: "رفع للهمّة.", detail: "هذه الآية تأتي كرفع مباشر للروح، وتمنح القلب دفعة من الثبات بعد الضعف." },
+    { num: 17, text: "﴿وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ﴾", ref: "[النحل: 127]", note: "الصبر ليس وحدك.", detail: "هذه الآية تربط الصبر بالله مباشرة، وكأنها تقول إن الثبات الحقيقي لا يأتي من قوة الإنسان وحدها، بل من معونة الله. فيها معنى هادئ وعميق جدًا لمن يمر بضيق ويحتاج سندًا داخليًا." },
+    { num: 18, text: "﴿إِنَّ اللَّهَ مَعَ الصَّابِرِينَ﴾", ref: "[البقرة: 153]", note: "معية ترفع القلب.", detail: "هذه من أقوى الآيات في معنى التحمل؛ لأنها لا تعد بالصبر فقط، بل تبشر بمعية الله للصابر. والمعنى أن الألم لا يكون فارغًا إذا صاحبه إيمان واحتساب." },
+    { num: 19, text: "﴿وَبَشِّرِ الصَّابِرِينَ﴾", ref: "[البقرة: 155]", note: "بشارة وسط الامتحان.", detail: "الآية قصيرة لكن أثرها كبير، لأنها تجعل الصبر نفسه طريقًا للبشارة. وفيها إشارة أن الابتلاء ليس مجرد وجع، بل قد يكون بابًا لخير كبير لا يُرى في لحظته." },
+    { num: 20, text: "﴿رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا﴾", ref: "[البقرة: 250]", note: "طلب الصبر من الله.", detail: "فيها دعاء نادر وقوي جدًا؛ لأنهم لم يطلبوا مجرد صبر عادي، بل صبًا يغمر القلب بالكامل. وهذا يجعلها مناسبة جدًا وقت الضعف أو الخوف أو الضغط." },
+    { num: 21, text: "﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾", ref: "[الشرح: 5]", note: "بعد الضيق انفراج.", detail: "هذه من أشهر آيات الرجاء، ومعناها أن الشدة لا تبقى مغلقة إلى الأبد. فيها وعد واضح بأن مع ثقل اللحظة يوجد باب آخر للفرج، حتى لو تأخر ظهوره." },
+    { num: 22, text: "﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾", ref: "[الرعد: 28]", note: "طمأنينة القلب.", detail: "هذه الآية تمسك بجذر الراحة الداخلية: ليس كل ما يهدئ الإنسان يأتي من الخارج. أحيانًا القلب لا يهدأ إلا حين يعود لذكر الله." },
+    { num: 23, text: "﴿رَبَّنَا لَا تُزِغْ قُلُوبَنَا﴾", ref: "[آل عمران: 8]", note: "ثبات القلب.", detail: "فيها خوف جميل من الانحراف، وفيها أدب الدعاء أيضًا؛ كأن الإنسان يعترف أنه ضعيف ويطلب الثبات. وهي مناسبة جدًا لمن يخاف تقلب قلبه." },
+    { num: 24, text: "﴿رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ﴾", ref: "[الفرقان: 74]", note: "دعاء الجمال الأسري.", detail: "هذه الآية تحمل معنى لطيفًا جدًا؛ لأن قرة العين ليست مجرد وجود الناس حولك، بل أن يكونوا سببًا للراحة والسكينة والخير في القلب." },
+    { num: 25, text: "﴿رَبِّ اشْرَحْ لِي صَدْرِي﴾", ref: "[طه: 25]", note: "سعة صدر.", detail: "دعاء عظيم لمن يضيق صدره أو يثقل عليه الأمر. فيه طلب واضح أن يفتح الله القلب للفهم والتحمل والهدوء، ولذلك يلامس كثيرًا من الناس." },
+    { num: 26, text: "﴿وَيَشْفِ صُدُورَ قَوْمٍ مُّؤْمِنِينَ﴾", ref: "[التوبة: 14]", note: "شفاء الداخل.", detail: "الآية لا تتكلم عن الألم الظاهر فقط، بل عن الصدر نفسه. وهذا يجعلها مناسبة جدًا لمن يشعر بثقل داخلي لا يراه الناس." },
+    { num: 27, text: "﴿إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ﴾", ref: "[الشعراء: 62]", note: "ثقة وسط الخوف.", detail: "هذه جملة من القوة والثبات، وفيها يقين بأن الحيرة لا تعني الضياع. معناها أن وجود الله مع العبد يجعل الطريق موجودًا ولو لم يره بعد." },
+    { num: 28, text: "﴿لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا﴾", ref: "[التوبة: 40]", note: "سند وقت الخوف.", detail: "من أقوى الآيات في التطمين؛ لأنها تجمع بين نهي الحزن وذكر المعية. فيها رسالة مباشرة أن الموقف مهما اشتد، فالله ليس غائبًا." },
+    { num: 29, text: "﴿إِنِّي لَذَاهِبٌ إِلَىٰ رَبِّي سَيَهْدِينِ﴾", ref: "[الصافات: 99]", note: "اتجاه القلب.", detail: "فيها معنى جميل جدًا عن التوجه إلى الله، وكأن الرجوع إليه هو بداية الهداية لا نهايتها. مناسبة جدًا لمعنى العودة والبحث عن الطريق." },
+    { num: 30, text: "﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾", ref: "[طه: 114]", note: "دعاء الزيادة.", detail: "هذه آية رقيقة لكنها عظيمة؛ لأنها تعلم الإنسان ألا يكتفي. وهي مناسبة جدًا لمن يحب التعلم أو يشعر أنه ما زال يحتاج فهمًا أوسع." },
+    { num: 31, text: "﴿وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ﴾", ref: "[الحديد: 2]", note: "قدرة لا يعجزها شيء.", detail: "تعطي القلب اتساعًا كبيرًا؛ لأن كل ما يبدو مستحيلًا عند الإنسان ليس مستحيلًا عند الله. هذه الآية تفتح باب الرجاء في أصعب الحالات." },
+    { num: 32, text: "﴿إِنَّ رَبِّي سَمِيعُ الدُّعَاءِ﴾", ref: "[إبراهيم: 39]", note: "الدعاء لا يضيع.", detail: "فيها طمأنينة مباشرة بأن الصوت الذي يخرج من القلب يُسمع، حتى لو لم يسمعه أحد من الناس. مناسبة جدًا لمن يدعو كثيرًا ويحتاج يقينًا." },
+    { num: 33, text: "﴿فَإِنِّي قَرِيبٌ﴾", ref: "[البقرة: 186]", note: "قرب يختصر المسافة.", detail: "آية قصيرة جدًا لكنها من أعمق آيات الطمأنينة. فيها قرب مباشر من الله للعبد حين يدعو، وهذا يجعلها من أجمل الآيات للنوافذ الهادئة." },
+    { num: 34, text: "﴿إِنَّ رَبِّي لَطِيفٌ لِّمَا يَشَاءُ﴾", ref: "[يوسف: 100]", note: "اللطف في التدبير.", detail: "هذه الآية تشرح أن ما يبدو معقدًا قد يكون فيه لطف خفي من الله. معناها جميل جدًا لمن ينظر إلى ما وراء الأحداث ولا يحكم بسرعة." },
+    { num: 35, text: "﴿رَبِّ لَا تَذَرْنِي فَرْدًا﴾", ref: "[الأنبياء: 89]", note: "دعاء الوحدة.", detail: "فيها احتياج إنساني واضح وصادق. ليست مجرد طلب ولد، بل طلب ألا يبقى الإنسان وحيدًا بلا سند أو امتداد أو أنس." },
+    { num: 36, text: "﴿وَفَوَّضْتُ أَمْرِي إِلَى اللَّهِ﴾", ref: "[غافر: 44]", note: "تفويض وراحة.", detail: "هذه من أهدأ آيات التسليم؛ لأنها تعني أن الإنسان توقف عن حمل ما لا يقدر عليه وحده، وأسلم أمره لمن يدبر أفضل منه." },
   ];
 
+  // ==========================================
+  // 4. حالة التطبيق (State)
+  // ==========================================
   let currentSongIndex = clamp(getNumber(STORAGE.lastIndex, 0), 0, songs.length - 1);
   let currentTimeRestore = Math.max(0, getNumber(STORAGE.lastTime, 0));
-  let saveResumeTime = currentTimeRestore;
-  let wasPlayingRestore = getBoolean(STORAGE.wasPlaying, false);
-  let pendingResume = false;
   let shuffleEnabled = getBoolean(STORAGE.shuffle, false);
-  let repeatMode = getString(STORAGE.repeat, "off"); // off | one | all
+  let repeatMode = getString(STORAGE.repeat, "off");
   let searchTerm = getString(STORAGE.search, "").trim().toLowerCase();
   let favorites = new Set(getArray(STORAGE.favorites, []));
   let visibleIndexes = [];
-  let lastSavedTick = 0;
   let loadedResumeApplied = false;
-
   let isSeeking = false;
   let hideTooltipTimer = null;
   let toastTimer = null;
@@ -362,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let ayahOrder = [];
   let ayahCursor = 0;
   let ayahVisible = getBoolean(STORAGE.ayahVisible, true);
-  let ayahDragState = {
+  const ayahDragState = {
     active: false,
     started: false,
     offsetX: 0,
@@ -373,16 +186,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let trackMenu = null;
   let menuIndex = -1;
+  const playbackHistory = [];
+  let pendingResume = false;
 
-  ensureExtraStyles();
-  decorateSectionTitles();
-  ensureDivider();
-  ensureToolbar();
-  ensureNowPlayingCard();
-  ensureAyahToggleButton();
-  ensureTrackMenu();
-  restoreAyahVisibility();
+  // Audio Context للنبض (Pulse)
+  let audioCtx, analyzer, dataArray;
+  let audioContextInitialized = false;
 
+  // ==========================================
+  // 5. دوال مساعدة (Helpers)
+  // ==========================================
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
@@ -418,6 +231,36 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(key, typeof value === "string" ? value : JSON.stringify(value));
   }
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      const temp = document.createElement("textarea");
+      temp.value = text;
+      temp.setAttribute("readonly", "");
+      temp.style.position = "fixed";
+      temp.style.opacity = "0";
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      temp.remove();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function showToast(message) {
     if (!toast) return;
     toast.textContent = message;
@@ -428,20 +271,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function copyText(text) {
     if (!text) return;
-    navigator.clipboard.writeText(text).then(
-      () => showToast("تم النسخ"),
-      () => {
-        const temp = document.createElement("textarea");
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        temp.remove();
-        showToast("تم النسخ");
-      }
-    );
+    copyToClipboard(text).then((ok) => showToast(ok ? "تم النسخ" : "تعذر النسخ"));
   }
 
+  // ==========================================
+  // 6. المشغل والأغاني (Music Player Core)
+  // ==========================================
   function baseTrackSearch(song) {
     return `${song.title} ${song.fileLabel} ${song.base}`.toLowerCase();
   }
@@ -456,13 +291,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function savePlaybackSnapshot() {
     setStored(STORAGE.lastIndex, String(currentSongIndex));
-    setStored(STORAGE.lastTime, String(Math.max(0, audio.currentTime || 0)));
-    setStored(STORAGE.volume, String(Math.round((audio.volume || 0) * 100)));
-    setStored(STORAGE.wasPlaying, String(!audio.paused));
+    setStored(STORAGE.lastTime, String(Math.max(0, audio?.currentTime || 0)));
+    setStored(STORAGE.volume, String(Math.round((audio?.volume || 0) * 100)));
+    setStored(STORAGE.wasPlaying, String(!audio?.paused));
     setStored(STORAGE.shuffle, String(shuffleEnabled));
     setStored(STORAGE.repeat, repeatMode);
     setStored(STORAGE.search, searchTerm);
     setStored(STORAGE.ayahVisible, String(ayahVisible));
+    setStored(STORAGE.device, document.body?.dataset?.device || detectDeviceMode());
+
     if (ayahFloat) {
       const rect = ayahFloat.getBoundingClientRect();
       setStored(STORAGE.ayahX, String(Math.round(rect.left)));
@@ -494,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const song = songs[currentSongIndex];
     nowPlayingTitle.textContent = song ? song.title : "اسم الأغنية";
-    nowPlayingSub.textContent = audio.paused ? "متوقف" : "يعمل الآن";
+    nowPlayingSub.textContent = audio?.paused ? "متوقف" : "يعمل الآن";
     nowPlayingIndex.textContent = `${currentSongIndex + 1} / ${songs.length}`;
   }
 
@@ -523,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateProgress() {
-    if (!audio.duration) return;
+    if (!audio?.duration) return;
     const pct = (audio.currentTime / audio.duration) * 100;
     if (progressBar) progressBar.style.width = `${pct}%`;
     if (!isSeeking && seekBar) seekBar.value = String(pct);
@@ -532,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateSeekTooltipFromValue(value) {
-    if (!audio.duration || !seekTooltip || !seekWrap) return;
+    if (!audio?.duration || !seekTooltip || !seekWrap) return;
     const ratio = clamp(Number(value), 0, 100) / 100;
     const time = ratio * audio.duration;
     seekTooltip.textContent = formatTime(time);
@@ -567,9 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getCoverCandidates(song) {
-    const exts = Array.isArray(song.coverCandidates) && song.coverCandidates.length
-      ? song.coverCandidates
-      : ["jpg", "jpeg", "png"];
+    const exts = Array.isArray(song.coverCandidates) && song.coverCandidates.length ? song.coverCandidates : ["jpg", "jpeg", "png"];
     const candidates = exts.map((ext) => `${IMAGE_BASE}${encodeURIComponent(song.base)}.${ext}`);
     candidates.push(FALLBACK_COVER);
     return candidates;
@@ -638,17 +473,59 @@ document.addEventListener("DOMContentLoaded", () => {
     return indexes;
   }
 
+  function attachLongPress(trackEl, index) {
+    let lpTimer = null;
+    let startX = 0;
+    let startY = 0;
+    let fired = false;
+
+    const clear = () => {
+      if (lpTimer) clearTimeout(lpTimer);
+      lpTimer = null;
+    };
+
+    trackEl.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      startX = e.clientX;
+      startY = e.clientY;
+      fired = false;
+      clear();
+      lpTimer = setTimeout(() => {
+        fired = true;
+        trackEl.dataset.ignoreClick = "1";
+        openTrackMenu(index, e.clientX + 12, e.clientY + 12);
+      }, 550);
+    });
+
+    trackEl.addEventListener("pointermove", (e) => {
+      if (!lpTimer) return;
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
+      if (dx > 8 || dy > 8) clear();
+    });
+
+    trackEl.addEventListener("pointerup", () => {
+      clear();
+      if (fired) {
+        setTimeout(() => {
+          trackEl.dataset.ignoreClick = "0";
+        }, 120);
+      }
+    });
+
+    trackEl.addEventListener("pointercancel", () => {
+      clear();
+      trackEl.dataset.ignoreClick = "0";
+    });
+  }
+
   function buildPlaylist() {
     if (!playlistEl) return;
     visibleIndexes = getVisibleSongIndexes();
-    playlistCount.textContent = `${visibleIndexes.length} / ${songs.length} أغنية`;
+    if (playlistCount) playlistCount.textContent = `${visibleIndexes.length} / ${songs.length} أغنية`;
 
     if (!visibleIndexes.length) {
-      playlistEl.innerHTML = `
-        <div class="track-empty">
-          لا توجد نتائج
-        </div>
-      `;
+      playlistEl.innerHTML = `<div class="track-empty">لا توجد نتائج</div>`;
       return;
     }
 
@@ -678,7 +555,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     playlistEl.querySelectorAll(".track").forEach((track) => {
       const index = Number(track.dataset.index);
-
       attachLongPress(track, index);
 
       track.addEventListener("click", (e) => {
@@ -687,7 +563,6 @@ document.addEventListener("DOMContentLoaded", () => {
           track.dataset.ignoreClick = "0";
           return;
         }
-
         if (e.target.closest(".track-star")) return;
         playSong(index);
       });
@@ -736,7 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadSong(index, autoplay = false, options = {}) {
-    if (!songs.length) return;
+    if (!songs.length || !audio) return;
     const { pushHistory = true, restoreTime = null } = options;
 
     if (pushHistory && index !== currentSongIndex) {
@@ -746,7 +621,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentSongIndex = (index + songs.length) % songs.length;
     const song = currentSong();
-
     if (!song) return;
 
     if (audioState) audioState.textContent = "جاري التحميل...";
@@ -769,6 +643,8 @@ document.addEventListener("DOMContentLoaded", () => {
     savePlaybackSnapshot();
 
     if (autoplay) {
+      // شغلنا النبض هون كمان احتياط لما يشتغل الصوت
+      initAudioPulse();
       audio.play().catch(() => showToast("المتصفح منع التشغيل التلقائي"));
     }
 
@@ -779,14 +655,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function playSong(index) {
-    if (index === currentSongIndex && audio.src) {
+    if (index === currentSongIndex && audio?.src) {
+      initAudioPulse();
       audio.play().catch(() => showToast("المتصفح منع التشغيل"));
       return;
     }
     loadSong(index, true, { pushHistory: true });
   }
-
-  const playbackHistory = [];
 
   function nextSong() {
     if (repeatMode === "one") {
@@ -830,6 +705,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function togglePlay() {
+    if (!audio) return;
+    initAudioPulse(); // تشغيل الـ AudioContext بأول تفاعل من المستخدم عشان سياسات المتصفح
     if (audio.paused) {
       audio.play().catch(() => showToast("المتصفح منع التشغيل"));
     } else {
@@ -837,6 +714,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ==========================================
+  // 7. تأثير النبض (Visualizer Pulse)
+  // ==========================================
+  function initAudioPulse() {
+    if (audioContextInitialized || !audio) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+      analyzer = audioCtx.createAnalyser();
+      const source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyzer);
+      analyzer.connect(audioCtx.destination);
+      analyzer.fftSize = 256;
+      const bufferLength = analyzer.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      audioContextInitialized = true;
+      runPulseAnimation();
+    } catch (e) {
+      console.warn("تفعيل النبض الصوتي فشل (عادي بتصير ببعض المتصفحات):", e);
+    }
+  }
+
+  function runPulseAnimation() {
+    if (!analyzer || !dataArray) return;
+    requestAnimationFrame(runPulseAnimation);
+    
+    if (audio.paused) return; // ما تعمل نبض لو الصوت واقف
+    
+    analyzer.getByteFrequencyData(dataArray);
+    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+    
+    // النبض بصير للأفاتار نفسه (حسب الكود القديم تبعك)
+    const scale = 1 + (avg / 600); 
+    const avatar = document.querySelector('.avatar');
+    if(avatar) avatar.style.transform = `translateX(-50%) scale(${scale})`;
+  }
+
+  // ==========================================
+  // 8. الستايلات وبناء الواجهة الإضافية (UI Builders)
+  // ==========================================
   function ensureExtraStyles() {
     if (document.getElementById("addonStyles")) return;
     const style = document.createElement("style");
@@ -909,9 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
         border-color: rgba(0,242,255,.24);
         color: #d8ffff;
       }
-      .tool-btn:active {
-        transform: scale(.98);
-      }
+      .tool-btn:active { transform: scale(.98); }
       .now-playing-card {
         display: grid;
         gap: 2px;
@@ -948,9 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
         box-shadow: 0 12px 22px rgba(0,0,0,.16);
         border-color: rgba(255,255,255,.12);
       }
-      .track.fav {
-        border-color: rgba(255,215,0,.22);
-      }
+      .track.fav { border-color: rgba(255,215,0,.22); }
       .track-star {
         width: 34px;
         height: 34px;
@@ -965,9 +878,7 @@ document.addEventListener("DOMContentLoaded", () => {
         color: #ffd54a;
         background: rgba(255, 213, 74, .10);
       }
-      .track-star:active {
-        transform: scale(.96);
-      }
+      .track-star:active { transform: scale(.96); }
       .track-empty {
         padding: 16px;
         text-align: center;
@@ -988,9 +899,7 @@ document.addEventListener("DOMContentLoaded", () => {
         display: none;
         gap: 6px;
       }
-      .track-menu.open {
-        display: grid;
-      }
+      .track-menu.open { display: grid; }
       .track-menu button {
         text-align: right;
         padding: 10px 12px;
@@ -1002,9 +911,7 @@ document.addEventListener("DOMContentLoaded", () => {
         font-size: 12px;
         cursor: pointer;
       }
-      .track-menu button:active {
-        transform: scale(.99);
-      }
+      .track-menu button:active { transform: scale(.99); }
       .ayah-toggle-btn {
         position: fixed;
         top: 12px;
@@ -1028,6 +935,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .music-sheet .now-playing-card {
         backdrop-filter: blur(10px);
       }
+      /* ستايلات لظهور الكروت متل كودك الأول */
+      .social-card {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      }
+      .social-card.appear {
+        opacity: 1;
+        transform: translateY(0);
+      }
     `;
     document.head.appendChild(style);
   }
@@ -1037,6 +954,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "روابط التواصل": "fa-link",
       "نسخ سريع": "fa-copy",
       "مشروعي": "fa-sparkles",
+      "مشروع؟": "fa-sparkles",
     };
 
     sectionTitles.forEach((el) => {
@@ -1079,33 +997,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const repeatBtn = document.getElementById("repeatBtn");
     const ayahHideBtn = document.getElementById("ayahHideBtn");
 
-    if (searchInput) {
-      searchInput.addEventListener("input", () => {
-        searchTerm = searchInput.value.trim().toLowerCase();
-        setStored(STORAGE.search, searchTerm);
-        buildPlaylist();
-      });
-    }
+    searchInput?.addEventListener("input", () => {
+      searchTerm = searchInput.value.trim().toLowerCase();
+      setStored(STORAGE.search, searchTerm);
+      buildPlaylist();
+    });
 
-    if (shuffleBtn) {
-      shuffleBtn.addEventListener("click", () => {
-        toggleShuffle();
-        refreshToolbarState();
-      });
-    }
+    shuffleBtn?.addEventListener("click", () => {
+      toggleShuffle();
+      refreshToolbarState();
+    });
 
-    if (repeatBtn) {
-      repeatBtn.addEventListener("click", () => {
-        cycleRepeatMode();
-        refreshToolbarState();
-      });
-    }
+    repeatBtn?.addEventListener("click", () => {
+      cycleRepeatMode();
+      refreshToolbarState();
+    });
 
-    if (ayahHideBtn) {
-      ayahHideBtn.addEventListener("click", () => {
-        toggleAyahVisibility();
-      });
-    }
+    ayahHideBtn?.addEventListener("click", () => {
+      toggleAyahVisibility();
+    });
   }
 
   function ensureNowPlayingCard() {
@@ -1122,19 +1032,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="now-playing-title" id="nowPlayingTitle">اسم الأغنية</div>
       <div class="now-playing-sub" id="nowPlayingSub">متوقف</div>
     `;
-    if (musicControls) {
-      musicSheet.insertBefore(card, musicControls);
-    } else {
-      musicSheet.appendChild(card);
-    }
+    if (musicControls) musicSheet.insertBefore(card, musicControls);
+    else musicSheet.appendChild(card);
   }
-
-  const cards = document.querySelectorAll('.social-card');
-  cards.forEach((card, index) => {
-    setTimeout(() => {
-      card.classList.add('appear');
-    }, index * 100); // كل كرت بيتأخر 100ms عن اللي قبله عشان يعطي تأثير "وحدة وحدة"
-  });
 
   function ensureAyahToggleButton() {
     if (!ayahFloat || document.getElementById("ayahToggleBtn")) return;
@@ -1145,10 +1045,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
     btn.title = "إظهار / إخفاء الآية";
     document.body.appendChild(btn);
-
-    btn.addEventListener("click", () => {
-      toggleAyahVisibility();
-    });
+    btn.addEventListener("click", toggleAyahVisibility);
   }
 
   function toggleAyahVisibility() {
@@ -1192,15 +1089,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const song = songs[menuIndex];
       if (!song) return;
 
-      if (action === "play") {
-        playSong(menuIndex);
-      } else if (action === "favorite") {
-        toggleFavorite(menuIndex);
-      } else if (action === "copy-title") {
-        copyText(song.title);
-      } else if (action === "copy-file") {
-        copyText(song.fileLabel);
-      }
+      if (action === "play") playSong(menuIndex);
+      else if (action === "favorite") toggleFavorite(menuIndex);
+      else if (action === "copy-title") copyText(song.title);
+      else if (action === "copy-file") copyText(song.fileLabel);
 
       closeTrackMenu();
     });
@@ -1241,52 +1133,9 @@ document.addEventListener("DOMContentLoaded", () => {
     menuIndex = -1;
   }
 
-  function attachLongPress(trackEl, index) {
-    let lpTimer = null;
-    let startX = 0;
-    let startY = 0;
-    let fired = false;
-
-    const clear = () => {
-      if (lpTimer) clearTimeout(lpTimer);
-      lpTimer = null;
-    };
-
-    trackEl.addEventListener("pointerdown", (e) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      startX = e.clientX;
-      startY = e.clientY;
-      fired = false;
-      clear();
-      lpTimer = setTimeout(() => {
-        fired = true;
-        trackEl.dataset.ignoreClick = "1";
-        openTrackMenu(index, e.clientX + 12, e.clientY + 12);
-      }, 550);
-    });
-
-    trackEl.addEventListener("pointermove", (e) => {
-      if (!lpTimer) return;
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
-      if (dx > 8 || dy > 8) clear();
-    });
-
-    trackEl.addEventListener("pointerup", () => {
-      clear();
-      if (fired) {
-        setTimeout(() => {
-          trackEl.dataset.ignoreClick = "0";
-        }, 120);
-      }
-    });
-
-    trackEl.addEventListener("pointercancel", () => {
-      clear();
-      trackEl.dataset.ignoreClick = "0";
-    });
-  }
-
+  // ==========================================
+  // 9. آيات القرآن (Ayah Float)
+  // ==========================================
   function toggleAyahExpanded(nextState) {
     ayahExpanded = nextState;
     if (ayahFloat) ayahFloat.classList.toggle("expanded", ayahExpanded);
@@ -1342,7 +1191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const rect = ayahFloat.getBoundingClientRect();
     const maxX = window.innerWidth - rect.width - 8;
     const maxY = window.innerHeight - rect.height - 8;
-
     ayahFloat.style.left = `${clamp(x, 8, maxX)}px`;
     ayahFloat.style.top = `${clamp(y, 8, maxY)}px`;
   }
@@ -1388,23 +1236,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function maybeResumePlaybackOnGesture() {
-    if (!pendingResume) return;
-    pendingResume = false;
-    if (!audio.src) return;
-    audio.play().catch(() => {});
-  }
-
+  // ==========================================
+  // 10. إعداد المشغل الافتراضي والوقت
+  // ==========================================
   function restorePlaybackTime() {
     if (loadedResumeApplied) return;
     loadedResumeApplied = true;
     if (!Number.isFinite(currentTimeRestore) || currentTimeRestore <= 0) return;
-    if (!audio.duration) return;
+    if (!audio?.duration) return;
     audio.currentTime = Math.min(currentTimeRestore, Math.max(0, audio.duration - 0.25));
     updateProgress();
   }
 
   function initVolume() {
+    if (!volumeBar || !audio) return;
     const storedVolume = clamp(getNumber(STORAGE.volume, 80), 0, 100);
     volumeBar.value = String(storedVolume);
     audio.volume = storedVolume / 100;
@@ -1417,100 +1262,421 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSong(currentSongIndex, false, { pushHistory: false, restoreTime: currentTimeRestore });
     setPlayIcon(false);
     updatePulse(false);
-    currentTimeEl.textContent = "0:00";
-    totalTimeEl.textContent = "0:00";
+    if (currentTimeEl) currentTimeEl.textContent = "0:00";
+    if (totalTimeEl) totalTimeEl.textContent = "0:00";
     updateNowPlayingCard();
   }
 
+  function maybeResumePlaybackOnGesture() {
+    if (!pendingResume) return;
+    pendingResume = false;
+    if (!audio?.src) return;
+    initAudioPulse();
+    audio.play().catch(() => {});
+  }
+
+  // ==========================================
+  // 11. أدوات المشاركة والتأثيرات (Share & Effects)
+  // ==========================================
+  function detectDeviceMode() {
+    const ua = navigator.userAgent || "";
+    const mobileUA = /Android|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    const coarse = window.matchMedia?.("(pointer: coarse)")?.matches;
+    const touch = (navigator.maxTouchPoints || 0) > 1;
+    const narrow = window.innerWidth <= 980;
+    return (mobileUA || (coarse && touch && narrow)) ? "mobile" : "desktop";
+  }
+
+  function applyDeviceMode() {
+    document.body.dataset.device = detectDeviceMode();
+  }
+
+  function openModal() {
+    if (!shareOverlay) return;
+    shareOverlay.classList.add("active");
+    shareOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeModal() {
+    if (!shareOverlay) return;
+    shareOverlay.classList.remove("active");
+    shareOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  function openSheet() {
+    if (!fakeShareSheet) return;
+    fakeShareSheet.classList.add("active");
+    fakeShareSheet.setAttribute("aria-hidden", "false");
+  }
+
+  function closeSheet() {
+    if (!fakeShareSheet) return;
+    fakeShareSheet.classList.remove("active");
+    fakeShareSheet.setAttribute("aria-hidden", "true");
+  }
+
+  function openMoreSocials() {
+    document.body.classList.add("drawer-open");
+    moreSocialsDrawer?.classList.add("open");
+    moreSocialsBackdrop?.classList.add("open");
+  }
+
+  function closeMoreSocials() {
+    document.body.classList.remove("drawer-open");
+    moreSocialsDrawer?.classList.remove("open");
+    moreSocialsBackdrop?.classList.remove("open");
+  }
+
+  function initShareLinks() {
+    if (shareQrImg) {
+      shareQrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(SHARE_URL) + "&margin=10";
+    }
+
+    if (shareUrlInput) shareUrlInput.value = SHARE_URL;
+    if (waShare) waShare.href = `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT}\n${SHARE_URL}`)}`;
+    if (fbShare) fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`;
+    if (tgShare) tgShare.href = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`;
+
+    const mail = fakeShareSheet?.querySelector('[data-act="mail"]');
+    if (mail) {
+      mail.href = `mailto:?subject=${encodeURIComponent(document.title)}&body=${encodeURIComponent(`${SHARE_TEXT}\n${SHARE_URL}`)}`;
+    }
+  }
+
+  async function doNativeShare() {
+    const shareData = {
+      title: document.title,
+      text: SHARE_TEXT,
+      url: SHARE_URL,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch {}
+    }
+    openSheet();
+  }
+
+  function initShareUI() {
+    if (sharePortalBtn && shareOverlay) {
+      sharePortalBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    closeShareBtn?.addEventListener("click", closeModal);
+    shareOverlay?.addEventListener("click", (e) => {
+      if (e.target === shareOverlay) closeModal();
+    });
+
+    copyShareBtn?.addEventListener("click", async () => {
+      const ok = await copyToClipboard(shareUrlInput?.value || SHARE_URL);
+      showToast(ok ? "تم نسخ الرابط" : "تعذر نسخ الرابط");
+    });
+
+    nativeShareBtn?.addEventListener("click", doNativeShare);
+    desktopSheetBtn?.addEventListener("click", openSheet);
+    openLinkBtn?.addEventListener("click", () => {
+      window.open(shareUrlInput?.value || SHARE_URL, "_blank", "noopener,noreferrer");
+    });
+
+    sheetBackdrop?.addEventListener("click", closeSheet);
+    closeSheetBtn?.addEventListener("click", closeSheet);
+
+    fakeShareSheet?.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-act]");
+      if (!btn) return;
+      const act = btn.getAttribute("data-act");
+
+      if (act === "copy") {
+        const ok = await copyToClipboard(SHARE_URL);
+        showToast(ok ? "تم نسخ الرابط" : "تعذر النسخ");
+        closeSheet();
+        return;
+      }
+
+      if (act === "open") {
+        window.open(SHARE_URL, "_blank", "noopener,noreferrer");
+        closeSheet();
+        return;
+      }
+
+      if (act === "wa" || act === "fb" || act === "tg") {
+        closeSheet();
+      }
+    });
+
+    moreSocialsBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      pulseWave(moreSocialsBtn);
+      makeRipple(e, moreSocialsBtn);
+      openMoreSocials();
+    });
+
+    moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
+    moreSocialsClose?.addEventListener("click", closeMoreSocials);
+  }
+
+  // ==========================================
+  // 12. تأثيرات بصرية (Ripple & Animations)
+  // ==========================================
+  function pulseWave(el) {
+    if (!el) return;
+    el.classList.remove("pulse-hit");
+    void el.offsetWidth; // Trigger reflow
+    el.classList.add("pulse-hit");
+    setTimeout(() => el.classList.remove("pulse-hit"), 650);
+  }
+
+  function makeRipple(e, el) {
+    const rect = el.getBoundingClientRect();
+    const circle = document.createElement("span");
+    const size = Math.max(rect.width, rect.height) * 1.4;
+
+    circle.style.position = "absolute";
+    circle.style.width = `${size}px`;
+    circle.style.height = `${size}px`;
+    circle.style.left = `${e.clientX - rect.left - size / 2}px`;
+    circle.style.top = `${e.clientY - rect.top - size / 2}px`;
+    circle.style.borderRadius = "50%";
+    circle.style.pointerEvents = "none";
+    circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
+    circle.style.transform = "scale(0)";
+    circle.style.opacity = "1";
+    circle.style.animation = "rippleAnim 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards";
+    el.appendChild(circle);
+    setTimeout(() => circle.remove(), 650);
+  }
+
+  function initRippleStyle() {
+    if (document.getElementById("rippleAnimStyle")) return;
+    const style = document.createElement("style");
+    style.id = "rippleAnimStyle";
+    style.textContent = `
+      @keyframes rippleAnim {
+        0%   { transform: scale(0); opacity: .55; }
+        100% { transform: scale(1.9); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function initMiscUI() {
+    moreSocialsBtn?.classList.add("soft-float", "wave-auto");
+    initRippleStyle();
+
+    // تأثير حركة الخلفية مع الماوس
+    document.addEventListener("mousemove", (e) => {
+      const moveX = (e.clientX * 0.05) / 8;
+      const moveY = (e.clientY * 0.05) / 8;
+      document.body.style.backgroundPosition = `${moveX}px ${moveY}px`;
+    });
+
+    // إحصائيات المتصفح عند الضغط على الصورة الرمزية
+    const profileImg = document.querySelector(".avatar-img") || document.querySelector(".avatar img") || document.querySelector('img[src$="profile.jpeg"]');
+    if (profileImg) {
+      profileImg.addEventListener("click", () => {
+        const stats = `Browser: ${navigator.userAgent.split(" ")[0]} | Screen: ${window.screen.width}x${window.screen.height} | Lang: ${navigator.language}`;
+        showToast(stats);
+      });
+    }
+
+    // حركة ظهور الكروت بالتتابع
+    document.querySelectorAll('.social-card').forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add('appear');
+      }, index * 100); 
+    });
+
+    // نسخ بالزر اليمين (Context Menu)
+    document.querySelectorAll(".social-card").forEach((card) => {
+      card.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        const span = card.querySelector(".social-text span");
+        if (!span) return;
+        const textToCopy = span.innerText;
+        copyToClipboard(textToCopy).then((ok) => {
+          if (ok) {
+            showToast(`تم نسخ: ${textToCopy}`);
+            // هزة خفيفة للكرت للتأكيد
+            card.style.animation = "none";
+            card.offsetHeight;
+            card.style.animation = "softFloat 0.3s ease";
+          } else {
+            showToast("تعذر النسخ");
+          }
+        });
+      });
+    });
+  }
+
+  // ==========================================
+  // 13. الضغط المطول للنسخ السريع (Long Press)
+  // ==========================================
+  function initShareLongCopy() {
+    const attachLongPressCopy = (selector = "[data-longcopy]", holdMs = 700) => {
+      document.querySelectorAll(selector).forEach((el) => {
+        let timer = null;
+        let startX = 0;
+        let startY = 0;
+        let copied = false;
+
+        const clearHold = () => {
+          if (timer) clearTimeout(timer);
+          timer = null;
+        };
+
+        const getCopyText = () => {
+          return (
+            el.dataset.copyText ||
+            el.getAttribute("data-copy-text") ||
+            el.getAttribute("href") ||
+            el.textContent.trim()
+          );
+        };
+
+        el.addEventListener("pointerdown", (e) => {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          copied = false;
+          startX = e.clientX;
+          startY = e.clientY;
+          clearHold();
+
+          timer = setTimeout(async () => {
+            const textToCopy = getCopyText();
+            if (!textToCopy) return;
+
+            const ok = await copyToClipboard(textToCopy);
+            if (ok) {
+              copied = true;
+              showToast(`تم نسخ: ${textToCopy}`);
+              el.classList.add("copied");
+              setTimeout(() => el.classList.remove("copied"), 500);
+              el.dataset.ignoreClick = "1";
+              setTimeout(() => {
+                el.dataset.ignoreClick = "0";
+              }, 120);
+            } else {
+              showToast("تعذر النسخ");
+            }
+          }, holdMs);
+        });
+
+        el.addEventListener("pointermove", (e) => {
+          if (!timer) return;
+          const dx = Math.abs(e.clientX - startX);
+          const dy = Math.abs(e.clientY - startY);
+          if (dx > 10 || dy > 10) clearHold();
+        });
+
+        el.addEventListener("pointerup", clearHold);
+        el.addEventListener("pointercancel", clearHold);
+        el.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        el.addEventListener("click", (e) => {
+          if (el.dataset.ignoreClick === "1") {
+            e.preventDefault();
+            e.stopPropagation();
+            el.dataset.ignoreClick = "0";
+          }
+          if (copied) {
+            copied = false;
+          }
+        });
+      });
+    };
+
+    attachLongPressCopy("[data-longcopy]");
+    window.attachLongPressCopy = attachLongPressCopy; // عشان لو احتجتها بره
+  }
+
+  // ==========================================
+  // 14. ربط الأحداث الرئيسية (Event Listeners)
+  // ==========================================
   function bindEvents() {
-    if (musicFab) musicFab.addEventListener("click", () => {
+    musicFab?.addEventListener("click", () => {
       musicSheet.classList.add("open");
       overlay.classList.add("open");
     });
 
-    if (closeMusicBtn) closeMusicBtn.addEventListener("click", () => {
+    closeMusicBtn?.addEventListener("click", () => {
       musicSheet.classList.remove("open");
       overlay.classList.remove("open");
     });
 
-    if (overlay) overlay.addEventListener("click", () => {
+    overlay?.addEventListener("click", () => {
       musicSheet.classList.remove("open");
       overlay.classList.remove("open");
       closeTrackMenu();
     });
 
-    if (playBtn) playBtn.addEventListener("click", togglePlay);
-    if (prevSongBtn) prevSongBtn.addEventListener("click", prevSong);
-    if (nextSongBtn) nextSongBtn.addEventListener("click", nextSong);
+    playBtn?.addEventListener("click", togglePlay);
+    prevSongBtn?.addEventListener("click", prevSong);
+    nextSongBtn?.addEventListener("click", nextSong);
 
-    if (volumeBar) {
-      volumeBar.addEventListener("input", () => {
-        const value = Number(volumeBar.value);
-        audio.volume = value / 100;
-        setVolumeTheme(value);
-        savePlaybackSnapshot();
-      });
-    }
-
-    if (volumeIconBtn) {
-      volumeIconBtn.addEventListener("click", () => {
-        if (audio.volume > 0) {
-          audio.dataset.lastVolume = String(Math.round(audio.volume * 100));
-          audio.volume = 0;
-          volumeBar.value = "0";
-          setVolumeTheme(0);
-        } else {
-          const restore = clamp(getNumber(STORAGE.volume, 80), 0, 100);
-          audio.volume = restore / 100;
-          volumeBar.value = String(restore);
-          setVolumeTheme(restore);
-        }
-        savePlaybackSnapshot();
-      });
-    }
-
-    audio.addEventListener("play", () => {
-      setPlayIcon(true);
-      updatePulse(true);
-      if (audioState) audioState.textContent = `يعمل الآن: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "يعمل الآن";
-      }
+    volumeBar?.addEventListener("input", () => {
+      const value = Number(volumeBar.value);
+      audio.volume = value / 100;
+      setVolumeTheme(value);
       savePlaybackSnapshot();
     });
 
-    audio.addEventListener("pause", () => {
-      setPlayIcon(false);
-      updatePulse(false);
-      if (audioState) audioState.textContent = `متوقف: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "متوقف";
-      }
-      savePlaybackSnapshot();
-    });
-
-    audio.addEventListener("ended", () => {
-      if (repeatMode === "one") {
-        loadSong(currentSongIndex, true, { pushHistory: false });
+    volumeIconBtn?.addEventListener("click", () => {
+      if (audio.volume > 0) {
+        audio.dataset.lastVolume = String(Math.round(audio.volume * 100));
+        audio.volume = 0;
+        volumeBar.value = "0";
+        setVolumeTheme(0);
       } else {
-        nextSong();
+        const restore = clamp(getNumber(STORAGE.volume, 80), 0, 100);
+        audio.volume = restore / 100;
+        volumeBar.value = String(restore);
+        setVolumeTheme(restore);
       }
+      savePlaybackSnapshot();
     });
 
-    audio.addEventListener("loadedmetadata", () => {
-      if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
-      if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
-      if (audioState) audioState.textContent = `جاهزة: ${currentSong().title}`;
-      if (document.getElementById("nowPlayingSub")) {
-        document.getElementById("nowPlayingSub").textContent = "جاهزة";
-      }
-      restorePlaybackTime();
-      updateProgress();
-    });
+    if(audio) {
+      audio.addEventListener("play", () => {
+        setPlayIcon(true);
+        updatePulse(true);
+        if (audioState) audioState.textContent = `يعمل الآن: ${currentSong().title}`;
+        const sub = document.getElementById("nowPlayingSub");
+        if (sub) sub.textContent = "يعمل الآن";
+        savePlaybackSnapshot();
+      });
 
-    audio.addEventListener("canplay", () => {
-      if (audioState) audioState.textContent = `جاهزة: ${currentSong().title}`;
-    });
+      audio.addEventListener("pause", () => {
+        setPlayIcon(false);
+        updatePulse(false);
+        if (audioState) audioState.textContent = `متوقف: ${currentSong().title}`;
+        const sub = document.getElementById("nowPlayingSub");
+        if (sub) sub.textContent = "متوقف";
+        savePlaybackSnapshot();
+      });
+
+      audio.addEventListener("ended", () => {
+        if (repeatMode === "one") loadSong(currentSongIndex, true, { pushHistory: false });
+        else nextSong();
+      });
+
+      audio.addEventListener("loadedmetadata", () => {
+        if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
+        if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
+        if (audioState) audioState.textContent = `جاهزة: ${currentSong().title}`;
+        const sub = document.getElementById("nowPlayingSub");
+        if (sub) sub.textContent = "جاهزة";
+        restorePlaybackTime();
+        updateProgress();
+      });
+
+      audio.addEventListener("canplay", () => {
+        if (audioState) audioState.textContent = `جاهزة: ${currentSong().title}`;
+      });
+    }
 
     seekBar?.addEventListener("pointerdown", () => {
       isSeeking = true;
@@ -1528,7 +1694,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     seekBar?.addEventListener("input", () => {
-      if (!audio.duration) return;
+      if (!audio?.duration) return;
       const value = Number(seekBar.value);
       const time = (value / 100) * audio.duration;
       audio.currentTime = time;
@@ -1540,7 +1706,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     seekBar?.addEventListener("mousemove", (e) => {
-      if (!audio.duration) return;
+      if (!audio?.duration) return;
       const rect = seekBar.getBoundingClientRect();
       const pct = ((e.clientX - rect.left) / rect.width) * 100;
       updateSeekTooltipFromValue(pct);
@@ -1551,23 +1717,23 @@ document.addEventListener("DOMContentLoaded", () => {
     seekBar?.addEventListener("touchend", hideSeekTooltipSoon);
 
     seekWrap?.addEventListener("touchstart", () => {
-      if (!audio.duration) return;
+      if (!audio?.duration) return;
       showSeekTooltip();
     }, { passive: true });
 
     seekWrap?.addEventListener("touchend", hideSeekTooltipSoon);
 
-    document.addEventListener("pointerdown", maybeResumePlaybackOnGesture, { passive: true });
-    document.addEventListener("touchstart", maybeResumePlaybackOnGesture, { passive: true });
     document.addEventListener("keydown", (e) => {
-      maybeResumePlaybackOnGesture();
       if (e.key === "Escape") {
         closeTrackMenu();
         musicSheet.classList.remove("open");
         overlay.classList.remove("open");
+        closeModal();
+        closeSheet();
+        closeMoreSocials();
       }
-      if (e.key === "ArrowRight") prevSong();
-      if (e.key === "ArrowLeft") nextSong();
+      if (e.key === "ArrowRight") nextSong();
+      if (e.key === "ArrowLeft") prevSong();
       if (e.key === " ") {
         const active = document.activeElement;
         if (active !== seekBar && active?.tagName !== "INPUT") {
@@ -1575,8 +1741,11 @@ document.addEventListener("DOMContentLoaded", () => {
           togglePlay();
         }
       }
+      maybeResumePlaybackOnGesture();
     });
 
+    document.addEventListener("pointerdown", maybeResumePlaybackOnGesture, { passive: true });
+    document.addEventListener("touchstart", maybeResumePlaybackOnGesture, { passive: true });
     document.addEventListener("beforeunload", savePlaybackSnapshot);
 
     copyButtons.forEach((btn) => {
@@ -1584,558 +1753,59 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function escapeHtml(value) {
-    return String(value || "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  refreshToolbarState();
-  initVolume();
-  buildPlaylist();
-  initPlayback();
-  bindEvents();
-
-  if (ayahFloat) {
-    if (!ayahVisible) ayahFloat.style.display = "none";
-    bindAyahDragging();
-    const savedX = getNumber(STORAGE.ayahX, 12);
-    const savedY = getNumber(STORAGE.ayahY, 54);
-    ayahFloat.style.left = `${savedX}px`;
-    ayahFloat.style.top = `${savedY}px`;
-  }
-
-  if (ayahVisible) {
-    startNewAyahCycle();
-    restartAyahRotation();
-  }
-
-  const toggleBtn = document.getElementById("ayahToggleBtn");
-  if (toggleBtn) {
-    toggleBtn.innerHTML = ayahVisible
-      ? '<i class="fa-solid fa-eye"></i>'
-      : '<i class="fa-solid fa-eye-slash"></i>';
-  }
-
-  if (shuffleEnabled) updateShuffleButton();
-  updateRepeatButton();
-  updateNowPlayingCard();
-  savePlaybackSnapshot();
-
-  
-
-const moreSocialsBtn = document.getElementById("moreSocialsBtn");
-const moreSocialsDrawer = document.getElementById("moreSocialsDrawer");
-const moreSocialsBackdrop = document.getElementById("moreSocialsBackdrop");
-const moreSocialsClose = document.getElementById("moreSocialsClose");
-
-function openMoreSocials() {
-  document.body.classList.add("drawer-open");
-  moreSocialsDrawer?.classList.add("open");
-  moreSocialsBackdrop?.classList.add("open");
-}
-
-function closeMoreSocials() {
-  document.body.classList.remove("drawer-open");
-  moreSocialsDrawer?.classList.remove("open");
-  moreSocialsBackdrop?.classList.remove("open");
-}
-
-function pulseWave(el) {
-  if (!el) return;
-  el.classList.remove("pulse-hit");
-  void el.offsetWidth;
-  el.classList.add("pulse-hit");
-  setTimeout(() => el.classList.remove("pulse-hit"), 650);
-}
-
-function makeRipple(e, el) {
-  const rect = el.getBoundingClientRect();
-  const circle = document.createElement("span");
-  const size = Math.max(rect.width, rect.height) * 1.4;
-
-  circle.style.position = "absolute";
-  circle.style.width = `${size}px`;
-  circle.style.height = `${size}px`;
-  circle.style.left = `${e.clientX - rect.left - size / 2}px`;
-  circle.style.top = `${e.clientY - rect.top - size / 2}px`;
-  circle.style.borderRadius = "50%";
-  circle.style.pointerEvents = "none";
-  circle.style.background = "radial-gradient(circle, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, transparent 70%)";
-  circle.style.transform = "scale(0)";
-  circle.style.opacity = "1";
-// غير الـ animation في الكود الموجود عندك ليكون أبطأ شوي وأكبر
-circle.style.animation = "rippleAnim 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards";
-  el.appendChild(circle);
-  setTimeout(() => circle.remove(), 650);
-}
-
-if (!document.getElementById("rippleAnimStyle")) {
-  const style = document.createElement("style");
-  style.id = "rippleAnimStyle";
-  style.textContent = `
-    @keyframes rippleAnim {
-      0%   { transform: scale(0); opacity: .55; }
-      100% { transform: scale(1.9); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-moreSocialsBtn?.classList.add("soft-float", "wave-auto");
-
-moreSocialsBtn?.addEventListener("click", (e) => {
-  e.preventDefault();
-  pulseWave(moreSocialsBtn);
-  makeRipple(e, moreSocialsBtn);
-  openMoreSocials();
-});
-moreSocialsBackdrop?.addEventListener("click", closeMoreSocials);
-moreSocialsClose?.addEventListener("click", closeMoreSocials);
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeMoreSocials();
-});
-
-document.addEventListener('mousemove', (e) => {
-  const moveX = (e.clientX * 0.05) / 8;
-  const moveY = (e.clientY * 0.05) / 8;
-  document.body.style.backgroundPosition = `${moveX}px ${moveY}px`;
-});
-
-const shareBtn = document.getElementById('shareBtn');
-const qrModal = document.getElementById('qrModal');
-const closeQr = document.getElementById('closeQr');
-
-shareBtn.onclick = () => qrModal.style.display = 'flex';
-closeQr.onclick = () => qrModal.style.display = 'none';
-window.onclick = (e) => { if(e.target == qrModal) qrModal.style.display = 'none'; }
-
-document.querySelectorAll('.social-card').forEach(card => {
-    card.addEventListener('contextmenu', (e) => {
-        e.preventDefault(); // منع القائمة الافتراضية عند الضغط المطول
-        const textToCopy = card.querySelector('.social-text span').innerText;
-        
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            // استخدام الـ Toast اللي عندك في الموقع
-            showToast(`تم نسخ: ${textToCopy}`);
-            
-            // حركة اهتزاز خفيفة للكرت للتأكيد
-            card.style.animation = 'none';
-            card.offsetHeight; // trigger reflow
-            card.style.animation = 'softFloat 0.3s ease';
-        });
-    });
-});
-
-const showStats = () => {
-    const stats = `Browser: ${navigator.userAgent.split(' ')[0]}\nScreen: ${window.screen.width}x${window.screen.height}\nLanguage: ${navigator.language}`;
-    showToast(stats); // استخدم الـ Toast اللي عندك لعرضها
-}
-document.querySelector('photo/profile.jpeg').onclick = showStats;
-
-function pulse() {
-    if (!audio.paused) {
-        analyzer.getByteFrequencyData(dataArray);
-        const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
-        
-        // النبض بصير للأفاتار نفسه
-        const scale = 1 + (avg / 600); 
-        const avatar = document.querySelector('.avatar');
-        if(avatar) avatar.style.transform = `translateX(-50%) scale(${scale})`;
-    }
-    requestAnimationFrame(pulse);
-}
-const ayahBox = document.querySelector('.ayah-float');
-let clickTimer = null;
-
-// --- 1. ميزة النسخ بالزر اليمين (Context Menu) ---
-    document.querySelectorAll('.social-card').forEach(card => {
-        card.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const span = card.querySelector('.social-text span');
-            if (span) {
-                const textToCopy = span.innerText;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    if (typeof showToast === 'function') showToast(`تم نسخ: ${textToCopy}`);
-                    card.style.animation = 'none';
-                    card.offsetHeight; 
-                    card.style.animation = 'softFloat 0.3s ease';
-                });
-            }
-        });
-    });
-
-    // --- 2. ميزة إحصائيات المتصفح عند الضغط على الصورة ---
-    // عدلت لك المسار ليصير دقيق حسب عناصر موقعك
-    const profileImg = document.querySelector('.avatar-img') || document.querySelector('.avatar');
-    if (profileImg) {
-        profileImg.onclick = () => {
-            const stats = `Browser: ${navigator.userAgent.split(' ')[0]} | Screen: ${window.screen.width}x${window.screen.height}`;
-            showToast(stats);
-        };
-    }
-    // --- 4. تشغيل النبض (Pulse) ---
-    function pulse() {
-        if (typeof audio !== 'undefined' && !audio.paused && typeof dataArray !== 'undefined') {
-            analyzer.getByteFrequencyData(dataArray);
-            const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
-            const scale = 1 + (avg / 600); 
-            const avatar = document.querySelector('.avatar');
-            if(avatar) avatar.style.transform = `translateX(-50%) scale(${scale})`;
-        }
-        requestAnimationFrame(pulse);
-    }
-    pulse(); // تشغيل الدالة
-
-    document.addEventListener('DOMContentLoaded', () => {
-  const SHARE_URL = 'https://omar-i9.github.io/my-profiles/';
-  const SHARE_TEXT = 'هذا موقعي، تفضل الرابط:';
-
-  const sBtn = document.getElementById('sharePortalBtn');
-  const sOverlay = document.getElementById('shareOverlay');
-  const sClose = document.getElementById('closeShare');
-
-  const qrImg = document.getElementById('shareQrImg');
-  const urlInput = document.getElementById('shareUrlInput');
-  const copyBtn = document.getElementById('copyShareBtn');
-  const nativeShareBtn = document.getElementById('nativeShareBtn');
-  const desktopSheetBtn = document.getElementById('desktopSheetBtn');
-  const openLinkBtn = document.getElementById('openLinkBtn');
-
-  const sheet = document.getElementById('fakeShareSheet');
-  const sheetBackdrop = sheet?.querySelector('.sheet-backdrop');
-  const closeSheetBtn = document.getElementById('closeSheetBtn');
-
-  const waShare = document.getElementById('waShare');
-  const fbShare = document.getElementById('fbShare');
-  const tgShare = document.getElementById('tgShare');
-
-  const encodedUrl = encodeURIComponent(SHARE_URL);
-  const encodedText = encodeURIComponent(`${SHARE_TEXT}\n${SHARE_URL}`);
-
-  function toastMessage(msg) {
-    if (typeof showToast === 'function') {
-      showToast(msg);
-      return;
-    }
-    console.log(msg);
-  }
-
-  function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-
-    const temp = document.createElement('textarea');
-    temp.value = text;
-    temp.setAttribute('readonly', '');
-    temp.style.position = 'fixed';
-    temp.style.opacity = '0';
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand('copy');
-    document.body.removeChild(temp);
-    return Promise.resolve();
-  }
-
-  function detectDeviceMode() {
-    const ua = navigator.userAgent || '';
-    const mobileUA = /Android|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    const touch = navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
-    const narrow = window.innerWidth <= 980;
-
-    return (mobileUA || (coarse && touch && narrow)) ? 'mobile' : 'desktop';
-  }
-
-  function applyDeviceMode() {
-    document.body.dataset.device = detectDeviceMode();
-  }
-
-  function openModal() {
-    sOverlay.classList.add('active');
-    sOverlay.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeModal() {
-    sOverlay.classList.remove('active');
-    sOverlay.setAttribute('aria-hidden', 'true');
-  }
-
-  function openSheet() {
-    sheet?.classList.add('active');
-    sheet?.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeSheet() {
-    sheet?.classList.remove('active');
-    sheet?.setAttribute('aria-hidden', 'true');
-  }
-
-  function initShareLinks() {
-    qrImg.src =
-      'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' +
-      encodedUrl +
-      '&margin=10';
-
-    urlInput.value = SHARE_URL;
-
-    waShare.href = `https://wa.me/?text=${encodedText}`;
-    fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-    tgShare.href = `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(SHARE_TEXT)}`;
-
-    const mail = sheet?.querySelector('[data-act="mail"]');
-    if (mail) {
-      mail.href = `mailto:?subject=${encodeURIComponent(document.title)}&body=${encodedText}`;
-    }
-  }
-
-  async function doNativeShare() {
-    const shareData = {
-      title: document.title,
-      text: SHARE_TEXT,
-      url: SHARE_URL
+  function initGlobalShareHelpers() {
+    window.copySiteLink = async () => {
+      const ok = await copyToClipboard(SHARE_URL);
+      showToast(ok ? "تم نسخ الرابط" : "تعذر نسخ الرابط");
     };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        return;
-      } catch {}
-    }
-
-    openSheet();
   }
 
-  if (sBtn && sOverlay) {
-    sBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal();
-    });
-  }
+  // ==========================================
+  // 15. دالة التشغيل الأساسية (Initialization)
+  // ==========================================
+  function initEverything() {
+    ensureExtraStyles();
+    decorateSectionTitles();
+    ensureDivider();
+    ensureToolbar();
+    ensureNowPlayingCard();
+    ensureAyahToggleButton();
+    ensureTrackMenu();
+    restoreAyahVisibility();
 
-  sClose?.addEventListener('click', closeModal);
+    initVolume();
+    buildPlaylist();
+    initPlayback();
+    bindEvents();
 
-  sOverlay?.addEventListener('click', (e) => {
-    if (e.target === sOverlay) closeModal();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-      closeSheet();
-    }
-  });
-
-  copyBtn?.addEventListener('click', async () => {
-    try {
-      await copyToClipboard(SHARE_URL);
-      toastMessage('تم نسخ الرابط');
-    } catch {
-      toastMessage('تعذر نسخ الرابط');
-    }
-  });
-
-  nativeShareBtn?.addEventListener('click', doNativeShare);
-
-  desktopSheetBtn?.addEventListener('click', () => {
-    openSheet();
-  });
-
-  openLinkBtn?.addEventListener('click', () => {
-    window.open(SHARE_URL, '_blank', 'noopener,noreferrer');
-  });
-
-  sheetBackdrop?.addEventListener('click', closeSheet);
-  closeSheetBtn?.addEventListener('click', closeSheet);
-
-  sheet?.addEventListener('click', async (e) => {
-    const btn = e.target.closest('[data-act]');
-    if (!btn) return;
-
-    const act = btn.getAttribute('data-act');
-
-    if (act === 'copy') {
-      try {
-        await copyToClipboard(SHARE_URL);
-        toastMessage('تم نسخ الرابط');
-      } catch {
-        toastMessage('تعذر النسخ');
-      }
-      closeSheet();
-      return;
+    if (ayahFloat) {
+      if (!ayahVisible) ayahFloat.style.display = "none";
+      bindAyahDragging();
+      const savedX = getNumber(STORAGE.ayahX, 12);
+      const savedY = getNumber(STORAGE.ayahY, 54);
+      ayahFloat.style.left = `${savedX}px`;
+      ayahFloat.style.top = `${savedY}px`;
     }
 
-    if (act === 'open') {
-      window.open(SHARE_URL, '_blank', 'noopener,noreferrer');
-      closeSheet();
-      return;
+    if (ayahVisible) {
+      startNewAyahCycle();
+      restartAyahRotation();
     }
-  });
 
-  initShareLinks();
-  applyDeviceMode();
-
-  window.addEventListener('resize', () => {
+    initShareLinks();
+    initShareUI();
+    initMiscUI();
+    initShareLongCopy();
+    initGlobalShareHelpers();
     applyDeviceMode();
-  });
+    window.addEventListener("resize", applyDeviceMode);
 
-  window.copySiteLink = async function () {
-    try {
-      await copyToClipboard(SHARE_URL);
-      toastMessage('تم نسخ الرابط');
-    } catch {
-      toastMessage('تعذر نسخ الرابط');
-    }
-  };
+    if (shuffleEnabled) updateShuffleButton();
+    updateRepeatButton();
+    updateNowPlayingCard();
+    savePlaybackSnapshot();
+  }
+
+  // يلا بينا نشغل كل شي!
+  initEverything();
 });
-// --- Long press copy for any button you choose ---
-function attachLongPressCopy(selector = '[data-longcopy]', holdMs = 700) {
-  const items = document.querySelectorAll(selector);
-
-  items.forEach((el) => {
-    let timer = null;
-    let startX = 0;
-    let startY = 0;
-    let copied = false;
-
-    const clearHold = () => {
-      if (timer) clearTimeout(timer);
-      timer = null;
-    };
-
-    const getCopyText = () => {
-      return (
-        el.dataset.copyText ||
-        el.getAttribute('data-copy-text') ||
-        el.textContent.trim()
-      );
-    };
-
-    el.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-      copied = false;
-      startX = e.clientX;
-      startY = e.clientY;
-      clearHold();
-
-      timer = setTimeout(async () => {
-        const textToCopy = getCopyText();
-        if (!textToCopy) return;
-
-        copied = true;
-
-        try {
-          await navigator.clipboard.writeText(textToCopy);
-          if (typeof showToast === 'function') {
-            showToast(`تم نسخ: ${textToCopy}`);
-          }
-          el.classList.add('copied');
-          setTimeout(() => el.classList.remove('copied'), 500);
-        } catch {
-          if (typeof showToast === 'function') {
-            showToast('تعذر النسخ');
-          }
-        }
-      }, holdMs);
-    });
-
-    el.addEventListener('pointermove', (e) => {
-      if (!timer) return;
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
-      if (dx > 10 || dy > 10) clearHold();
-    });
-
-    el.addEventListener('pointerup', () => {
-      clearHold();
-      if (copied) {
-        el.dataset.ignoreClick = '1';
-        setTimeout(() => {
-          el.dataset.ignoreClick = '0';
-        }, 120);
-      }
-    });
-
-    el.addEventListener('pointercancel', clearHold);
-    el.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
-  });
-}
-
-// فعّلها على أي زر/عنصر تضيف له هذا الـ attribute:
-// data-longcopy
-attachLongPressCopy('[data-longcopy]');
-
-function attachLongPressCopy(selector = '[data-longcopy]', holdMs = 700) {
-  const items = document.querySelectorAll(selector);
-
-  items.forEach((el) => {
-    let timer = null;
-    let startX = 0;
-    let startY = 0;
-
-    const clearHold = () => {
-      if (timer) clearTimeout(timer);
-      timer = null;
-    };
-
-    el.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-      startX = e.clientX;
-      startY = e.clientY;
-      clearHold();
-
-      timer = setTimeout(async () => {
-        const textToCopy = el.dataset.copyText || el.href || el.textContent.trim();
-        if (!textToCopy) return;
-
-        try {
-          await navigator.clipboard.writeText(textToCopy);
-          if (typeof showToast === 'function') {
-            showToast(`تم نسخ: ${textToCopy}`);
-          }
-          el.classList.add('copied');
-          setTimeout(() => el.classList.remove('copied'), 450);
-          el.dataset.ignoreClick = '1';
-          setTimeout(() => {
-            el.dataset.ignoreClick = '0';
-          }, 120);
-        } catch {
-          if (typeof showToast === 'function') {
-            showToast('تعذر النسخ');
-          }
-        }
-      }, holdMs);
-    });
-
-    el.addEventListener('pointermove', (e) => {
-      if (!timer) return;
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
-      if (dx > 10 || dy > 10) clearHold();
-    });
-
-    el.addEventListener('pointerup', clearHold);
-    el.addEventListener('pointercancel', clearHold);
-    el.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    el.addEventListener('click', (e) => {
-      if (el.dataset.ignoreClick === '1') {
-        e.preventDefault();
-        e.stopPropagation();
-        el.dataset.ignoreClick = '0';
-      }
-    });
-  });
-}
-
-attachLongPressCopy('[data-longcopy]');
-}); // <--- هاد القوس هو الأهم، هاد بيسكر الـ DOMContentLoaded اللي بأول الملف
