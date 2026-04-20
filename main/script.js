@@ -1778,23 +1778,6 @@ let clickTimer = null;
             showToast(stats);
         };
     }
-
-    // --- 3. بوابة المشاركة (Share Portal) ---
-    const sBtn = document.getElementById('sharePortalBtn');
-    const sOverlay = document.getElementById('shareOverlay');
-    const sClose = document.getElementById('closeShare');
-
-    if (sBtn && sOverlay) {
-        sBtn.onclick = (e) => {
-            e.preventDefault();
-            sOverlay.style.display = 'flex';
-        };
-        if (sClose) sClose.onclick = () => sOverlay.style.display = 'none';
-        sOverlay.onclick = (e) => {
-            if (e.target === sOverlay) sOverlay.style.display = 'none';
-        };
-    }
-
     // --- 4. تشغيل النبض (Pulse) ---
     function pulse() {
         if (typeof audio !== 'undefined' && !audio.paused && typeof dataArray !== 'undefined') {
@@ -1808,12 +1791,206 @@ let clickTimer = null;
     }
     pulse(); // تشغيل الدالة
 
-}); // <--- هاد القوس هو الأهم، هاد بيسكر الـ DOMContentLoaded اللي بأول الملف
+    document.addEventListener('DOMContentLoaded', () => {
+  const SHARE_URL = 'https://omar-i9.github.io/my-profiles/';
+  const SHARE_TEXT = 'هذا موقعي، تفضل الرابط:';
 
-// دالة النسخ (برا القوس عشان الـ HTML يشوفها)
-window.copySiteLink = function() {
-    const url = "https://omar-i9.github.io/my-profiles/";
-    navigator.clipboard.writeText(url).then(() => {
-        if (typeof showToast === 'function') showToast("تم نسخ الرابط يا فنان 🔗");
+  const sBtn = document.getElementById('sharePortalBtn');
+  const sOverlay = document.getElementById('shareOverlay');
+  const sClose = document.getElementById('closeShare');
+
+  const qrImg = document.getElementById('shareQrImg');
+  const urlInput = document.getElementById('shareUrlInput');
+  const copyBtn = document.getElementById('copyShareBtn');
+  const nativeShareBtn = document.getElementById('nativeShareBtn');
+  const desktopSheetBtn = document.getElementById('desktopSheetBtn');
+  const openLinkBtn = document.getElementById('openLinkBtn');
+
+  const sheet = document.getElementById('fakeShareSheet');
+  const sheetBackdrop = sheet?.querySelector('.sheet-backdrop');
+  const closeSheetBtn = document.getElementById('closeSheetBtn');
+
+  const waShare = document.getElementById('waShare');
+  const fbShare = document.getElementById('fbShare');
+  const tgShare = document.getElementById('tgShare');
+
+  const encodedUrl = encodeURIComponent(SHARE_URL);
+  const encodedText = encodeURIComponent(`${SHARE_TEXT}\n${SHARE_URL}`);
+
+  function toastMessage(msg) {
+    if (typeof showToast === 'function') {
+      showToast(msg);
+      return;
+    }
+    console.log(msg);
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+
+    const temp = document.createElement('textarea');
+    temp.value = text;
+    temp.setAttribute('readonly', '');
+    temp.style.position = 'fixed';
+    temp.style.opacity = '0';
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+    return Promise.resolve();
+  }
+
+  function detectDeviceMode() {
+    const ua = navigator.userAgent || '';
+    const mobileUA = /Android|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const touch = navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
+    const narrow = window.innerWidth <= 980;
+
+    return (mobileUA || (coarse && touch && narrow)) ? 'mobile' : 'desktop';
+  }
+
+  function applyDeviceMode() {
+    document.body.dataset.device = detectDeviceMode();
+  }
+
+  function openModal() {
+    sOverlay.classList.add('active');
+    sOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    sOverlay.classList.remove('active');
+    sOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  function openSheet() {
+    sheet?.classList.add('active');
+    sheet?.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSheet() {
+    sheet?.classList.remove('active');
+    sheet?.setAttribute('aria-hidden', 'true');
+  }
+
+  function initShareLinks() {
+    qrImg.src =
+      'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' +
+      encodedUrl +
+      '&margin=10';
+
+    urlInput.value = SHARE_URL;
+
+    waShare.href = `https://wa.me/?text=${encodedText}`;
+    fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    tgShare.href = `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(SHARE_TEXT)}`;
+
+    const mail = sheet?.querySelector('[data-act="mail"]');
+    if (mail) {
+      mail.href = `mailto:?subject=${encodeURIComponent(document.title)}&body=${encodedText}`;
+    }
+  }
+
+  async function doNativeShare() {
+    const shareData = {
+      title: document.title,
+      text: SHARE_TEXT,
+      url: SHARE_URL
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch {}
+    }
+
+    openSheet();
+  }
+
+  if (sBtn && sOverlay) {
+    sBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
     });
-};
+  }
+
+  sClose?.addEventListener('click', closeModal);
+
+  sOverlay?.addEventListener('click', (e) => {
+    if (e.target === sOverlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      closeSheet();
+    }
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await copyToClipboard(SHARE_URL);
+      toastMessage('تم نسخ الرابط');
+    } catch {
+      toastMessage('تعذر نسخ الرابط');
+    }
+  });
+
+  nativeShareBtn?.addEventListener('click', doNativeShare);
+
+  desktopSheetBtn?.addEventListener('click', () => {
+    openSheet();
+  });
+
+  openLinkBtn?.addEventListener('click', () => {
+    window.open(SHARE_URL, '_blank', 'noopener,noreferrer');
+  });
+
+  sheetBackdrop?.addEventListener('click', closeSheet);
+  closeSheetBtn?.addEventListener('click', closeSheet);
+
+  sheet?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+
+    const act = btn.getAttribute('data-act');
+
+    if (act === 'copy') {
+      try {
+        await copyToClipboard(SHARE_URL);
+        toastMessage('تم نسخ الرابط');
+      } catch {
+        toastMessage('تعذر النسخ');
+      }
+      closeSheet();
+      return;
+    }
+
+    if (act === 'open') {
+      window.open(SHARE_URL, '_blank', 'noopener,noreferrer');
+      closeSheet();
+      return;
+    }
+  });
+
+  initShareLinks();
+  applyDeviceMode();
+
+  window.addEventListener('resize', () => {
+    applyDeviceMode();
+  });
+
+  window.copySiteLink = async function () {
+    try {
+      await copyToClipboard(SHARE_URL);
+      toastMessage('تم نسخ الرابط');
+    } catch {
+      toastMessage('تعذر نسخ الرابط');
+    }
+  };
+});
+}); // <--- هاد القوس هو الأهم، هاد بيسكر الـ DOMContentLoaded اللي بأول الملف
