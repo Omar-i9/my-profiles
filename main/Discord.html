@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Discord Profile</title>
+  <style>
+    :root {
+      --bg1: #071229;
+      --bg2: #0d2254;
+      --bg3: #1f57d6;
+      --card: rgba(10, 19, 44, 0.64);
+      --card2: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(142, 181, 255, 0.16);
+      --text: #f6f8ff;
+      --muted: rgba(246, 248, 255, 0.72);
+      --accent: #5865F2;
+      --accent2: #7aa7ff;
+      --accent3: #b7d0ff;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+      --radius: 30px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(122, 167, 255, 0.22), transparent 25%),
+        radial-gradient(circle at 80% 15%, rgba(88, 101, 242, 0.25), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.07), transparent 35%),
+        linear-gradient(160deg, var(--bg1), var(--bg2) 52%, var(--bg3));
+      color: var(--text);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(12px);
+      opacity: 0.45;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 220px;
+      height: 220px;
+      left: -70px;
+      top: 16%;
+      background: radial-gradient(circle, rgba(122,167,255,0.55), transparent 65%);
+      animation: floatBlob1 11s ease-in-out infinite;
+    }
+
+    body::after {
+      width: 260px;
+      height: 260px;
+      right: -90px;
+      bottom: 8%;
+      background: radial-gradient(circle, rgba(88,101,242,0.5), transparent 68%);
+      animation: floatBlob2 13s ease-in-out infinite;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .card {
+      width: min(100%, 430px);
+      position: relative;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(16, 28, 65, 0.68), rgba(6, 13, 31, 0.58));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 20px 18px 18px;
+      transform: translateZ(0);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), transparent 35%, transparent 65%, rgba(255,255,255,0.06));
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -20% -30% auto auto;
+      width: 190px;
+      height: 190px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 65%);
+      pointer-events: none;
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+
+    .floating-logo {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 92px;
+      height: 92px;
+      opacity: 0.15;
+      animation: floatDiscord 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .floating-logo svg {
+      width: 100%;
+      height: 100%;
+      fill: white;
+      filter: drop-shadow(0 10px 22px rgba(88,101,242,0.45));
+    }
+
+    .top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(88,101,242,1), rgba(122,167,255,0.95));
+      box-shadow: 0 12px 28px rgba(88,101,242,0.36);
+      flex: 0 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.28), transparent);
+      transform: translateX(-120%);
+      animation: shine 3.8s ease-in-out infinite;
+    }
+
+    .logo svg {
+      width: 34px;
+      height: 34px;
+      fill: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .title h1 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #E60023;
+      box-shadow: 0 0 0 4px rgba(67,245,143,0.12);
+    }
+
+    .user-box {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+      border-radius: 24px;
+      padding: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .label span:last-child {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.76rem;
+    }
+
+    .copy-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #5865F2, #7aa7ff);
+      box-shadow: 0 14px 26px rgba(88,101,242,0.30);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.98);
+      filter: brightness(0.96);
+      box-shadow: 0 10px 20px rgba(88,101,242,0.24);
+    }
+
+    .copy-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+      flex: 0 0 auto;
+    }
+
+    .stats {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      border-radius: 18px;
+      padding: 12px 10px;
+      text-align: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .hint {
+      margin-top: 12px;
+      text-align: center;
+      color: rgba(245,247,255,0.70);
+      font-size: 0.84rem;
+    }
+
+    .pulse-bar {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .pulse-bar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 45%;
+      background: linear-gradient(90deg, transparent, rgba(122,167,255,0.9), rgba(88,101,242,1), rgba(122,167,255,0.9), transparent);
+      animation: scan 2.8s linear infinite;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(245,247,255,0.62);
+      font-size: 0.76rem;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.82);
+      box-shadow: 0 0 10px rgba(177, 208, 255, 0.9);
+      animation: sparkleFloat linear infinite;
+      opacity: 0.6;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(12, 18, 40, 0.92);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.25);
+      max-width: calc(100vw - 28px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      z-index: 5;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes floatDiscord {
+      0%, 100% { transform: translate(0, 0) rotate(-6deg); }
+      50% { transform: translate(16px, 14px) rotate(6deg); }
+    }
+
+    @keyframes floatBlob1 {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(16px) scale(1.08); }
+    }
+
+    @keyframes floatBlob2 {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-18px) scale(1.07); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-120%) skewX(-18deg); }
+      45% { transform: translateX(140%) skewX(-18deg); }
+      100% { transform: translateX(140%) skewX(-18deg); }
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(340%); }
+    }
+
+    @keyframes sparkleFloat {
+      0% { transform: translateY(20px) scale(0.6); opacity: 0; }
+      15% { opacity: 0.75; }
+      100% { transform: translateY(-120vh) scale(1.25); opacity: 0; }
+    }
+
+    @media (max-width: 380px) {
+      .card { padding: 18px 14px 14px; border-radius: 24px; }
+      .title h1 { font-size: 1.14rem; }
+      .copy-btn { padding: 15px 14px; font-size: 1rem; }
+      .stats { gap: 8px; }
+      .stat { padding: 10px 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" aria-label="Discord profile card">
+      <div class="floating-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.32 4.37A19.8 19.8 0 0 0 15.9 3l-.2.4c1.6.4 2.8 1 3.8 1.7-1.6-.8-3.1-1.3-4.6-1.6a19.1 19.1 0 0 0-6.8 0c-1.5.3-3 .8-4.6 1.6 1-.7 2.2-1.3 3.8-1.7l-.2-.4A19.8 19.8 0 0 0 3.68 4.37C1.6 7.5.9 10.5 1.1 13.4c2 1.6 4 2.5 5.9 3.1l.7-1.1c-.7-.3-1.4-.6-2.1-1.1l.5-.4c4.1 1.9 8.2 1.9 12.2 0l.5.4c-.7.5-1.4.8-2.1 1.1l.7 1.1c1.9-.6 3.9-1.5 5.9-3.1.2-2.9-.5-5.9-2.5-9.03ZM9 12.8c-1 0-1.8-.9-1.8-2 0-1.1.8-2 1.8-2s1.8.9 1.8 2c0 1.1-.8 2-1.8 2Zm6 0c-1 0-1.8-.9-1.8-2 0-1.1.8-2 1.8-2s1.8.9 1.8 2c0 1.1-.8 2-1.8 2Z"/>
+        </svg>
+      </div>
+
+      <div class="top">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.32 4.37A19.8 19.8 0 0 0 15.9 3l-.2.4c1.6.4 2.8 1 3.8 1.7-1.6-.8-3.1-1.3-4.6-1.6a19.1 19.1 0 0 0-6.8 0c-1.5.3-3 .8-4.6 1.6 1-.7 2.2-1.3 3.8-1.7l-.2-.4A19.8 19.8 0 0 0 3.68 4.37C1.6 7.5.9 10.5 1.1 13.4c2 1.6 4 2.5 5.9 3.1l.7-1.1c-.7-.3-1.4-.6-2.1-1.1l.5-.4c4.1 1.9 8.2 1.9 12.2 0l.5.4c-.7.5-1.4.8-2.1 1.1l.7 1.1c1.9-.6 3.9-1.5 5.9-3.1.2-2.9-.5-5.9-2.5-9.03ZM9 12.8c-1 0-1.8-.9-1.8-2 0-1.1.8-2 1.8-2s1.8.9 1.8 2c0 1.1-.8 2-1.8 2Zm6 0c-1 0-1.8-.9-1.8-2 0-1.1.8-2 1.8-2s1.8.9 1.8 2c0 1.1-.8 2-1.8 2Z"/>
+          </svg>
+        </div>
+        <div class="title">
+          <h1>عُـمَر | Omar Discord</h1>
+          <div class="badge-row">
+            <div class="badge"><span class="dot"></span>عدم الازعاج</div>
+            <div class="badge">Web Dev?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="user-box">
+        <div class="label"><span>يوزر ديسكورد</span><span>Tap to copy</span></div>
+        <button class="copy-btn" id="copyBtn" type="button" aria-label="نسخ يوزر ديسكورد">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 2H8a2 2 0 0 0-2 2v11h2V4h11V2Zm3 4H12a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm0 16H12V8h10v14Z"/>
+          </svg>
+          <span id="userText">gdmi_3</span>
+        </button>
+        <div class="hint">اضغط على الاسم لنسخه</div>
+      </div>
+
+
+      <div class="pulse-bar" aria-hidden="true"></div>
+
+      <div class="footer">
+        <span>gdmi_3</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">تم نسخ اليوزر: gdmi_3</div>
+
+  <script>
+    const userText = "gdmi_3";
+    const copyBtn = document.getElementById("copyBtn");
+    const toast = document.getElementById("toast");
+    const sparkles = document.getElementById("sparkles");
+
+    function showToast() {
+      toast.classList.add("show");
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1600);
+    }
+
+    async function copyUser() {
+      try {
+        await navigator.clipboard.writeText(userText);
+      } catch (err) {
+        const temp = document.createElement("textarea");
+        temp.value = userText;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+      }
+      showToast();
+    }
+
+    function createSparkles(count = 26) {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("span");
+        el.className = "sparkle";
+        const size = 2 + Math.random() * 4;
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+        el.style.left = `${Math.random() * 100}%`;
+        el.style.bottom = `${-10 - Math.random() * 50}px`;
+        el.style.animationDuration = `${7 + Math.random() * 9}s`;
+        el.style.animationDelay = `${Math.random() * 8}s`;
+        el.style.opacity = `${0.25 + Math.random() * 0.5}`;
+        frag.appendChild(el);
+      }
+      sparkles.appendChild(frag);
+    }
+
+    copyBtn.addEventListener("click", copyUser);
+    createSparkles();
+  </script>
+</body>
+</html>
