@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://omar-i9.github.io/my-profiles/sitemap.xml
