@@ -20,7 +20,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WHRP4DELSR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -52,17 +51,25 @@
     <div class="ayah-detail" id="ayahDetail"></div>
   </div>
 
-  <main class="app">
-    <section class="hero">
-      <div class="avatar">
-        <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
-      </div>
+<main class="app">
+  <section class="hero-wrapper">
+    
+    <div class="avatar">
+      <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
+      <div class="status-indicator"></div> </div>
 
-      <div class="hero-text">
+    <div class="hero-card-body">
+      <div class="moving-border-line"></div>
+      
+            <div class="hero-text">
         <span class="status">BUSY</span>
         <h1>عُـمَر | Omar</h1>
         <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
       </div>
+
+      </div>
+    </div>
+
 
       <div class="hero-actions"></div>
     </section>
@@ -75,13 +82,14 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.facebook.com/share/1J5v2pJmfX/">
+         data-copy-text="https://www.facebook.com/share/1J5v2pJmfX/"
+         aria-label="فيسبوك">
         <span class="social-icon"><i class="fa-brands fa-facebook-f"></i></span>
         <div class="social-text">
           <strong>فيسبوك</strong>
           <span>Facebook</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
 
       <a class="social-card wa-card"
@@ -89,7 +97,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://wa.me/message/BZTIWEE5JKS3A1">
+         data-copy-text="https://wa.me/message/BZTIWEE5JKS3A1"
+         aria-label="واتساب">
         <span class="social-icon"><i class="fa-brands fa-whatsapp"></i></span>
         <div class="social-text">
           <strong>واتساب</strong>
@@ -102,7 +111,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.instagram.com/omar.a.z3">
+         data-copy-text="https://www.instagram.com/omar.a.z3"
+         aria-label="انستجرام">
         <span class="social-icon"><i class="fa-brands fa-instagram"></i></span>
         <div class="social-text">
           <strong>انستجرام</strong>
@@ -115,26 +125,14 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.tiktok.com/@gdmi_33">
+         data-copy-text="https://www.tiktok.com/@gdmi_33"
+         aria-label="تيك توك">
         <span class="social-icon"><i class="fa-brands fa-tiktok"></i></span>
         <div class="social-text">
           <strong>تيك توك</strong>
           <span>TikTok</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
-      </a>
-
-      <a class="social-card ds-card"
-         href="javascript:void(0)"
-         id="openDiscordBtn"
-         data-longcopy
-         data-copy-text="gdmi_3">
-        <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
-        <div class="social-text">
-          <strong>ديسكورد</strong>
-          <span>Discord</span>
-          <p><sub>اضغط لفتح البطاقة داخل الموقع</sub></p>
-        </div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
 
       <a class="social-card sc-card"
@@ -142,13 +140,14 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.snapchat.com/add/omar-gdmi">
+         data-copy-text="https://www.snapchat.com/add/omar-gdmi"
+         aria-label="سناب شات">
         <span class="social-icon"><i class="fa-brands fa-snapchat-ghost"></i></span>
         <div class="social-text">
           <strong>سناب شات</strong>
           <span>Snapchat</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
 
       <a class="social-card st-card"
@@ -156,7 +155,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://steamcommunity.com/profiles/76561199547179169/">
+         data-copy-text="https://steamcommunity.com/profiles/76561199547179169/"
+         aria-label="ستيم">
         <span class="social-icon"><i class="fa-brands fa-steam"></i></span>
         <div class="social-text">
           <strong>ستيم</strong>
@@ -164,16 +164,17 @@
         </div>
       </a>
 
-      <a class="social-card more-socials-card"
-         href="#"
-         id="moreSocialsBtn">
+      <button class="social-card more-socials-card"
+              type="button"
+              id="moreSocialsBtn"
+              aria-label="مواقع تواصل أخرى">
         <span class="social-icon"><i class="fa-solid fa-globe"></i></span>
         <div class="social-text">
           <strong>مواقع تواصل أخرى</strong>
           <span>Threads · GitHub · Chess · Twitch · Pinterest</span>
         </div>
         <span class="badge special-badge">Open</span>
-      </a>
+      </button>
     </section>
 
     <section class="section-title">نسخ سريع</section>
@@ -292,13 +293,14 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.threads.com/@omar.a.z3">
+         data-copy-text="https://www.threads.com/@omar.a.z3"
+         aria-label="Threads">
         <span class="social-icon"><i class="fa-brands fa-threads"></i></span>
         <div class="social-text">
           <strong>Threads</strong>
           <span>@omar.a.z3</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
 
       <a class="social-card drawer-card github-card"
@@ -306,7 +308,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://github.com/Omar-i9">
+         data-copy-text="https://github.com/Omar-i9"
+         aria-label="GitHub">
         <span class="social-icon"><i class="fa-brands fa-github"></i></span>
         <div class="social-text">
           <strong>GitHub</strong>
@@ -319,7 +322,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.chess.com/member/omar-g4">
+         data-copy-text="https://www.chess.com/member/omar-g4"
+         aria-label="Chess.com">
         <span class="social-icon"><i class="fa-solid fa-chess"></i></span>
         <div class="social-text">
           <strong>Chess.com</strong>
@@ -332,7 +336,8 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.twitch.tv/gdmi3">
+         data-copy-text="https://www.twitch.tv/gdmi3"
+         aria-label="Twitch">
         <span class="social-icon"><i class="fa-brands fa-twitch"></i></span>
         <div class="social-text">
           <strong>Twitch</strong>
@@ -345,13 +350,14 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://pin.it/5hZADmFhk">
+         data-copy-text="https://pin.it/5hZADmFhk"
+         aria-label="Pinterest">
         <span class="social-icon"><i class="fa-brands fa-pinterest"></i></span>
         <div class="social-text">
           <strong>Pinterest</strong>
           <span>Pin it</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
 
       <a class="social-card drawer-card ig-card vip-card"
@@ -359,15 +365,37 @@
          target="_blank"
          rel="noopener noreferrer"
          data-longcopy
-         data-copy-text="https://www.instagram.com/3mar.close">
+         data-copy-text="https://www.instagram.com/3mar.close"
+         aria-label="انستغرام خاص">
         <span class="social-icon"><i class="fa-solid fa-user-lock"></i></span>
         <div class="social-text">
           <strong>انستغرام؟</strong>
           <span>Private Instagram</span>
         </div>
-        <div class="badge vip">PRIVATE</div>
+        <div class="badge-vip">PRIVATE</div>
       </a>
+
+      
+      <button class="social-card ds-card"
+              type="button"
+              id="openDiscordBtn"
+              data-longcopy
+              data-copy-text="gdmi_3"
+              aria-label="ديسكورد">
+        <span class="social-icon"><i class="fa-brands fa-discord"></i></span>
+        <div class="social-text">
+          <strong>ديسكورد</strong>
+          <span>Discord</span>
+          <span class="social-note">اضغط لفتح البطاقة داخل الموقع</span>
+        </div>
+      </button>
+
     </div>
+   
+button class="music-fab" id="musicFab" type="button" aria-label="فتح الموسيقى" disabled> 
+  i class="fa-solid fa-music"></i>
+/button>
+
   </section>
 
   <footer>
