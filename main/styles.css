@@ -39,7 +39,7 @@
   --blue: #1877f2;
   --good: #25d366;
   --cyan: #229ED9;
-  --gold: #ffd700;
+  --gold-solid: #ffd700;
   --gold-2: #f59e0b;
   --white: #ffffff;
   --black: #000000;
@@ -63,8 +63,6 @@
   --glass-blur-strong: blur(16px) saturate(190%);
 
   --brand-shadow: 0 0 0 0 rgba(0,0,0,0);
-
-  --accent: #00f2ff; /* اللون الرئيسي */
   --bg-dark: #0b0f16;
   --card-bg: rgba(255, 255, 255, 0.05);
   --gold: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -111,9 +109,11 @@ body {
   padding: 18px 12px 120px;
   -webkit-tap-highlight-color: transparent;
   position: relative;
+}
 
-  background: radial-gradient(circle at center, #1a1f2b 0%, #0b0f16 100%);
-  overflow-x: hidden;
+body.drawer-open {
+  overflow: hidden;
+  touch-action: none;
 }
 
 body::before,
@@ -227,16 +227,14 @@ a {
   pointer-events: none;
 }
 
-/* هيرو ورايبر (لحل مشكلة القص) */
 .hero-wrapper {
   position: relative;
   max-width: 500px;
-  margin: 100px auto 40px; /* مساحة للأفاتار في الأعلى */
+  margin: 100px auto 40px; 
   padding: 0 20px;
   perspective: 1000px;
 }
 
-/* الأفاتار مع نبض نيون */
 .avatar {
   position: absolute;
   top: -60px;
@@ -261,7 +259,22 @@ a {
   box-shadow: 0 0 30px var(--accent);
 }
 
-/* تأثير النبض خلف الصورة */
+.status-indicator {
+  position: absolute;
+  right: 6px;
+  bottom: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 3px solid var(--bg-dark);
+  background: linear-gradient(180deg, #34d399, #16a34a);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 14px rgba(22, 163, 74, 0.45);
+  animation: softFloat 2.8s ease-in-out infinite;
+}
+
+/* طھط£ط«ظٹط± ط§ظ„ظ†ط¨ط¶ ط®ظ„ظپ ط§ظ„طµظˆط±ط© */
 .avatar::before {
   content: '';
   position: absolute;
@@ -271,7 +284,7 @@ a {
   animation: ringPulse 2s infinite;
 }
 
-/* جسم البطاقة الأساسي */
+/* ط¬ط³ظ… ط§ظ„ط¨ط·ط§ظ‚ط© ط§ظ„ط£ط³ط§ط³ظٹ */
 .hero-card-body {
   position: relative;
   display: flex;
@@ -314,7 +327,7 @@ a {
   font-style: normal;
   color: #b8f7ff;
 }
-/* الخط المتحرك الفخم */
+/* ط§ظ„ط®ط· ط§ظ„ظ…طھط­ط±ظƒ ط§ظ„ظپط®ظ… */
 .moving-border-line {
   position: absolute;
   inset: 0;
@@ -326,15 +339,15 @@ a {
   pointer-events: none;
   opacity: 0.7;
 }
-/* الحاوية (افترضنا أنها الزر أو الكارد الذي يحتوي الشارة) */
+/* ط§ظ„ط­ط§ظˆظٹط© (ط§ظپطھط±ط¶ظ†ط§ ط£ظ†ظ‡ط§ ط§ظ„ط²ط± ط£ظˆ ط§ظ„ظƒط§ط±ط¯ ط§ظ„ط°ظٹ ظٹط­طھظˆظٹ ط§ظ„ط´ط§ط±ط©) */
 .parent-container {
   position: relative;
   display: inline-block;
-  perspective: 1000px; /* ضروري لتأثير الـ 3D */
+  perspective: 1000px; /* ط¶ط±ظˆط±ظٹ ظ„طھط£ط«ظٹط± ط§ظ„ظ€ 3D */
 }
 
 
-/* تفاعل البطاقات عند الـ Hover */
+/* طھظپط§ط¹ظ„ ط§ظ„ط¨ط·ط§ظ‚ط§طھ ط¹ظ†ط¯ ط§ظ„ظ€ Hover */
 .card-link {
   position: relative;
   overflow: hidden;
@@ -349,7 +362,7 @@ a {
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* لمعة Sweep عند التحويم */
+/* ظ„ظ…ط¹ط© Sweep ط¹ظ†ط¯ ط§ظ„طھط­ظˆظٹظ… */
 .card-link::after {
   content: '';
   position: absolute;
@@ -377,15 +390,15 @@ a {
   transform-style: preserve-3d;
 }
 
-/* لازم الأب يكون يسمح بالـ 3D */
+/* ظ„ط§ط²ظ… ط§ظ„ط£ط¨ ظٹظƒظˆظ† ظٹط³ظ…ط­ ط¨ط§ظ„ظ€ 3D */
 .parent-container{
   position: relative;
   perspective: 900px;
   transform-style: preserve-3d;
-  overflow: visible; /* مهم حتى لا ينقص البادج */
+  overflow: visible; /* ظ…ظ‡ظ… ط­طھظ‰ ظ„ط§ ظٹظ†ظ‚طµ ط§ظ„ط¨ط§ط¯ط¬ */
 }
 
-/* البطاقة نفسها */
+/* ط§ظ„ط¨ط·ط§ظ‚ط© ظ†ظپط³ظ‡ط§ */
 .badge-vip{
   position: absolute;
   top: 53px;
@@ -439,7 +452,7 @@ a {
   animation: vipFloat 3.6s ease-in-out infinite;
 }
 
-/* الواجهة الأمامية اللامعة */
+/* ط§ظ„ظˆط§ط¬ظ‡ط© ط§ظ„ط£ظ…ط§ظ…ظٹط© ط§ظ„ظ„ط§ظ…ط¹ط© */
 .badge-vip::before{
   content:"";
   position: absolute;
@@ -452,7 +465,7 @@ a {
   pointer-events: none;
 }
 
-/* الحافة الجانبية لتعطي إحساس الجسم السميك */
+/* ط§ظ„ط­ط§ظپط© ط§ظ„ط¬ط§ظ†ط¨ظٹط© ظ„طھط¹ط·ظٹ ط¥ط­ط³ط§ط³ ط§ظ„ط¬ط³ظ… ط§ظ„ط³ظ…ظٹظƒ */
 .badge-vip::after{
   content:"";
   position: absolute;
@@ -474,7 +487,7 @@ a {
   pointer-events: none;
 }
 
-/* عند المرور على الكارد الأب */
+/* ط¹ظ†ط¯ ط§ظ„ظ…ط±ظˆط± ط¹ظ„ظ‰ ط§ظ„ظƒط§ط±ط¯ ط§ظ„ط£ط¨ */
 .parent-container:hover .badge-vip{
   transform:
     translateX(-4px)
@@ -491,7 +504,7 @@ a {
     0 0 18px rgba(124,92,255,.18);
 }
 
-/* ضغط حقيقي */
+/* ط¶ط؛ط· ط­ظ‚ظٹظ‚ظٹ */
 .badge-vip:active{
   transform:
     translateX(-1px)
@@ -506,14 +519,14 @@ a {
     0 10px 18px rgba(0,0,0,.18);
 }
 
-/* لمعان متحرك خفيف */
+/* ظ„ظ…ط¹ط§ظ† ظ…طھط­ط±ظƒ ط®ظپظٹظپ */
 .badge-vip .shine,
 .badge-vip::before{
   background-size: 200% 200%;
   animation: vipShine 4s linear infinite;
 }
 
-/* نبض خفيف */
+/* ظ†ط¨ط¶ ط®ظپظٹظپ */
 @keyframes vipFloat{
   0%,100%{
     transform:
@@ -539,7 +552,7 @@ a {
   100% { background-position: 0% 50%; }
 }
 
-/* تحسين على الشاشات الضعيفة */
+/* طھط­ط³ظٹظ† ط¹ظ„ظ‰ ط§ظ„ط´ط§ط´ط§طھ ط§ظ„ط¶ط¹ظٹظپط© */
 @media (max-width: 480px){
   .badge-vip{
     top: 10px;
@@ -563,7 +576,7 @@ a {
   }
 }
 
-/* تقليل الحركة لمن لا يفضلها */
+/* طھظ‚ظ„ظٹظ„ ط§ظ„ط­ط±ظƒط© ظ„ظ…ظ† ظ„ط§ ظٹظپط¶ظ„ظ‡ط§ */
 @media (prefers-reduced-motion: reduce){
   .badge-vip{
     animation: none;
@@ -867,6 +880,22 @@ a {
   line-height: 1.4;
 }
 
+.social-note {
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: #88f4ff;
+  opacity: 0.88;
+  letter-spacing: 0.1px;
+}
+
+.social-card.copied {
+  border-color: rgba(0, 242, 255, 0.4);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.30),
+    0 0 26px rgba(0, 242, 255, 0.24);
+}
+
 .social-card:hover .social-text strong,
 .social-card:hover .social-text span,
 .social-card:focus-visible .social-text strong,
@@ -899,7 +928,7 @@ a {
   transform: translateY(-1px);
 }
 
-/* وميض لطيف حسب لون المنصة */
+/* ظˆظ…ظٹط¶ ظ„ط·ظٹظپ ط­ط³ط¨ ظ„ظˆظ† ط§ظ„ظ…ظ†طµط© */
 @keyframes brandFlicker{
   0%, 100% { filter: brightness(1); }
   40% { filter: brightness(1.12); }
@@ -1204,7 +1233,8 @@ a {
 
 .music-fab {
   position: fixed;
-  right: 14px;
+  left: 14px;
+  right: auto;
   bottom: 14px;
   width: 54px;
   height: 54px;
@@ -1237,7 +1267,8 @@ a {
 
 .music-hint {
   position: fixed;
-  right: 76px;
+  left: 76px;
+  right: auto;
   bottom: 22px;
   z-index: 998;
   max-width: 190px;
@@ -1259,13 +1290,13 @@ a {
 .music-hint::after {
   content: "";
   position: absolute;
-  right: -6px;
+  left: -6px;
   bottom: 16px;
   width: 12px;
   height: 12px;
   background: rgba(12, 17, 26, 0.94);
   border-top: 1px solid var(--music-line);
-  border-right: 1px solid var(--music-line);
+  border-left: 1px solid var(--music-line);
   transform: rotate(45deg);
 }
 
@@ -1279,7 +1310,8 @@ a {
   z-index: 9996;
 }
 
-.overlay.open {
+.overlay.open,
+.overlay.show {
   opacity: 1;
   pointer-events: auto;
 }
@@ -1751,6 +1783,18 @@ a {
   scrollbar-color: var(--music-accent) transparent;
 }
 
+.audio-state {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #b8cbdd;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .track {
   display: grid;
   grid-template-columns: 48px 1fr auto;
@@ -2104,7 +2148,8 @@ a {
   z-index: 9994;
 }
 
-.drawer-backdrop.open {
+.drawer-backdrop.open,
+.drawer-backdrop.show {
   opacity: 1;
   pointer-events: auto;
 }
@@ -2131,7 +2176,8 @@ a {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.social-drawer.open {
+.social-drawer.open,
+.social-drawer.show {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
   visibility: visible;
@@ -2248,6 +2294,61 @@ a {
   background: linear-gradient(135deg, #22c55e, #06b6d4);
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+.social-card:focus-visible,
+.drawer-card:focus-visible,
+.tool-btn:focus-visible,
+.control-btn:focus-visible,
+.play-btn:focus-visible,
+.copy-btn:focus-visible,
+.share-item:focus-visible,
+.sheet-item:focus-visible {
+  outline: 2px solid rgba(0, 242, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.pulse-hit {
+  animation: pressWave .6s cubic-bezier(.2, .9, .2, 1);
+}
+
+.soft-float {
+  animation: softFloat 2.8s ease-in-out infinite;
+}
+
+.wave-auto {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.wave-auto::after {
+  content: "";
+  position: absolute;
+  inset: auto auto -150% -40%;
+  width: 180%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wave-auto:hover::after,
+.wave-auto:focus-visible::after {
+  animation: wavePulse 1.2s ease-out;
+}
+
+.social-card.copied::before {
+  opacity: 0.36;
+  transform: translateX(2%);
+}
+
+.share-modal {
+  width: min(100%, 430px);
+}
+
 .track-empty,
 .copy-row,
 .work-card,
@@ -2328,7 +2429,8 @@ a {
   padding: 16px;
 }
 
-.share-overlay.active {
+.share-overlay.active,
+.share-overlay.show {
   display: flex;
 }
 
@@ -2780,7 +2882,7 @@ body[data-device="desktop"] .desktop-only{ display: inline-grid; }
   user-select: none;
 }
 
-/* Footer كامل ومرتب */
+/* Footer ظƒط§ظ…ظ„ ظˆظ…ط±طھط¨ */
 .site-footer {
   width: 100%;
   margin-top: 60px;
@@ -2906,11 +3008,6 @@ body[data-device="desktop"] .desktop-only{ display: inline-grid; }
   100%{ transform: translateX(120%); }
 }
 
-@keyframes hintFloat{
-  0%,100%{ transform: translateY(0); }
-  50%{ transform: translateY(-4px); }
-}
-
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.6); }
   70% { box-shadow: 0 0 0 15px rgba(0, 242, 255, 0); }
@@ -2998,7 +3095,8 @@ body[data-device="desktop"] .desktop-only{ display: inline-grid; }
 
   .music-hint {
     max-width: 150px;
-    right: 74px;
+    left: 74px;
+    right: auto;
   }
 
   .track {
@@ -3087,9 +3185,53 @@ body[data-device="desktop"] .desktop-only{ display: inline-grid; }
 .pinterest-card{ --glow: rgba(230, 0, 35, 0.42); }
 .more-socials-card{ --glow: rgba(255, 255, 255, 0.16); }
 
-@keyframes brandFlicker{
-  0%, 100% { filter: brightness(1); }
-  40% { filter: brightness(1.12); }
-  55% { filter: brightness(.96); }
-  70% { filter: brightness(1.14); }
+@supports not (color: color-mix(in srgb, #000 50%, #fff 50%)) {
+  .social-card::before {
+    background:
+      radial-gradient(circle at 18% 50%, rgba(255, 255, 255, 0.12), transparent 52%),
+      linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.08) 30%, transparent 60%);
+  }
 }
+
+@media (prefers-contrast: more) {
+  .social-card,
+  .copy-row,
+  .work-card,
+  .music-sheet,
+  .social-drawer,
+  .share-modal {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  .social-text span,
+  .music-info span:last-child,
+  .now-playing-sub,
+  .audio-state {
+    color: #d7e6f6;
+  }
+}
+
+@media (max-width: 380px) {
+  .music-fab,
+  .share-fab {
+    width: 50px;
+    height: 50px;
+  }
+
+  .music-fab i,
+  .share-fab i {
+    font-size: 17px;
+  }
+
+  .social-card {
+    min-height: 72px;
+    padding-inline-start: 76px;
+  }
+
+  .social-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 18px;
+  }
+}
+
