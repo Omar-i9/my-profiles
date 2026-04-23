@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0f16" />
   <meta name="color-scheme" content="dark" />
+  <meta name="description" content="عُـمَر | Omar - كل حساباتي في مكان واحد؟!" />
 
   <meta property="og:title" content="عُـمَر | Omar">
   <meta property="og:description" content="كل حساباتي في مكان واحد؟!">
@@ -17,6 +18,8 @@
 
   <link rel="icon" href="https://omar-i9.github.io/my-profiles/photo/profile.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="https://omar-i9.github.io/my-profiles/photo/tameen-logo.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -36,6 +39,26 @@
       -webkit-touch-callout: none;
       user-select: none;
     }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .page-overlay,
+    .drawer-backdrop,
+    .share-overlay {
+      display: none;
+    }
+
+    .page-overlay.show,
+    .drawer-backdrop.show,
+    .share-overlay.show {
+      display: block;
+    }
   </style>
 </head>
 
@@ -51,27 +74,26 @@
     <div class="ayah-detail" id="ayahDetail"></div>
   </div>
 
-<main class="app">
-  <section class="hero-wrapper">
-    
-    <div class="avatar">
-      <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
-      <div class="status-indicator"></div> </div>
-
-    <div class="hero-card-body">
-      <div class="moving-border-line"></div>
-      
-            <div class="hero-text">
-        <span class="status">BUSY</span>
-        <h1>عُـمَر | Omar</h1>
-        <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
+  <main class="app">
+    <section class="hero-wrapper">
+      <div class="avatar">
+        <img src="photo/profile.jpeg" alt="صورة الملف الشخصي">
+        <div class="status-indicator"></div>
       </div>
 
+      <div class="hero-card-body">
+        <div class="moving-border-line"></div>
+
+        <div class="hero-text">
+          <span class="status">BUSY</span>
+          <h1>عُـمَر | Omar</h1>
+          <p>دامك دخلت كمل معروفك وشوف الباقي..!</p>
+        </div>
+
+        <div class="hero-actions"></div>
+
+        <div class="hero-card-footer">الفولو <em>ما بكهربك</em></div>
       </div>
-    </div>
-
-
-      <div class="hero-actions"></div>
     </section>
 
     <section class="section-title">روابط التواصل</section>
@@ -207,9 +229,6 @@
       </div>
       <i class="fa-solid fa-arrow-left"></i>
     </a>
-
-  <div class="hero-card-footer">الفولو <em>ما بكهربك</em></div>
-</div>
   </main>
 
   <section class="music-sheet" id="musicSheet" aria-label="قائمة الموسيقى">
@@ -376,7 +395,6 @@
         <div class="badge-vip">PRIVATE</div>
       </a>
 
-      
       <button class="social-card ds-card"
               type="button"
               id="openDiscordBtn"
@@ -390,22 +408,16 @@
           <span class="social-note">اضغط لفتح البطاقة داخل الموقع</span>
         </div>
       </button>
-
     </div>
-   
-
   </section>
 
-<footer class="site-footer">
-  <div class="site-footer__inner">
-    <p class="site-footer__brand">عُـمَر | Omar</p>
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p class="site-footer__brand">عُـمَر | Omar</p>
+      <p class="site-footer__text">جميع الحقوق غير محفوظة © 2026</p>
+    </div>
+  </footer>
 
-    <p class="site-footer__text">
-      جميع الحقوق غير محفوظة © 2026
-    </p>
-
-  </div>
-</footer>
   <button class="share-fab" id="sharePortalBtn" type="button" aria-label="مشاركة الموقع">
     <i class="fa-solid fa-share-nodes"></i>
   </button>
@@ -450,47 +462,51 @@
   </div>
 
   <script>
-    const openDiscordBtn = document.getElementById('openDiscordBtn');
-    const pageOverlay = document.getElementById('pageOverlay');
-    const closePageBtn = document.getElementById('closePageBtn');
-    const pageFrame = document.getElementById('pageFrame');
+    (function () {
+      const openDiscordBtn = document.getElementById('openDiscordBtn');
+      const pageOverlay = document.getElementById('pageOverlay');
+      const closePageBtn = document.getElementById('closePageBtn');
+      const pageFrame = document.getElementById('pageFrame');
 
-    function openDiscordPage() {
-      pageFrame.src = 'main/Discord.html';
-      pageOverlay.classList.add('show');
-      pageOverlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeDiscordPage() {
-      pageOverlay.classList.remove('show');
-      pageOverlay.setAttribute('aria-hidden', 'true');
-      pageFrame.src = '';
-      document.body.style.overflow = '';
-    }
-
-    if (openDiscordBtn) {
-      openDiscordBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        openDiscordPage();
-      });
-    }
-
-    if (closePageBtn) {
-      closePageBtn.addEventListener('click', closeDiscordPage);
-    }
-
-    if (pageOverlay) {
-      pageOverlay.addEventListener('click', (e) => {
-        if (e.target === pageOverlay) closeDiscordPage();
-      });
-    }
-
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'close-discord') {
-        closeDiscordPage();
+      function openDiscordPage() {
+        if (!pageOverlay || !pageFrame) return;
+        pageFrame.src = 'main/Discord.html';
+        pageOverlay.classList.add('show');
+        pageOverlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
       }
-    });
+
+      function closeDiscordPage() {
+        if (!pageOverlay || !pageFrame) return;
+        pageOverlay.classList.remove('show');
+        pageOverlay.setAttribute('aria-hidden', 'true');
+        pageFrame.src = '';
+        document.body.style.overflow = '';
+      }
+
+      if (openDiscordBtn) {
+        openDiscordBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openDiscordPage();
+        });
+      }
+
+      if (closePageBtn) {
+        closePageBtn.addEventListener('click', closeDiscordPage);
+      }
+
+      if (pageOverlay) {
+        pageOverlay.addEventListener('click', (e) => {
+          if (e.target === pageOverlay) closeDiscordPage();
+        });
+      }
+
+      window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'close-discord') {
+          closeDiscordPage();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
