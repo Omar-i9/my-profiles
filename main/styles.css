@@ -230,7 +230,7 @@ a {
 .hero-wrapper {
   position: relative;
   max-width: 500px;
-  margin: 100px auto 40px; 
+  margin: 100px auto 40px;
   padding: 0 20px;
   perspective: 1000px;
 }
@@ -252,6 +252,7 @@ a {
   border: 4px solid var(--bg-dark);
   box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
   transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  object-fit: cover;
 }
 
 .avatar:hover img {
@@ -274,7 +275,7 @@ a {
   animation: softFloat 2.8s ease-in-out infinite;
 }
 
-/* طھط£ط«ظٹط± ط§ظ„ظ†ط¨ط¶ ط®ظ„ظپ ط§ظ„طµظˆط±ط© */
+/* تأثير نبض حول الصورة */
 .avatar::before {
   content: '';
   position: absolute;
@@ -284,7 +285,7 @@ a {
   animation: ringPulse 2s infinite;
 }
 
-/* ط¬ط³ظ… ط§ظ„ط¨ط·ط§ظ‚ط© ط§ظ„ط£ط³ط§ط³ظٹ */
+/* جسم البطاقة */
 .hero-card-body {
   position: relative;
   display: flex;
@@ -327,7 +328,32 @@ a {
   font-style: normal;
   color: #b8f7ff;
 }
-/* ط§ظ„ط®ط· ط§ظ„ظ…طھط­ط±ظƒ ط§ظ„ظپط®ظ… */
+
+/* تحسينات إضافية للشاشات الصغيرة */
+@media (max-width: 520px) {
+  .hero {
+    margin-top: 48px;
+    padding: 70px 12px 16px;
+    border-radius: 22px;
+  }
+
+  .hero-wrapper {
+    margin: 88px auto 32px;
+    padding: 0 12px;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    top: -48px;
+  }
+
+  .hero-card-body {
+    min-height: 230px;
+    padding: 70px 18px 18px;
+    border-radius: 20px;
+  }
+}/* ط§ظ„ط®ط· ط§ظ„ظ…طھط­ط±ظƒ ط§ظ„ظپط®ظ… */
 .moving-border-line {
   position: absolute;
   inset: 0;
@@ -717,16 +743,42 @@ a {
   display: grid;
   gap: 10px;
 }
+.social-wrap,
+.links-grid,
+.links,
+.copy-list,
+.drawer-list {
+  display: grid;
+  gap: 10px;
+}
 
+/* تخطيط الكروت: صغار جنب بعض ويتراصّوا تلقائياً */
+.links-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+/* الكارت نفسه */
 .social-card {
   perspective: 1000px;
   transform-style: preserve-3d;
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  min-height: 78px;
-  padding: 14px 14px 14px 82px;
-  border-radius: 20px;
+
+  min-height: 150px;
+  padding: 12px 10px 12px;
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: 8px;
+
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03) !important;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
@@ -751,7 +803,7 @@ a {
     opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   opacity: 0;
-  transform: translateY(30px) scale(0.9);
+  transform: translateY(18px) scale(0.96);
   background-clip: padding-box;
 }
 
@@ -815,22 +867,29 @@ a {
   opacity: 1;
 }
 
+/* الأيقونة: صورة فقط، صغيرة، فوق النص */
 .social-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  width: 50px;
-  height: 50px;
-  transform: translateY(-50%);
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+
+  width: 56px;
+  height: 56px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  align-items: center;
+  justify-content: center;
+
   border-radius: 16px;
-  display: grid;
+  overflow: hidden;
+  display: flex;
   place-items: center;
-  font-size: 20px;
-  line-height: 1;
-  background: var(--icon-bg);
-  color: var(--icon-fg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+
+  background: transparent ;
+  border: 0 ;
+  box-shadow: none ;
+  overflow: visible;
   transition:
     transform .18s ease,
     background .18s ease,
@@ -840,23 +899,41 @@ a {
   z-index: 2;
 }
 
+.social-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.social-icon i {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--icon-fg, #fff);
+}
+
 .social-card:hover .social-icon,
 .social-card:focus-visible .social-icon,
 .social-card:active .social-icon {
   background: var(--hover-icon-bg);
   color: var(--hover-icon-fg);
   border-color: rgba(255,255,255,.18);
-  transform: translateY(-50%) scale(1.08);
+  transform: scale(1.06);
   box-shadow:
     0 10px 24px rgba(0,0,0,.26),
     0 0 18px var(--hover-glow);
   animation: brandFlicker .9s ease-in-out infinite;
 }
 
+/* النصوص */
 .social-text {
   position: relative;
   z-index: 2;
   min-width: 0;
+  width: 100%;
 }
 
 .social-text strong,
@@ -866,27 +943,23 @@ a {
 
 .social-text strong {
   display: block;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1.35;
   font-weight: 900;
   color: #fff;
+  margin-top: 2px;
 }
 
 .social-text span {
   display: block;
   margin-top: 4px;
   color: #aab6c5;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1.4;
 }
 
 .social-note {
-  margin-top: 6px;
-  font-size: 10px;
-  line-height: 1.45;
-  color: #88f4ff;
-  opacity: 0.88;
-  letter-spacing: 0.1px;
+  display: none;
 }
 
 .social-card.copied {
@@ -905,10 +978,11 @@ a {
   color: #fff;
 }
 
+/* البادج */
 .badge {
   position: absolute;
-  top: 50px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   left: auto;
   z-index: 3;
   padding: 3px 8px;
@@ -928,6 +1002,207 @@ a {
   transform: translateY(-1px);
 }
 
+/* ألوان المنصات */
+@keyframes brandFlicker{
+  0%, 100% { filter: brightness(1); }
+  40% { filter: brightness(1.12); }
+  55% { filter: brightness(.96); }
+  70% { filter: brightness(1.14); }
+}
+
+.fb-card {
+  --brand: #1877F2;
+  --icon-bg: rgba(24, 119, 242, 0.12);
+  --icon-fg: #1877F2;
+  --hover-icon-bg: #1877F2;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(24, 119, 242, 0.24);
+  --hover-glow: rgba(24, 119, 242, 0.32);
+}
+
+.wa-card {
+  --brand: #25D366;
+  --icon-bg: rgba(37, 211, 102, 0.12);
+  --icon-fg: #25D366;
+  --hover-icon-bg: #25D366;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(37, 211, 102, 0.24);
+  --hover-glow: rgba(37, 211, 102, 0.30);
+}
+
+.ig-card {
+  --brand: #E1306C;
+  --icon-bg: rgba(225, 48, 108, 0.12);
+  --icon-fg: #E1306C;
+  --hover-icon-bg: #E1306C;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(225, 48, 108, 0.24);
+  --hover-glow: rgba(225, 48, 108, 0.32);
+}
+
+.tk-card,
+.tiktok-card {
+  --brand: #111111;
+  --icon-bg: rgba(17, 17, 17, 0.10);
+  --icon-fg: #111111;
+  --hover-icon-bg: #111111;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(17, 17, 17, 0.18);
+  --hover-glow: rgba(255,255,255,.14);
+}
+
+.ds-card,
+.discord-card {
+  --brand: #5865F2;
+  --icon-bg: rgba(88, 101, 242, 0.12);
+  --icon-fg: #5865F2;
+  --hover-icon-bg: #5865F2;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(88, 101, 242, 0.24);
+  --hover-glow: rgba(88, 101, 242, 0.30);
+}
+
+.sc-card,
+.snapchat-card {
+  --brand: #FFFC00;
+  --icon-bg: rgba(255, 252, 0, 0.20);
+  --icon-fg: #111827;
+  --hover-icon-bg: #111827;
+  --hover-icon-fg: #FFFC00;
+  --hover-border: rgba(255, 252, 0, 0.26);
+  --hover-glow: rgba(255, 252, 0, 0.24);
+}
+
+.st-card,
+.steam-card {
+  --brand: #1B2838;
+  --icon-bg: rgba(27, 40, 56, 0.12);
+  --icon-fg: #1B2838;
+  --hover-icon-bg: #1B2838;
+  --hover-icon-fg: #fff;
+  --hover-border: rgba(27, 40, 56, 0.22);
+  --hover-glow: rgba(27, 40, 56, 0.28);
+}
+
+.threads-card {
+  --brand: #111111;
+  --icon-bg: #111827;
+  --icon-fg: #fff;
+  --hover-icon-bg: #fff;
+  --hover-icon-fg: #111827;
+  --hover-border: rgba(255,255,255,.18);
+  --hover-glow: rgba(255,255,255,.16);
+}
+
+.github-card {
+  --brand: #181717;
+  --icon-bg: #181717;
+  --icon-fg: #fff;
+  --hover-icon-bg: #fff;
+  --hover-icon-fg: #181717;
+  --hover-border: rgba(255,255,255,.18);
+  --hover-glow: rgba(255,255,255,.16);
+}
+
+.chess-card {
+  --brand: #69923E;
+  --icon-bg: #69923E;
+  --icon-fg: #fff;
+  --hover-icon-bg: #fff;
+  --hover-icon-fg: #69923E;
+  --hover-border: rgba(129, 182, 76, 0.20);
+  --hover-glow: rgba(129, 182, 76, 0.22);
+}
+
+.twitch-card {
+  --brand: #9146FF;
+  --icon-bg: #9146FF;
+  --icon-fg: #fff;
+  --hover-icon-bg: #fff;
+  --hover-icon-fg: #9146FF;
+  --hover-border: rgba(145, 70, 255, 0.20);
+  --hover-glow: rgba(145, 70, 255, 0.24);
+}
+
+.pinterest-card {
+  --brand: #E60023;
+  --icon-bg: #E60023;
+  --icon-fg: #fff;
+  --hover-icon-bg: #fff;
+  --hover-icon-fg: #E60023;
+  --hover-border: rgba(230, 0, 35, 0.20);
+  --hover-glow: rgba(230, 0, 35, 0.24);
+}
+
+.vip-card {
+  background: var(--royal-bg);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+}
+
+.vip-card:hover,
+.vip-card:focus-visible {
+  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+  border-color: #ffd700;
+}
+
+.vip-card:hover .social-icon,
+.vip-card:focus-visible .social-icon {
+  background: var(--royal-gold);
+  color: #1a1a1a;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
+}
+
+.sc-card:hover .social-icon,
+.sc-card:focus-visible .social-icon,
+.sc-card:active .social-icon {
+  background: #111827;
+  color: #FFFC00;
+  border-color: rgba(17, 24, 39, 0.24);
+}
+
+.sc-card:hover .social-text strong,
+.sc-card:hover .social-text span,
+.sc-card:focus-visible .social-text strong,
+.sc-card:focus-visible .social-text span,
+.sc-card:active .social-text strong,
+.sc-card:active .social-text span {
+  color: #ffffff;
+}
+
+.social-card:hover,
+.social-card:focus-visible {
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.30),
+    0 0 28px var(--hover-glow);
+}
+
+/* للشاشات الصغيرة */
+@media (max-width: 520px) {
+  .links-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .social-card {
+    min-height: 140px;
+    padding: 10px 8px;
+    border-radius: 16px;
+  }
+
+  .social-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .social-text strong {
+    font-size: 12.5px;
+  }
+
+  .social-text span {
+    font-size: 11px;
+  }
+}
 /* ظˆظ…ظٹط¶ ظ„ط·ظٹظپ ط­ط³ط¨ ظ„ظˆظ† ط§ظ„ظ…ظ†طµط© */
 @keyframes brandFlicker{
   0%, 100% { filter: brightness(1); }
@@ -3235,3 +3510,662 @@ body[data-device="desktop"] .desktop-only{ display: inline-grid; }
   }
 }
 
+
+/* =========================================================
+   FINAL SOCIAL ICON GRID OVERRIDE
+   هذه الطبقة النهائية تُضاف في آخر الملف فقط
+   الهدف:
+   - الأيقونة فقط بدون خلفية أو إطار
+   - اسم الموقع تحت الأيقونة
+   - الاسم الشخصي تحت اسم الموقع
+   - Private صغيرة أعلى اليمين
+   - Grid متجاوب صغير ومتقارب
+========================================================= */
+
+/* الحاويات التي يجب أن تصبح Grid متقارب */
+.links-grid,
+.links,
+.copy-list,
+.drawer-list,
+.social-wrap {
+  display: grid !important;
+  gap: 10px;
+  align-items: start;
+}
+
+/* توزيع الكروت: جنب بعض وفوق بعض */
+.links-grid {
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+/* لو عندك grids أخرى داخل نفس الصفحة */
+.links,
+.copy-list,
+.drawer-list,
+.social-wrap {
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+}
+
+/* =========================================================
+   SOCIAL CARD
+   - إلغاء الكتلة الثقيلة
+   - جعل العنصر نفسه transparent
+   - الحفاظ على الترتيب العمودي
+========================================================= */
+
+.links-grid .social-card,
+.links .social-card,
+.social-wrap .social-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+
+  min-height: 128px;
+  padding: 30px 8px 10px;
+  border-radius: 16px;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  overflow: visible;
+  isolation: isolate;
+  cursor: pointer;
+
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+
+  transition:
+    transform .18s ease,
+    filter .18s ease,
+    opacity .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+
+  animation: socialReveal .65s ease both;
+}
+
+/* إزالة أي طبقات زخرفية قديمة */
+.links-grid .social-card::before,
+.links-grid .social-card::after,
+.links .social-card::before,
+.links .social-card::after,
+.social-wrap .social-card::before,
+.social-wrap .social-card::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Hover خفيف فقط للأيقونة والنص */
+.links-grid .social-card:hover,
+.links-grid .social-card:focus-visible,
+.links .social-card:hover,
+.links .social-card:focus-visible,
+.social-wrap .social-card:hover,
+.social-wrap .social-card:focus-visible {
+  transform: translateY(-2px) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* =========================================================
+   ICON
+   - بدون container
+   - صورة/أيقونة فقط
+   - أي تأثير بصري خفيف جدًا
+========================================================= */
+
+.links-grid .social-icon,
+.links .social-icon,
+.social-wrap .social-icon {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 8px;
+
+  display: grid;
+  place-items: center;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+
+  color: currentColor;
+  overflow: hidden;
+  z-index: 2;
+
+  transition:
+    transform .18s ease,
+    filter .18s ease,
+    color .18s ease,
+    opacity .18s ease;
+}
+
+.links-grid .social-icon img,
+.links .social-icon img,
+.social-wrap .social-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: none ;
+  background: transparent !important;
+}
+
+.links-grid .social-icon i,
+.links .social-icon i,
+.social-wrap .social-icon i {
+  font-size: 2rem;
+  line-height: 1;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Hover: تكبير خفيف للأيقونة فقط */
+.links-grid .social-card:hover .social-icon,
+.links-grid .social-card:focus-visible .social-icon,
+.links .social-card:hover .social-icon,
+.links .social-card:focus-visible .social-icon,
+.social-wrap .social-card:hover .social-icon,
+.social-wrap .social-card:focus-visible .social-icon {
+  transform: translateY(-1px) scale(1.06) !important;
+}
+
+/* =========================================================
+   TEXT STACK
+   الاسم تحت الأيقونة ثم الاسم الشخصي
+========================================================= */
+
+.links-grid .social-text,
+.links .social-text,
+.social-wrap .social-text {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.links-grid .social-text strong,
+.links .social-text strong,
+.social-wrap .social-text strong {
+  display: block;
+  margin: 0;
+  font-size: 12.8px;
+  line-height: 1.22;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: .1px;
+  opacity: 0;
+  animation: socialTextIn .58s ease forwards;
+  animation-delay: .08s;
+  transition: color .18s ease, transform .18s ease;
+}
+
+.links-grid .social-text span,
+.links .social-text span,
+.social-wrap .social-text span {
+  display: block;
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.25;
+  color: #9eaabc;
+  opacity: 0;
+  animation: socialTextIn .58s ease forwards;
+  animation-delay: .16s;
+  transition: color .18s ease, transform .18s ease;
+}
+
+/* Hover: اللون brand يشتغل على اسم الموقع + الأيقونة */
+.links-grid .social-card:hover .social-text strong,
+.links-grid .social-card:focus-visible .social-text strong,
+.links .social-card:hover .social-text strong,
+.links .social-card:focus-visible .social-text strong,
+.social-wrap .social-card:hover .social-text strong,
+.social-wrap .social-card:focus-visible .social-text strong {
+  color: var(--brand, #fff);
+}
+
+.links-grid .social-card:hover .social-text span,
+.links-grid .social-card:focus-visible .social-text span,
+.links .social-card:hover .social-text span,
+.links .social-card:focus-visible .social-text span,
+.social-wrap .social-card:hover .social-text span,
+.social-wrap .social-card:focus-visible .social-text span {
+  color: #d7dfeb;
+}
+
+/* لو هناك سطر إضافي نوقفه */
+.links-grid .social-note,
+.links .social-note,
+.social-wrap .social-note {
+  display: none !important;
+}
+
+/* =========================================================
+   PRIVATE BADGE
+   - مصغر وواضح
+   - أعلى اليمين
+   - لا يغطي الأيقونة
+========================================================= */
+
+.links-grid .badge,
+.links .badge,
+.social-wrap .badge,
+.links-grid .badge-vip,
+.links .badge-vip,
+.social-wrap .badge-vip {
+  position: absolute !important;
+  top: 7px !important;
+  right: 7px !important;
+  left: auto !important;
+  z-index: 5 !important;
+
+  padding: 3px 7px !important;
+  min-width: auto !important;
+  border-radius: 999px !important;
+
+  font-size: 8px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: .6px !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(255,77,141,.96), rgba(124,92,255,.96), rgba(42,212,255,.96)) !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  box-shadow: 0 8px 16px rgba(0,0,0,.18) !important;
+
+  transform: none !important;
+  animation: none !important;
+  user-select: none !important;
+}
+
+.links-grid .badge::before,
+.links-grid .badge::after,
+.links-grid .badge-vip::before,
+.links-grid .badge-vip::after,
+.links .badge::before,
+.links .badge::after,
+.links .badge-vip::before,
+.links .badge-vip::after,
+.social-wrap .badge::before,
+.social-wrap .badge::after,
+.social-wrap .badge-vip::before,
+.social-wrap .badge-vip::after {
+  display: none !important;
+}
+
+/* =========================================================
+   PLATFORM BRAND TOKENS
+   الألوان تُطبّق على الأيقونة والنص عند الـ hover
+========================================================= */
+
+.fb-card,
+.facebook {
+  --brand: #1877F2;
+  --icon-bg: transparent;
+  --icon-fg: #1877F2;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #1877F2;
+  --hover-border: transparent;
+  --hover-glow: rgba(24, 119, 242, 0.26);
+}
+
+.ig-card,
+.instagram {
+  --brand: #E1306C;
+  --icon-bg: transparent;
+  --icon-fg: #E1306C;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #E1306C;
+  --hover-border: transparent;
+  --hover-glow: rgba(225, 48, 108, 0.26);
+}
+
+.x-card,
+.twitter-card,
+.x {
+  --brand: #ffffff;
+  --icon-bg: transparent;
+  --icon-fg: #ffffff;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #ffffff;
+  --hover-border: transparent;
+  --hover-glow: rgba(255,255,255,.16);
+}
+
+.yt-card,
+.youtube-card,
+.youtube {
+  --brand: #FF0033;
+  --icon-bg: transparent;
+  --icon-fg: #FF0033;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #FF0033;
+  --hover-border: transparent;
+  --hover-glow: rgba(255, 0, 51, 0.24);
+}
+
+.sc-card,
+.snapchat-card,
+.snapchat {
+  --brand: #FFFC00;
+  --icon-bg: transparent;
+  --icon-fg: #FFFC00;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #FFFC00;
+  --hover-border: transparent;
+  --hover-glow: rgba(255, 252, 0, 0.22);
+}
+
+.tk-card,
+.tiktok-card,
+.tiktok {
+  --brand: #ffffff;
+  --icon-bg: transparent;
+  --icon-fg: #ffffff;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #ffffff;
+  --hover-border: transparent;
+  --hover-glow: rgba(255,255,255,.12);
+}
+
+.wa-card,
+.whatsapp {
+  --brand: #25D366;
+  --icon-bg: transparent;
+  --icon-fg: #25D366;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #25D366;
+  --hover-border: transparent;
+  --hover-glow: rgba(37, 211, 102, 0.24);
+}
+
+.ds-card,
+.discord-card,
+.discord {
+  --brand: #5865F2;
+  --icon-bg: transparent;
+  --icon-fg: #5865F2;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #5865F2;
+  --hover-border: transparent;
+  --hover-glow: rgba(88, 101, 242, 0.24);
+}
+
+.threads-card,
+.threads {
+  --brand: #ffffff;
+  --icon-bg: transparent;
+  --icon-fg: #ffffff;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #ffffff;
+  --hover-border: transparent;
+  --hover-glow: rgba(255,255,255,.14);
+}
+
+.github-card,
+.github {
+  --brand: #EDEDED;
+  --icon-bg: transparent;
+  --icon-fg: #EDEDED;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #ffffff;
+  --hover-border: transparent;
+  --hover-glow: rgba(255,255,255,.12);
+}
+
+.st-card,
+.steam-card,
+.steam {
+  --brand: #1B2838;
+  --icon-bg: transparent;
+  --icon-fg: #1B2838;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #1B2838;
+  --hover-border: transparent;
+  --hover-glow: rgba(27, 40, 56, 0.18);
+}
+
+.chess-card,
+.chess {
+  --brand: #69923E;
+  --icon-bg: transparent;
+  --icon-fg: #69923E;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #69923E;
+  --hover-border: transparent;
+  --hover-glow: rgba(105, 146, 62, 0.18);
+}
+
+.twitch-card,
+.twitch {
+  --brand: #9146FF;
+  --icon-bg: transparent;
+  --icon-fg: #9146FF;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #9146FF;
+  --hover-border: transparent;
+  --hover-glow: rgba(145, 70, 255, 0.20);
+}
+
+.pinterest-card,
+.pinterest {
+  --brand: #E60023;
+  --icon-bg: transparent;
+  --icon-fg: #E60023;
+  --hover-icon-bg: transparent;
+  --hover-icon-fg: #E60023;
+  --hover-border: transparent;
+  --hover-glow: rgba(230, 0, 35, 0.22);
+}
+
+/* =========================================================
+   VISUAL RESET FOR OLD BIG CARDS
+   إذا كان الملف الأصلي يحتوي على خلفيات/إطارات قديمة
+   هذا الجزء يلغيها داخل منطقة الكروت الاجتماعية
+========================================================= */
+
+.links-grid .social-card,
+.links .social-card,
+.social-wrap .social-card {
+  background-clip: padding-box;
+  background-color: transparent !important;
+}
+
+.links-grid .social-card:hover,
+.links .social-card:hover,
+.social-wrap .social-card:hover {
+  background-color: transparent !important;
+}
+
+/* لو توجد عناصر icon wrappers قديمة داخل social-card */
+.links-grid .social-icon > *,
+.links .social-icon > *,
+.social-wrap .social-icon > * {
+  background: transparent !important;
+}
+
+/* =========================================================
+   A11Y / FOCUS
+========================================================= */
+
+.links-grid .social-card:focus-visible .social-text strong,
+.links .social-card:focus-visible .social-text strong,
+.social-wrap .social-card:focus-visible .social-text strong {
+  text-decoration: none;
+}
+
+.links-grid .social-card:focus-visible .social-icon,
+.links .social-card:focus-visible .social-icon,
+.social-wrap .social-card:focus-visible .social-icon {
+  transform: translateY(-1px) scale(1.06) !important;
+  filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--brand) 28%, transparent));
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 560px) {
+  .links-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .links,
+  .copy-list,
+  .drawer-list,
+  .social-wrap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .links-grid .social-card,
+  .links .social-card,
+  .social-wrap .social-card {
+    min-height: 120px;
+    padding: 28px 6px 10px;
+    border-radius: 15px;
+  }
+
+  .links-grid .social-icon,
+  .links .social-icon,
+  .social-wrap .social-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 7px;
+  }
+
+  .links-grid .social-text strong,
+  .links .social-text strong,
+  .social-wrap .social-text strong {
+    font-size: 12px;
+  }
+
+  .links-grid .social-text span,
+  .links .social-text span,
+  .social-wrap .social-text span {
+    font-size: 10px;
+  }
+
+  .links-grid .badge,
+  .links .badge,
+  .social-wrap .badge,
+  .links-grid .badge-vip,
+  .links .badge-vip,
+  .social-wrap .badge-vip {
+    top: 6px !important;
+    right: 6px !important;
+    padding: 2px 5px !important;
+    font-size: 7px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .links-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .links-grid .social-card,
+  .links .social-card,
+  .social-wrap .social-card {
+    min-height: 114px;
+  }
+}
+
+/* =========================================================
+   ANIMATION KEYFRAMES
+========================================================= */
+
+@keyframes socialReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes socialTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   MOTION REDUCTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .links-grid .social-card,
+  .links .social-card,
+  .social-wrap .social-card,
+  .links-grid .social-icon,
+  .links .social-icon,
+  .social-wrap .social-icon,
+  .links-grid .social-text strong,
+  .links-grid .social-text span,
+  .links .social-text strong,
+  .links .social-text span,
+  .social-wrap .social-text strong,
+  .social-wrap .social-text span,
+  .links-grid .badge,
+  .links-grid .badge-vip,
+  .links .badge,
+  .links .badge-vip,
+  .social-wrap .badge,
+  .social-wrap .badge-vip {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   END OF FINAL OVERRIDE
+========================================================= */
+
+/* Steam */
+.steam-card { --brand: #171a21; }
+.steam-card:hover .social-icon i { color: #66c0f4; }
+
+/* Twitch */
+.twitch-card { --brand: #9146ff; }
+.twitch-card:hover .social-icon i { color: #9146ff; }
+
+/* X */
+.x-card { --brand: #ffffff; }
+.x-card:hover .social-icon i { color: #ffffff; }
+
+/* Spotify */
+.spotify-card { --brand: #1db954; }
+.spotify-card:hover .social-icon i { color: #1db954; }
+
+/* Tellonym */
+.tellonym-card { --brand: #ff0066; }
+.tellonym-card:hover .social-icon i { color: #ff0066; }
