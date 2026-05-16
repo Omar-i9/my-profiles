@@ -346,7 +346,6 @@
         </span>
         <div class="social-text">
           <strong data-i18n="discordAr">ديسكورد</strong>
-          <span>Discord</span>
           <span class="social-note" data-i18n="discordNote">اضغط لفتح البطاقة داخل الموقع</span>
         </div>
       </button>
@@ -570,7 +569,6 @@
   ════════════════════════════════════════════ -->
   <div class="page-overlay" id="pageOverlay" aria-hidden="true">
     <div class="page-overlay-panel">
-      <button class="page-close" id="closePageBtn" type="button" aria-label="إغلاق">×</button>
       <iframe
         id="pageFrame"
         class="page-frame"
@@ -590,7 +588,6 @@
 
     const openDiscordBtn   = $('openDiscordBtn');
     const pageOverlay      = $('pageOverlay');
-    const closePageBtn     = $('closePageBtn');
     const pageFrame        = $('pageFrame');
 
     const sharePortalBtn   = $('sharePortalBtn');
@@ -683,7 +680,6 @@
 
     /* ── Event listeners ── */
     openDiscordBtn?.addEventListener('click', (e) => { e.preventDefault(); openPageOverlay(); });
-    closePageBtn?.addEventListener('click', closePageOverlay);
     pageOverlay?.addEventListener('click', (e) => { if (e.target === pageOverlay) closePageOverlay(); });
 
     sharePortalBtn?.addEventListener('click', openShare);
