@@ -141,6 +141,19 @@
 
 }
 
+.label-tag {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9df9ff;
+  letter-spacing: 0.3px;
+  text-shadow: 0 0 6px rgba(54, 215, 232, 0.3);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
 /* ============================================================
    02 · RESET & BASE
    ============================================================ */
