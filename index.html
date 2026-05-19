@@ -544,8 +544,7 @@
         <div class="retro-badge">PIXEL SHARE</div>
 
         <div class="qr-wrapper">
-          <img id="shareQrImg" src="" alt="QR للموقع" class="main-qr" />
-          <img src="photo/profile.jpeg" alt="شعار الموقع" class="qr-logo" />
+          <img id="shareQrImg" src="https://omar-i9.github.io/omar-i9/" class="main-qr" />
         </div>
 
         <h3 id="shareTitle" data-i18n="shareTitle">بوابة المشاركة</h3>
@@ -585,172 +584,202 @@
   <!-- ═══════════════════════════════════════════
        سكريبت الأوفرليز + النسخ + عنوان التاب
   ════════════════════════════════════════════ -->
-  <script>
-  (function () {
+<!-- ═══════════════════════════════════════════
+     سكريبت الأوفرليز + النسخ + عنوان التاب المطور
+     ════════════════════════════════════════════ -->
+<script>
+(function () {
+    // 1. الإعدادات والثوابت البرمجية (Configuration)
+    const TARGET_URL = 'https://omar-i9.github.io/omar-i9/';
+    const TYPER_TITLES = ['اهلين تعال كل يوم 👋', 'Omar Profiles'];
+    const TYPER_SPEED = 50;
+
+    // 2. جلب عناصر الـ DOM وتخزينها (DOM Caching)
     const $ = (id) => document.getElementById(id);
-
-    const openDiscordBtn   = $('openDiscordBtn');
-    const pageOverlay      = $('pageOverlay');
-    const pageFrame        = $('pageFrame');
-
-    const sharePortalBtn   = $('sharePortalBtn');
-    const shareOverlay     = $('shareOverlay');
-    const closeShare       = $('closeShare');
-    const copyShareBtn     = $('copyShareBtn');
-    const shareUrlInput    = $('shareUrlInput');
-    const shareQrImg       = $('shareQrImg');
-
-    const toast            = $('toast');
+    const titleEl = document.querySelector('title');
+    
+    const openDiscordBtn     = $('openDiscordBtn');
+    const pageOverlay        = $('pageOverlay');
+    const pageFrame          = $('pageFrame');
+    const sharePortalBtn     = $('sharePortalBtn');
+    const shareOverlay       = $('shareOverlay');
+    const closeShare         = $('closeShare');
+    const copyShareBtn       = $('copyShareBtn');
+    const shareUrlInput      = $('shareUrlInput');
+    const shareQrImg         = $('shareQrImg');
+    const toast              = $('toast');
     const moreSocialsBackdrop = $('moreSocialsBackdrop');
 
-    /* ── helpers ── */
+    // متغيرات حالة أنيميشن العنوان
+    let typerIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typerTimer = null;
+    let isTabActive = true;
+
+    // 3. دالات المساعدة العامة (Global Helpers)
     function hasOpenPanel() {
-      return Boolean(
-        (pageOverlay  && pageOverlay.classList.contains('show')) ||
-        (shareOverlay && shareOverlay.classList.contains('show'))
-      );
+        return Boolean(
+            pageOverlay?.classList.contains('show') || 
+            shareOverlay?.classList.contains('show')
+        );
     }
 
     function updateBodyLock() {
-      document.body.style.overflow = hasOpenPanel() ? 'hidden' : '';
+        document.body.style.overflow = hasOpenPanel() ? 'hidden' : '';
     }
 
     function showToast(message = 'تم النسخ') {
-      if (!toast) return;
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(showToast._timer);
-      showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
     }
 
     async function copyText(text) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          const temp = document.createElement('textarea');
-          temp.value = text;
-          temp.setAttribute('readonly', '');
-          temp.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
-          document.body.appendChild(temp);
-          temp.focus();
-          temp.select();
-          document.execCommand('copy');
-          document.body.removeChild(temp);
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = text;
+                temp.setAttribute('readonly', '');
+                temp.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
+                document.body.appendChild(temp);
+                temp.focus();
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+            }
+            showToast('تم النسخ ✓');
+        } catch {
+            showToast('تعذر النسخ');
         }
-        showToast('تم النسخ ✓');
-      } catch {
-        showToast('تعذر النسخ');
-      }
     }
 
-    /* ── Discord overlay ── */
+    // 4. منطق نافذة الديسكورد (Discord Overlay Logic)
     function openPageOverlay() {
-      if (!pageOverlay || !pageFrame) return;
-      pageFrame.src = 'main/Discord.html';
-      pageOverlay.classList.add('show');
-      pageOverlay.setAttribute('aria-hidden', 'false');
-      updateBodyLock();
+        if (!pageOverlay || !pageFrame) return;
+        pageFrame.src = 'main/Discord.html';
+        pageOverlay.classList.add('show');
+        pageOverlay.setAttribute('aria-hidden', 'false');
+        updateBodyLock();
     }
 
     function closePageOverlay() {
-      if (!pageOverlay || !pageFrame) return;
-      pageOverlay.classList.remove('show');
-      pageOverlay.setAttribute('aria-hidden', 'true');
-      pageFrame.src = '';
-      updateBodyLock();
+        if (!pageOverlay || !pageFrame) return;
+        pageOverlay.classList.remove('show');
+        pageOverlay.setAttribute('aria-hidden', 'true');
+        pageFrame.src = '';
+        updateBodyLock();
     }
 
-    /* ── Share overlay ── */
+    // 5. منطق نافذة المشاركة (Share Overlay Logic)
     function openShare() {
-      if (!shareOverlay) return;
-      shareOverlay.classList.add('show');
-      shareOverlay.setAttribute('aria-hidden', 'false');
-      updateBodyLock();
-      if (shareUrlInput)  shareUrlInput.value = window.location.href;
-      if (shareQrImg) {
-        const url = encodeURIComponent(window.location.href);
-        shareQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${url}`;
-      }
+        if (!shareOverlay) return;
+        shareOverlay.classList.add('show');
+        shareOverlay.setAttribute('aria-hidden', 'false');
+        updateBodyLock();
+        
+        if (shareUrlInput) shareUrlInput.value = TARGET_URL;
+        if (shareQrImg) {
+            const urlEncoded = encodeURIComponent(TARGET_URL);
+            shareQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${urlEncoded}`;
+        }
     }
 
     function closeShareModal() {
-      if (!shareOverlay) return;
-      shareOverlay.classList.remove('show');
-      shareOverlay.setAttribute('aria-hidden', 'true');
-      updateBodyLock();
+        if (!shareOverlay) return;
+        shareOverlay.classList.remove('show');
+        shareOverlay.setAttribute('aria-hidden', 'true');
+        updateBodyLock();
     }
 
-    /* ── Event listeners ── */
-    openDiscordBtn?.addEventListener('click', (e) => { e.preventDefault(); openPageOverlay(); });
-    pageOverlay?.addEventListener('click', (e) => { if (e.target === pageOverlay) closePageOverlay(); });
+    // 6. تأثير الكتابة الذكي لعنوان التاب (Smart Typewriter Effect)
+    function typeEffect() {
+        // لو المستخدم خرج من التاب، بنوقف الـ Loop تماماً لمنع العشوائية stutters
+        if (!isTabActive || !titleEl) return;
 
-    sharePortalBtn?.addEventListener('click', openShare);
-    closeShare?.addEventListener('click', closeShareModal);
-    shareOverlay?.addEventListener('click', (e) => { if (e.target === shareOverlay) closeShareModal(); });
-    copyShareBtn?.addEventListener('click', () => { if (shareUrlInput) copyText(shareUrlInput.value); });
+        const currentWord = TYPER_TITLES[typerIndex];
+        charIndex += isDeleting ? -1 : 1;
+        titleEl.textContent = currentWord.substring(0, charIndex);
 
-    /* ── Global copy delegation ── */
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest?.('[data-copy]');
-      if (btn) {
-        const val = btn.getAttribute('data-copy') || '';
-        if (val) copyText(val);
-      }
-    });
+        let currentSpeed = isDeleting ? TYPER_SPEED / 2 : TYPER_SPEED;
 
-    /* ── iframe message ── */
-    window.addEventListener('message', (event) => {
-      if (event.data?.type === 'close-discord') closePageOverlay();
-    });
+        if (!isDeleting && charIndex === currentWord.length) {
+            currentSpeed = 1200; // مدة الانتظار عند اكتمال الكلمة
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            typerIndex = (typerIndex + 1) % TYPER_TITLES.length;
+        }
 
-    /* ── Escape key ── */
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closePageOverlay(); closeShareModal(); }
-    });
+        typerTimer = setTimeout(typeEffect, currentSpeed);
+    }
 
-    /* ── Backdrop aria ── */
+    // 7. مراقبة حالة رؤية الصفحة (Tab Visibility Control)
+    function handleVisibilityChange() {
+        if (!titleEl) return;
+
+        if (document.hidden) {
+            isTabActive = false;
+            clearTimeout(typerTimer);
+            titleEl.textContent = 'لا تهرب خليكككك';
+        } else {
+            isTabActive = true;
+            titleEl.textContent = 'رجعت هيك 😎';
+            // ننتظر ثانية ثم نُعيد تشغيل الأنيميشن بسلاسة من البداية
+            clearTimeout(typerTimer);
+            typerTimer = setTimeout(() => {
+                typerIndex = 0;
+                charIndex = 0;
+                isDeleting = false;
+                typeEffect();
+            }, 1200);
+        }
+    }
+
+    // 8. إعداد وتعيين مستمعي الأحداث (Event Listeners & Delegation)
+    function initEvents() {
+        // أحداث الديسكورد والمشاركة
+        openDiscordBtn?.addEventListener('click', (e) => { e.preventDefault(); openPageOverlay(); });
+        pageOverlay?.addEventListener('click', (e) => { if (e.target === pageOverlay) closePageOverlay(); });
+        
+        sharePortalBtn?.addEventListener('click', openShare);
+        closeShare?.addEventListener('click', closeShareModal);
+        shareOverlay?.addEventListener('click', (e) => { if (e.target === shareOverlay) closeShareModal(); });
+        copyShareBtn?.addEventListener('click', () => { if (shareUrlInput) copyText(shareUrlInput.value); });
+
+        // مستمع تفويض النسخ الشامل [data-copy]
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest?.('[data-copy]');
+            if (btn) {
+                const val = btn.getAttribute('data-copy') || '';
+                if (val) copyText(val);
+            }
+        });
+
+        // رسائل الـ iframe وزر الـ Escape
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'close-discord') closePageOverlay();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closePageOverlay(); closeShareModal(); }
+        });
+
+        // مراقبة التاب
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    // 9. تشغيل السكريبت الابتدائي (Initialization)
     if (moreSocialsBackdrop) moreSocialsBackdrop.setAttribute('aria-hidden', 'true');
-
     updateBodyLock();
-  })();
-
-  /* ══════════════════════════════
-     تأثير الكتابة على عنوان التاب
-  ══════════════════════════════ */
-  const titles     = ['اهلين تعال كل يوم 👋', 'Omar Profiles'];
-  let i            = 0;
-  let charIndex    = 0;
-  let isDeleting   = false;
-  const speed      = 50;
-  const titleEl    = document.querySelector('title');
-
-  function typeEffect() {
-    const current = titles[i];
-    charIndex += isDeleting ? -1 : 1;
-    titleEl.textContent = current.substring(0, charIndex);
-
-    if (!isDeleting && charIndex === current.length) {
-      setTimeout(() => (isDeleting = true), 1200);
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      i = (i + 1) % titles.length;
-    }
-    setTimeout(typeEffect, isDeleting ? speed / 2 : speed);
-  }
-
-  typeEffect();
-
-  /* ── Tab visibility trick ── */
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      titleEl.textContent = 'لا تهرب خليكككك';
-    } else {
-      titleEl.textContent = 'رجعت هيك 😎';
-      setTimeout(() => { i = 0; charIndex = 0; isDeleting = false; }, 800);
-    }
-  });
-  </script>
+    initEvents();
+    typeEffect(); // تشغيل حركة العنوان فوراً
+})();
+</script>
 
 </body>
 </html>
